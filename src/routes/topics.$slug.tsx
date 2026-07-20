@@ -39,7 +39,7 @@ export const Route = createFileRoute("/topics/$slug")({
 });
 
 function TopicPage() {
-  const { topic } = Route.useLoaderData();
+  const { topic } = Route.useLoaderData() as { topic: import("@/data/problems").Topic };
   const progress = useProgress();
   const { query } = useGlobalSearch();
 
