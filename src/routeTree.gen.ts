@@ -9,38 +9,135 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RevisionRouteImport } from './routes/revision'
+import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TopicsSlugRouteImport } from './routes/topics.$slug'
 
+const RevisionRoute = RevisionRouteImport.update({
+  id: '/revision',
+  path: '/revision',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookmarksRoute = BookmarksRouteImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TopicsSlugRoute = TopicsSlugRouteImport.update({
+  id: '/topics/$slug',
+  path: '/topics/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/practice': typeof PracticeRoute
+  '/progress': typeof ProgressRoute
+  '/revision': typeof RevisionRoute
+  '/topics/$slug': typeof TopicsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/practice': typeof PracticeRoute
+  '/progress': typeof ProgressRoute
+  '/revision': typeof RevisionRoute
+  '/topics/$slug': typeof TopicsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/practice': typeof PracticeRoute
+  '/progress': typeof ProgressRoute
+  '/revision': typeof RevisionRoute
+  '/topics/$slug': typeof TopicsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bookmarks'
+    | '/practice'
+    | '/progress'
+    | '/revision'
+    | '/topics/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bookmarks'
+    | '/practice'
+    | '/progress'
+    | '/revision'
+    | '/topics/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/bookmarks'
+    | '/practice'
+    | '/progress'
+    | '/revision'
+    | '/topics/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BookmarksRoute: typeof BookmarksRoute
+  PracticeRoute: typeof PracticeRoute
+  ProgressRoute: typeof ProgressRoute
+  RevisionRoute: typeof RevisionRoute
+  TopicsSlugRoute: typeof TopicsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/revision': {
+      id: '/revision'
+      path: '/revision'
+      fullPath: '/revision'
+      preLoaderRoute: typeof RevisionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookmarks': {
+      id: '/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/bookmarks'
+      preLoaderRoute: typeof BookmarksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +145,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topics/$slug': {
+      id: '/topics/$slug'
+      path: '/topics/$slug'
+      fullPath: '/topics/$slug'
+      preLoaderRoute: typeof TopicsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BookmarksRoute: BookmarksRoute,
+  PracticeRoute: PracticeRoute,
+  ProgressRoute: ProgressRoute,
+  RevisionRoute: RevisionRoute,
+  TopicsSlugRoute: TopicsSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
