@@ -4,13 +4,14 @@
 
 import { PROBLEMS as REMAINING_PROBLEMS, TOPICS as REMAINING_TOPICS } from "./remaining-topics";
 import { PROBLEMS as DSA_PROBLEMS, TOPICS as DSA_TOPICS } from "./dsa-topics";
+import { ADDITIONAL_PLACEMENTS, ADDITIONAL_PROBLEMS } from "./roadmap-additions";
 import { ROADMAP } from "./roadmap";
 
 export type Difficulty = "Easy" | "Medium" | "Hard" | "Unverified";
-export type Platform = "LeetCode" | "GFG";
+export type Platform = "LeetCode" | "GFG" | "CSES" | "AtCoder";
 
 export interface Problem {
-  id: string; // canonical id derived from URL slug
+  id: string; // stable catalog identifier
   title: string;
   url: string;
   platform: Platform;
@@ -399,10 +400,27 @@ const ORIGINAL_PROBLEMS: Problem[] = [
   p("gfg-check-for-bst", "Check for BST", "https://www.geeksforgeeks.org/problems/check-for-bst/1", GFG_, "Medium"),
 ];
 
+const BASE_PROBLEMS = [...ORIGINAL_PROBLEMS, ...REMAINING_PROBLEMS, ...DSA_PROBLEMS];
+const knownProblemUrls = new Set(
+  BASE_PROBLEMS.map((problem) => problem.url.toLowerCase().replace(/\/+$/, "")),
+);
+const knownProblemIds = new Set(BASE_PROBLEMS.map((problem) => problem.id));
+const UNIQUE_ADDITIONS = ADDITIONAL_PROBLEMS.filter((problem) => {
+  const url = problem.url.toLowerCase().replace(/\/+$/, "");
+  if (knownProblemUrls.has(url) || knownProblemIds.has(problem.id)) return false;
+  knownProblemUrls.add(url);
+  knownProblemIds.add(problem.id);
+  return true;
+});
+const UNIQUE_ADDITION_IDS = new Set(UNIQUE_ADDITIONS.map((problem) => problem.id));
+
 export const PROBLEMS: Problem[] = Array.from(
   new Map(
-    [...ORIGINAL_PROBLEMS, ...REMAINING_PROBLEMS, ...DSA_PROBLEMS].map((pr) => [pr.id, pr])
-  ).values()
+    [...BASE_PROBLEMS, ...UNIQUE_ADDITIONS].map((problem) => [
+      problem.id,
+      problem,
+    ]),
+  ).values(),
 );
 
 export const PROBLEM_MAP: Record<string, Problem> = Object.fromEntries(
@@ -924,7 +942,26 @@ function deduplicateTopics(topicsList: Topic[]): Topic[] {
 
 // Merge all topic sources, then sort by the canonical roadmap order (scratch → expert).
 // Topics not found in the roadmap are appended at the end in their original order.
-const ALL_RAW_TOPICS = deduplicateTopics([...ORIGINAL_TOPICS, ...REMAINING_TOPICS, ...DSA_TOPICS]);
+const ALL_RAW_TOPICS = deduplicateTopics([
+  ...ORIGINAL_TOPICS,
+  ...REMAINING_TOPICS,
+  ...DSA_TOPICS,
+]);
+for (const [slug, ids] of Object.entries(ADDITIONAL_PLACEMENTS)) {
+  const topic = ALL_RAW_TOPICS.find((entry) => entry.slug === slug);
+  if (!topic) throw new Error(`Missing topic for additional problems: ${slug}`);
+
+  const problemIds = ids.filter((id) => UNIQUE_ADDITION_IDS.has(id));
+  if (problemIds.length === 0) continue;
+
+  const levels = (topic.levels ??= []);
+  const nextNumber = Math.max(0, ...levels.map((level) => level.number)) + 1;
+  levels.push({
+    number: nextNumber,
+    title: "Additional Practice",
+    problems: problemIds.map((id) => ({ id })),
+  });
+}
 const roadmapOrder = Object.fromEntries(ROADMAP.map((e) => [e.slug, e.order]));
 export const TOPICS: Topic[] = [...ALL_RAW_TOPICS].sort((a, b) => {
   const oa = roadmapOrder[a.slug] ?? 999;

@@ -133,6 +133,8 @@ function TopicPage() {
             { v: "all", l: "All platforms" },
             { v: "LeetCode", l: "LeetCode" },
             { v: "GFG", l: "GFG" },
+            { v: "CSES", l: "CSES" },
+            { v: "AtCoder", l: "AtCoder" },
           ]}
         />
         <FilterSelect

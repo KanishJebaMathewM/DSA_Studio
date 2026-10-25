@@ -9,7 +9,7 @@
 // Merge with problems.ts at the application level for full coverage.
 
 export type Difficulty = "Easy" | "Medium" | "Hard" | "Unverified";
-export type Platform = "LeetCode" | "GFG";
+export type Platform = "LeetCode" | "GFG" | "CSES" | "AtCoder";
 
 export interface Problem {
   id: string;

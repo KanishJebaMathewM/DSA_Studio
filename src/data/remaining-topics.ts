@@ -1,7 +1,7 @@
 // Remaining DSA topics — companion dataset to your existing db file.
 
 export type Difficulty = "Easy" | "Medium" | "Hard" | "Unverified";
-export type Platform = "LeetCode" | "GFG";
+export type Platform = "LeetCode" | "GFG" | "CSES" | "AtCoder";
 
 export interface Problem {
   id: string;

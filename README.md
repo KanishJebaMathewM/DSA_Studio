@@ -21,9 +21,9 @@ The primary motive behind DSA Studio is to eliminate the confusion and lack of s
                                   |
                                   v
 +-------------------------------------------------------------------+
-|                     DUAL-PLATFORM INTEGRATION                     |
+|                    MULTI-PLATFORM INTEGRATION                     |
 |                                                                   |
-|         [ LeetCode Problems ]    +    [ GeeksforGeeks ]           |
+|       [ LeetCode ] + [ GeeksforGeeks ] + [ CSES ] + [ AtCoder ]   |
 +-------------------------------------------------------------------+
                                   |
                                   v
@@ -41,8 +41,8 @@ The primary motive behind DSA Studio is to eliminate the confusion and lack of s
 ### 1. Zero-to-Hero Structured Roadmap
 DSA Studio categorizes topics into logical learning phases. Beginners start with basic math, array manipulation, and string processing before moving to pointers, recursion, tree traversals, graph algorithms, and dynamic programming.
 
-### 2. Dual Platform Parity (LeetCode and GeeksforGeeks)
-Practice problems are sourced and mapped across both LeetCode and GeeksforGeeks. This allows learners to practice equivalent problems on their preferred platform without missing core patterns.
+### 2. Multi-Platform Practice
+Practice problems link directly to LeetCode and GeeksforGeeks, with CSES graph and range-query challenges and the AtCoder Educational DP Contest included for deeper competitive-programming practice.
 
 ### 3. Comprehensive Classical Algorithm Coverage
 The catalog includes standard, essential computer science algorithms:
