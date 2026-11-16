@@ -18,6 +18,12 @@ export type ProgressMap = Record<string, ProgressEntry>;
 
 const STORAGE_KEY = "dsa-sheet-progress-v1";
 
+const EMPTY_MAP: ProgressMap = Object.freeze({});
+
+function getServerSnapshot(): ProgressMap {
+  return EMPTY_MAP;
+}
+
 const listeners = new Set<() => void>();
 let cache: ProgressMap | null = null;
 
@@ -26,13 +32,13 @@ function isBrowser(): boolean {
 }
 
 function read(): ProgressMap {
-  if (!isBrowser()) return {};
+  if (!isBrowser()) return EMPTY_MAP;
   if (cache) return cache;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    cache = raw ? (JSON.parse(raw) as ProgressMap) : {};
+    cache = raw ? (JSON.parse(raw) as ProgressMap) : EMPTY_MAP;
   } catch {
-    cache = {};
+    cache = EMPTY_MAP;
   }
   return cache;
 }
@@ -109,7 +115,7 @@ function subscribe(cb: () => void): () => void {
 
 // Hook: subscribe components to progress changes.
 export function useProgress(): ProgressMap {
-  return useSyncExternalStore(subscribe, read, () => ({}));
+  return useSyncExternalStore(subscribe, read, getServerSnapshot);
 }
 
 export function useProgressEntry(id: string): ProgressEntry {

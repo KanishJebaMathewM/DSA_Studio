@@ -1,16 +1,75 @@
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Search,
+  SlidersHorizontal,
+  Share2,
+  Network,
+  Sigma,
+  MoveHorizontal,
+  ArrowLeftRight,
+  ArrowDownAZ,
+  GitFork,
+  Link2,
+  Layers,
+  SearchCode,
+  Layers3,
+  ListOrdered,
+  GitBranch,
+  TrendingUp,
+  TreePine,
+  Binary,
+  CaseSensitive,
+  Grid3x3,
+  Calculator,
+  LayoutList,
+  Type,
+  Hash,
+  AppWindow,
+  type LucideIcon,
+} from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ProgressBar } from "@/components/ProgressBar";
-import { TOPICS } from "@/data/problems";
+import { Input } from "@/components/ui/input";
+import { TOPICS, PROBLEM_MAP } from "@/data/problems";
+import { ROADMAP, type RoadmapPhase } from "@/data/roadmap";
 import { useProgress } from "@/lib/progress-store";
+import { useGlobalSearch } from "@/lib/search-context";
+
+const iconMap: Record<string, LucideIcon> = {
+  Share2,
+  Network,
+  Sigma,
+  MoveHorizontal,
+  ArrowLeftRight,
+  ArrowDownAZ,
+  GitFork,
+  Link2,
+  Layers,
+  SearchCode,
+  Layers3,
+  ListOrdered,
+  GitBranch,
+  TrendingUp,
+  TreePine,
+  Binary,
+  CaseSensitive,
+  Grid3x3,
+  Calculator,
+  LayoutList,
+  Type,
+  Hash,
+  AppWindow,
+};
 
 export const Route = createFileRoute("/practice")({
   head: () => ({
     meta: [
-      { title: "Practice — DSA Sheet" },
+      { title: "Practice Roadmap — DSA Studio" },
       { name: "description", content: "Browse DSA topics and pick a track to practice." },
-      { property: "og:title", content: "Practice — DSA Sheet" },
+      { property: "og:title", content: "Practice Roadmap — DSA Studio" },
       { property: "og:description", content: "Choose a topic to start practicing." },
     ],
   }),
@@ -19,54 +78,239 @@ export const Route = createFileRoute("/practice")({
 
 function PracticePage() {
   const progress = useProgress();
+  const { query: globalQuery } = useGlobalSearch();
+  const [selectedPhase, setSelectedPhase] = useState<RoadmapPhase | "All">("All");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<"order" | "progress" | "name">("order");
+
+  // Pre-calculate topic stats
+  const topicData = useMemo(() => {
+    return ROADMAP.map((roadmapItem) => {
+      const topic = TOPICS.find((t) => t.slug === roadmapItem.slug);
+      const ids = new Set<string>();
+      topic?.levels?.forEach((lvl) => lvl.problems.forEach((lp) => ids.add(lp.id)));
+      topic?.parts?.forEach((p) =>
+        p.levels.forEach((lvl) => lvl.problems.forEach((lp) => ids.add(lp.id))),
+      );
+
+      const allIds = Array.from(ids);
+      const total = allIds.length;
+      const solved = allIds.filter((id) => progress[id]?.completed).length;
+      const pct = total ? Math.round((solved / total) * 100) : 0;
+
+      const easy = allIds.filter((id) => PROBLEM_MAP[id]?.difficulty === "Easy").length;
+      const medium = allIds.filter((id) => PROBLEM_MAP[id]?.difficulty === "Medium").length;
+      const hard = allIds.filter((id) => PROBLEM_MAP[id]?.difficulty === "Hard").length;
+
+      return {
+        ...roadmapItem,
+        topic,
+        total,
+        solved,
+        pct,
+        easy,
+        medium,
+        hard,
+      };
+    });
+  }, [progress]);
+
+  const filteredTopics = useMemo(() => {
+    let list = topicData;
+
+    if (selectedPhase !== "All") {
+      list = list.filter((t) => t.phase === selectedPhase);
+    }
+
+    const activeSearch = (search || globalQuery).trim().toLowerCase();
+    if (activeSearch) {
+      list = list.filter(
+        (t) =>
+          t.name.toLowerCase().includes(activeSearch) ||
+          t.tagline.toLowerCase().includes(activeSearch) ||
+          t.slug.toLowerCase().includes(activeSearch),
+      );
+    }
+
+    if (sortBy === "progress") {
+      list = [...list].sort((a, b) => b.pct - a.pct);
+    } else if (sortBy === "name") {
+      list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      list = [...list].sort((a, b) => a.order - b.order);
+    }
+
+    return list;
+  }, [topicData, selectedPhase, search, globalQuery, sortBy]);
+
+  const phases: { id: RoadmapPhase | "All"; label: string; count: number }[] = [
+    { id: "All", label: "All Tracks", count: 22 },
+    { id: "Foundation", label: "Foundation", count: 8 },
+    { id: "Intermediate", label: "Intermediate", count: 6 },
+    { id: "Advanced", label: "Advanced", count: 8 },
+  ];
 
   return (
-    <AppShell title="Practice">
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight">Topics</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Structured practice tracks organized by pattern and level.
-        </p>
-      </div>
+    <AppShell title="Practice Roadmap">
+      <div className="space-y-6">
+        {/* Page Header */}
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
+              Curated Practice Tracks
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A complete, zero-to-hero curriculum organized into 3 tiers of mastery.
+            </p>
+          </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {TOPICS.map((t) => {
-          const ids = new Set<string>();
-          t.levels?.forEach((lvl) => lvl.problems.forEach((lp) => ids.add(lp.id)));
-          t.parts?.forEach((p) =>
-            p.levels.forEach((lvl) => lvl.problems.forEach((lp) => ids.add(lp.id))),
-          );
-          const tt = ids.size;
-          const ts = Array.from(ids).filter((id) => progress[id]?.completed).length;
-          const tp = tt ? Math.round((ts / tt) * 100) : 0;
-          return (
-            <Link
-              key={t.slug}
-              to="/topics/$slug"
-              params={{ slug: t.slug }}
-              className="group rounded-lg border bg-surface p-5 transition-colors hover:border-primary/50"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-base font-semibold text-foreground">
-                    {t.name}
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">{t.short}</p>
-                </div>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-              </div>
-              <div className="mt-4">
-                <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>
-                    {ts} / {tt} solved
+          {/* Quick Filter Search */}
+          <div className="relative w-full sm:w-64">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Filter topics..."
+              className="h-8.5 rounded-lg border-border/80 bg-surface pl-8 text-xs focus-visible:border-primary/50"
+            />
+          </div>
+        </div>
+
+        {/* Phase Filter Tabs & Sort Controls */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto">
+            {phases.map((phase) => {
+              const active = selectedPhase === phase.id;
+              return (
+                <button
+                  key={phase.id}
+                  onClick={() => setSelectedPhase(phase.id)}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-accent text-xs font-medium transition-all ${
+                    active
+                      ? "bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                      : "text-muted-foreground hover:bg-hover hover:text-foreground"
+                  }`}
+                >
+                  <span>{phase.label}</span>
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 font-mono text-[10px] tabular-nums ${
+                      active ? "bg-white/20 text-white" : "bg-surface-muted text-muted-foreground"
+                    }`}
+                  >
+                    {phase.count}
                   </span>
-                  <span>{tp}%</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="font-accent text-xs text-muted-foreground">Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "order" | "progress" | "name")}
+              className="h-8 rounded-lg border border-border/80 bg-surface px-2.5 font-accent text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            >
+              <option value="order">Roadmap Sequence</option>
+              <option value="progress">Highest Completion</option>
+              <option value="name">Alphabetical</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Topic Grid */}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filteredTopics.map((item, index) => {
+            const Icon = iconMap[item.icon] ?? Layers;
+            const isCompleted = item.solved === item.total && item.total > 0;
+
+            const phaseStyles = {
+              Foundation: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
+              Intermediate: "text-sky-500 bg-sky-500/10 border-sky-500/20",
+              Advanced: "text-violet-500 bg-violet-500/10 border-violet-500/20",
+            }[item.phase];
+
+            return (
+              <Link
+                key={item.slug}
+                to="/topics/$slug"
+                params={{ slug: item.slug }}
+                style={{ animationDelay: `${Math.min(index * 30, 420)}ms` }}
+                className="premium-card animate-card-enter group relative flex flex-col justify-between rounded-xl border p-5 transition-all"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-surface-muted/50 text-foreground transition-all duration-200 group-hover:scale-105 group-hover:border-primary/40 group-hover:bg-primary-soft group-hover:text-primary">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`rounded border px-1.5 py-0.2 font-accent text-[10px] font-semibold uppercase tracking-wider ${phaseStyles}`}
+                          >
+                            {item.phase}
+                          </span>
+                          <span className="font-mono text-[11px] text-muted-foreground">
+                            #{item.order}
+                          </span>
+                        </div>
+                        <h3 className="mt-1 font-display text-base font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                          {item.name}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center">
+                      {isCompleted ? (
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-success/15 text-success">
+                          <Check className="h-3.5 w-3.5" />
+                        </div>
+                      ) : (
+                        <ArrowRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary" />
+                      )}
+                    </div>
+                  </div>
+
+                  <p className="mt-3 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                    {item.tagline}
+                  </p>
                 </div>
-                <ProgressBar value={tp} />
-              </div>
-            </Link>
-          );
-        })}
+
+                {/* Difficulty dots & Progress Bar */}
+                <div className="mt-5 border-t border-border/50 pt-3">
+                  <div className="mb-2 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 rounded-full bg-easy" />
+                        <span className="tabular-nums">{item.easy}</span>
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 rounded-full bg-medium" />
+                        <span className="tabular-nums">{item.medium}</span>
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 rounded-full bg-hard" />
+                        <span className="tabular-nums">{item.hard}</span>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 font-mono">
+                      <span className="text-xs font-semibold tabular-nums text-foreground">
+                        {item.solved}
+                        <span className="font-normal text-muted-foreground">/{item.total}</span>
+                      </span>
+                      <span className="rounded bg-surface-muted px-1 py-0.2 text-[10px] font-medium text-muted-foreground tabular-nums">
+                        {item.pct}%
+                      </span>
+                    </div>
+                  </div>
+                  <ProgressBar value={item.pct} className="h-1.5" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </AppShell>
   );

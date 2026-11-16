@@ -1,7 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, RotateCcw, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ProblemTable, type ProblemTableRow } from "@/components/ProblemTable";
 import { EmptyState } from "@/components/EmptyState";
+import { Button } from "@/components/ui/button";
 import { ALL_PLACEMENTS, PROBLEM_MAP } from "@/data/problems";
 import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
@@ -9,10 +11,10 @@ import { useGlobalSearch } from "@/lib/search-context";
 export const Route = createFileRoute("/revision")({
   head: () => ({
     meta: [
-      { title: "Revision — DSA Sheet" },
-      { name: "description", content: "Problems flagged for revision." },
-      { property: "og:title", content: "Revision — DSA Sheet" },
-      { property: "og:description", content: "Problems flagged for revision." },
+      { title: "Revision Queue — DSA Studio" },
+      { name: "description", content: "Problems flagged for revision and spaced practice." },
+      { property: "og:title", content: "Revision Queue — DSA Studio" },
+      { property: "og:description", content: "Problems flagged for revision and spaced practice." },
     ],
   }),
   component: RevisionPage,
@@ -37,21 +39,42 @@ function RevisionPage() {
   }
 
   return (
-    <AppShell title="Revision">
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight">Needs Revision</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Problems you've marked to revisit. Click the revision icon on any row to add or remove it.
-        </p>
+    <AppShell title="Revision Queue">
+      <div className="space-y-6">
+        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
+              Revision Queue
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Problems marked for reinforcement. Spaced repetition solidifies algorithmic intuition.
+            </p>
+          </div>
+          {rows.length > 0 && (
+            <span className="self-start rounded-full border border-warning/25 bg-warning/10 px-3 py-1 font-mono text-xs font-semibold text-warning tabular-nums sm:self-auto">
+              {rows.length} {rows.length === 1 ? "problem" : "problems"} to revisit
+            </span>
+          )}
+        </div>
+
+        {rows.length === 0 ? (
+          <EmptyState
+            icon={<RotateCcw className="h-6 w-6 text-warning" />}
+            title="All caught up!"
+            description="You don't have any problems waiting in your revision queue. Mark tricky problems to revisit them later."
+            action={
+              <Link to="/practice">
+                <Button className="gap-1.5 font-semibold">
+                  <span>Practice More Problems</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            }
+          />
+        ) : (
+          <ProblemTable rows={rows} />
+        )}
       </div>
-      {rows.length === 0 ? (
-        <EmptyState
-          title="No revision problems"
-          description="You're caught up with your revision list."
-        />
-      ) : (
-        <ProblemTable rows={rows} />
-      )}
     </AppShell>
   );
 }
