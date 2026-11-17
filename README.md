@@ -32,6 +32,7 @@ We have an active Discord server for discussing **DSA Studio**, sharing intervie
 </div>
 
 **Why join?**
+
 - 💬 **DSA Discussions:** Ask questions, share problem solutions, and explore optimal time/space complexity approaches.
 - 🤝 **Open-Source Collaboration:** Discuss issues, feature requests, and contribute to DSA Studio alongside fellow developers.
 - 🚀 **Explore Other Projects:** Brainstorm, share, and collaborate on other exciting open-source initiatives and developer tools.
@@ -65,6 +66,7 @@ We have an active Discord server for discussing **DSA Studio**, sharing intervie
 ## 🎯 Overview & Mission
 
 When preparing for technical interviews or competitive programming, learners often face common hurdles:
+
 - **Overwhelming volume:** Thousands of scattered problems without clear logical prerequisites.
 - **Lack of continuity:** Jumping haphazardly between unrelated topics without solidifying core mental models.
 - **Retention loss:** Forgetting solved problems due to the absence of spaced repetition and targeted revision.
@@ -109,6 +111,7 @@ When preparing for technical interviews or competitive programming, learners oft
 
 ## ✨ Core Features
 
+- **Instant Global Search & Autocomplete**: Real-time search popover in the top header indexing all topics and problems across the curriculum by title, difficulty, pattern, and phase, complete with keyboard shortcuts (`/` or `Ctrl+K` / `Cmd+K`) and strict viewport containment.
 - **Structured 22-Topic Progression**: Progressive roadmap starting from elementary mathematics and two-pointer basics up to complex graph theory, dynamic programming, and range query trees.
 - **Multi-Platform Integration**: Direct links to vetted problems on LeetCode and GeeksforGeeks, plus CSES and AtCoder challenge suites.
 - **Revision Queue & Bookmarks**: Flag problems that need spaced repetition revisit. Maintain a custom list of bookmarked questions for quick reference before interview rounds.
@@ -186,14 +189,14 @@ Foundation (Phases 1–8)  ──►  Intermediate (Phases 9–15)  ──►  A
 
 ## 🏛️ Classical Algorithm Coverage
 
-| Category | Classical Algorithms Included |
-| :--- | :--- |
-| **Shortest Path** | Dijkstra's Algorithm, Bellman-Ford, Floyd-Warshall |
-| **Minimum Spanning Tree** | Kruskal's Algorithm, Prim's Algorithm, Disjoint Set Union (DSU) |
+| Category                  | Classical Algorithms Included                                                                         |
+| :------------------------ | :---------------------------------------------------------------------------------------------------- |
+| **Shortest Path**         | Dijkstra's Algorithm, Bellman-Ford, Floyd-Warshall                                                    |
+| **Minimum Spanning Tree** | Kruskal's Algorithm, Prim's Algorithm, Disjoint Set Union (DSU)                                       |
 | **Graph Traversal & SCC** | Breadth-First Search, Depth-First Search, Kahn's Topological Sort, Tarjan's SCC, Kosaraju's Algorithm |
-| **String Matching** | Knuth-Morris-Pratt (KMP), Rabin-Karp Rolling Hash, Z-Algorithm, Manacher's Algorithm |
-| **Optimization & DP** | Kadane's Algorithm, 0/1 Knapsack, Unbounded Knapsack, LIS, LCS, MCM, Bitmask DP |
-| **Range Queries** | Fenwick Tree (Binary Indexed Tree), Segment Tree with Lazy Propagation |
+| **String Matching**       | Knuth-Morris-Pratt (KMP), Rabin-Karp Rolling Hash, Z-Algorithm, Manacher's Algorithm                  |
+| **Optimization & DP**     | Kadane's Algorithm, 0/1 Knapsack, Unbounded Knapsack, LIS, LCS, MCM, Bitmask DP                       |
+| **Range Queries**         | Fenwick Tree (Binary Indexed Tree), Segment Tree with Lazy Propagation                                |
 
 ---
 
@@ -260,20 +263,28 @@ DSA_Studio/
 
 ### Installation & Local Run
 
+This project does not have a separate API server or database to start. The
+TanStack Start/Nitro server is part of the app, so one development command runs
+both the frontend and its server-side runtime. User progress is saved in the
+browser's local storage.
+
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/KanishJebaMathewM/DSA_Studio.git
    cd DSA_Studio
    ```
 
 2. **Install dependencies:**
+
    ```bash
-   npm install
+   npm ci
    # or
    bun install
    ```
 
 3. **Start the development server:**
+
    ```bash
    npm run dev
    # or
@@ -281,17 +292,20 @@ DSA_Studio/
    ```
 
 4. **Open in your browser:**
-   Navigate to `http://localhost:3000` (or the port indicated in terminal).
+   Open the URL printed in the terminal. With the current configuration, it is
+   `http://127.0.0.1:8080/`.
+
+To stop the app, press `Ctrl+C` in the terminal running the development server.
 
 ### Available Scripts
 
-| Script | Purpose |
-| :--- | :--- |
-| `npm run dev` | Starts the Vite development server with hot-reload |
-| `npm run build` | Builds the client and server output for production |
-| `npm run preview` | Previews the production build locally |
-| `npm run lint` | Runs ESLint across the codebase |
-| `npm run format` | Formats all files using Prettier |
+| Script            | Purpose                                            |
+| :---------------- | :------------------------------------------------- |
+| `npm run dev`     | Starts the Vite development server with hot-reload |
+| `npm run build`   | Builds the client and server output for production |
+| `npm run preview` | Previews the production build locally              |
+| `npm run lint`    | Runs ESLint across the codebase                    |
+| `npm run format`  | Formats all files using Prettier                   |
 
 ---
 
@@ -328,8 +342,8 @@ Contributions are warmly welcomed! Whether you want to add new curated problems,
      "Problem Title",
      "https://leetcode.com/problems/your-problem-slug/",
      "LeetCode", // or "GFG" / "CSES" / "AtCoder"
-     "Medium"    // "Easy" | "Medium" | "Hard"
-   )
+     "Medium", // "Easy" | "Medium" | "Hard"
+   );
    ```
 4. **Test your changes** locally:
    ```bash

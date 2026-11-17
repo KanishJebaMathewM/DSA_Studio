@@ -1,7 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, RotateCcw, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ProblemTable, type ProblemTableRow } from "@/components/ProblemTable";
 import { EmptyState } from "@/components/EmptyState";
+import { Button } from "@/components/ui/button";
 import { ALL_PLACEMENTS, PROBLEM_MAP } from "@/data/problems";
 import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
@@ -9,10 +11,10 @@ import { useGlobalSearch } from "@/lib/search-context";
 export const Route = createFileRoute("/revision")({
   head: () => ({
     meta: [
-      { title: "Revision — DSA Sheet" },
-      { name: "description", content: "Problems flagged for revision." },
-      { property: "og:title", content: "Revision — DSA Sheet" },
-      { property: "og:description", content: "Problems flagged for revision." },
+      { title: "Revision Queue — DSA Studio" },
+      { name: "description", content: "Problems flagged for revision and spaced practice." },
+      { property: "og:title", content: "Revision Queue — DSA Studio" },
+      { property: "og:description", content: "Problems flagged for revision and spaced practice." },
     ],
   }),
   component: RevisionPage,
@@ -20,38 +22,81 @@ export const Route = createFileRoute("/revision")({
 
 function RevisionPage() {
   const progress = useProgress();
-  const { query } = useGlobalSearch();
+  const { query, setQuery } = useGlobalSearch();
   const q = query.trim().toLowerCase();
 
-  const ids = new Set<string>();
+  // Calculate total revision queue (unfiltered, deduplicated)
+  const allRevisionIds = new Set<string>();
+  for (const pl of ALL_PLACEMENTS) {
+    if (allRevisionIds.has(pl.problemId)) continue;
+    if (!progress[pl.problemId]?.needsRevision) continue;
+    allRevisionIds.add(pl.problemId);
+  }
+  const totalInQueue = allRevisionIds.size;
+
+  // Apply search filter
+  const filteredIds = new Set<string>();
   const rows: ProblemTableRow[] = [];
   for (const pl of ALL_PLACEMENTS) {
-    if (ids.has(pl.problemId)) continue;
+    if (filteredIds.has(pl.problemId)) continue;
     if (!progress[pl.problemId]?.needsRevision) continue;
     const pr = PROBLEM_MAP[pl.problemId];
     if (!pr) continue;
     if (q && !pr.title.toLowerCase().includes(q) && !pl.topicName.toLowerCase().includes(q))
       continue;
-    ids.add(pl.problemId);
+    filteredIds.add(pl.problemId);
     rows.push({ problem: pr, pattern: `${pl.topicName} • ${pl.levelTitle}` });
   }
 
   return (
-    <AppShell title="Revision">
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight">Needs Revision</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Problems you've marked to revisit. Click the revision icon on any row to add or remove it.
-        </p>
+    <AppShell title="Revision Queue">
+      <div className="space-y-6">
+        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
+              Revision Queue
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Problems marked for reinforcement. Spaced repetition solidifies algorithmic intuition.
+            </p>
+          </div>
+          {totalInQueue > 0 && (
+            <span className="self-start rounded-full border border-warning/25 bg-warning/10 px-3 py-1 font-mono text-xs font-semibold text-warning tabular-nums sm:self-auto">
+              {q ? `${rows.length} of ${totalInQueue}` : totalInQueue}{" "}
+              {totalInQueue === 1 ? "problem" : "problems"} to revisit
+            </span>
+          )}
+        </div>
+
+        {totalInQueue === 0 ? (
+          <EmptyState
+            icon={<RotateCcw className="h-6 w-6 text-warning" />}
+            title="All caught up!"
+            description="You don't have any problems waiting in your revision queue. Mark tricky problems to revisit them later."
+            action={
+              <Link to="/practice">
+                <Button className="gap-1.5 font-semibold">
+                  <span>Practice More Problems</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            }
+          />
+        ) : rows.length === 0 ? (
+          <EmptyState
+            icon={<RotateCcw className="h-6 w-6 text-warning" />}
+            title={`No revision problems match "${query}"`}
+            description="Your revision queue still has problems. Try a different search term."
+            action={
+              <Button variant="outline" onClick={() => setQuery("")} className="gap-1.5">
+                <span>Clear search</span>
+              </Button>
+            }
+          />
+        ) : (
+          <ProblemTable rows={rows} />
+        )}
       </div>
-      {rows.length === 0 ? (
-        <EmptyState
-          title="No revision problems"
-          description="You're caught up with your revision list."
-        />
-      ) : (
-        <ProblemTable rows={rows} />
-      )}
     </AppShell>
   );
 }
