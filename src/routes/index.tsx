@@ -8,6 +8,7 @@ import {
   ListTodo,
   RotateCcw,
   Sparkles,
+  X,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ProgressBar } from "@/components/ProgressBar";
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const progress = useProgress();
-  const { query } = useGlobalSearch();
+  const { query, setQuery } = useGlobalSearch();
 
   const total = UNIQUE_PROBLEM_IDS.length;
   const solvedIds = UNIQUE_PROBLEM_IDS.filter((id) => progress[id]?.completed);
@@ -84,34 +85,28 @@ function Dashboard() {
         {/* Global Search Banner (when search active from header) */}
         {query.trim() && (
           <div className="flex items-center justify-between rounded-xl border border-primary/20 bg-primary-soft p-4 text-xs text-muted-foreground sm:text-sm">
-            <div>
+            <div className="min-w-0 flex-1 pr-3">
               Searching for <strong className="text-foreground">"{query}"</strong> — explore topics
               and problems in the practice catalog.
             </div>
-            <Link
-              to="/practice"
-              className="inline-flex items-center gap-1 font-semibold text-primary hover:underline ml-3 shrink-0"
-            >
-              Open Roadmap
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        )}
-
-        {/* Global Search Banner (when search active from header) */}
-        {query.trim() && (
-          <div className="flex items-center justify-between rounded-xl border border-primary/20 bg-primary-soft p-4 text-xs text-muted-foreground sm:text-sm">
-            <div>
-              Searching for <strong className="text-foreground">"{query}"</strong> — explore topics
-              and problems in the practice catalog.
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                to="/practice"
+                className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+              >
+                Open Roadmap
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                className="rounded-md p-1 text-muted-foreground hover:bg-hover hover:text-foreground transition-colors"
+                title="Dismiss banner"
+                aria-label="Dismiss banner"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
             </div>
-            <Link
-              to="/practice"
-              className="inline-flex items-center gap-1 font-semibold text-primary hover:underline ml-3 shrink-0"
-            >
-              Open Roadmap
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
           </div>
         )}
 
