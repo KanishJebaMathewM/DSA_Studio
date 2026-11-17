@@ -67,7 +67,8 @@ export function defaultEntry(): ProgressEntry {
 }
 
 export function getEntry(id: string): ProgressEntry {
-  return read()[id] ?? defaultEntry();
+  const entry = read()[id];
+  return entry ? { ...defaultEntry(), ...entry } : defaultEntry();
 }
 
 export function getAllProgress(): ProgressMap {
@@ -76,7 +77,7 @@ export function getAllProgress(): ProgressMap {
 
 function update(id: string, patch: Partial<ProgressEntry>): void {
   const current = read();
-  const existing = current[id] ?? defaultEntry();
+  const existing = current[id] ? { ...defaultEntry(), ...current[id] } : defaultEntry();
   const next: ProgressMap = { ...current, [id]: { ...existing, ...patch } };
   write(next);
 }
@@ -120,5 +121,6 @@ export function useProgress(): ProgressMap {
 
 export function useProgressEntry(id: string): ProgressEntry {
   const all = useProgress();
-  return all[id] ?? defaultEntry();
+  const entry = all[id];
+  return entry ? { ...defaultEntry(), ...entry } : defaultEntry();
 }

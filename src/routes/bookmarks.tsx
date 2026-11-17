@@ -22,18 +22,29 @@ export const Route = createFileRoute("/bookmarks")({
 
 function BookmarksPage() {
   const progress = useProgress();
-  const { query } = useGlobalSearch();
+  const { query, setQuery } = useGlobalSearch();
   const q = query.trim().toLowerCase();
 
+  // Calculate total bookmarks (unfiltered)
   const seen = new Set<string>();
-  const rows: ProblemTableRow[] = [];
+  let totalBookmarks = 0;
   for (const pl of ALL_PLACEMENTS) {
     if (seen.has(pl.problemId)) continue;
+    if (!progress[pl.problemId]?.bookmarked) continue;
+    seen.add(pl.problemId);
+    totalBookmarks++;
+  }
+
+  // Apply search filter
+  const filteredSeen = new Set<string>();
+  const rows: ProblemTableRow[] = [];
+  for (const pl of ALL_PLACEMENTS) {
+    if (filteredSeen.has(pl.problemId)) continue;
     if (!progress[pl.problemId]?.bookmarked) continue;
     const pr = PROBLEM_MAP[pl.problemId];
     if (!pr) continue;
     if (q && !pr.title.toLowerCase().includes(q)) continue;
-    seen.add(pl.problemId);
+    filteredSeen.add(pl.problemId);
     rows.push({ problem: pr, pattern: `${pl.topicName} • ${pl.levelTitle}` });
   }
 
@@ -49,14 +60,15 @@ function BookmarksPage() {
               Your starred challenges saved for quick access and deep-dive review.
             </p>
           </div>
-          {rows.length > 0 && (
+          {totalBookmarks > 0 && (
             <span className="self-start rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 font-mono text-xs font-semibold text-amber-500 tabular-nums sm:self-auto">
-              {rows.length} {rows.length === 1 ? "problem" : "problems"} saved
+              {q ? `${rows.length} of ${totalBookmarks}` : totalBookmarks}{" "}
+              {totalBookmarks === 1 ? "bookmark" : "bookmarks"}
             </span>
           )}
         </div>
 
-        {rows.length === 0 ? (
+        {totalBookmarks === 0 ? (
           <EmptyState
             icon={<Bookmark className="h-6 w-6 text-amber-500" />}
             title="No bookmarked problems yet"
@@ -68,6 +80,17 @@ function BookmarksPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
+            }
+          />
+        ) : rows.length === 0 ? (
+          <EmptyState
+            icon={<Bookmark className="h-6 w-6 text-amber-500" />}
+            title={`No bookmarks match "${query}"`}
+            description="Your bookmarks are still saved. Try a different search term."
+            action={
+              <Button variant="outline" onClick={() => setQuery("")} className="gap-1.5">
+                <span>Clear search</span>
+              </Button>
             }
           />
         ) : (

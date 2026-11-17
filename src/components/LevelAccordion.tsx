@@ -8,11 +8,13 @@ import { PROBLEM_MAP } from "@/data/problems";
 
 export function LevelAccordion({
   level,
+  fullLevel,
   isOpen,
   onToggle,
   defaultOpen = false,
 }: {
   level: Level;
+  fullLevel?: Level;
   isOpen?: boolean;
   onToggle?: () => void;
   defaultOpen?: boolean;
@@ -34,8 +36,10 @@ export function LevelAccordion({
     pattern: level.title,
   }));
 
-  const total = rows.length;
-  const solved = rows.filter((r) => progress[r.problem.id]?.completed).length;
+  // Completion & progress calculated independently of filtered rows (Bug #5 fix)
+  const baseProblems = fullLevel?.problems ?? level.problems;
+  const total = baseProblems.length;
+  const solved = baseProblems.filter((lp) => progress[lp.id]?.completed).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
   const done = solved === total && total > 0;
 
@@ -98,6 +102,7 @@ export function LevelAccordion({
         id={`accordion-panel-${level.number}`}
         role="region"
         aria-labelledby={`accordion-header-${level.number}`}
+        aria-hidden={!open}
         className={`accordion-collapse-grid ${open ? "is-open" : ""}`}
       >
         <div>

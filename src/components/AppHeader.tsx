@@ -33,7 +33,8 @@ export function AppHeader({ title }: { title: string }) {
       (r) =>
         r.name.toLowerCase().includes(trimmed) ||
         r.tagline.toLowerCase().includes(trimmed) ||
-        r.slug.toLowerCase().includes(trimmed),
+        r.slug.toLowerCase().includes(trimmed) ||
+        r.phase.toLowerCase().includes(trimmed),
     ).slice(0, 4);
 
     const seenIds = new Set<string>();
@@ -50,7 +51,8 @@ export function AppHeader({ title }: { title: string }) {
       if (
         prob.title.toLowerCase().includes(trimmed) ||
         pl.topicName.toLowerCase().includes(trimmed) ||
-        pl.levelTitle.toLowerCase().includes(trimmed)
+        pl.levelTitle.toLowerCase().includes(trimmed) ||
+        prob.difficulty.toLowerCase().includes(trimmed)
       ) {
         seenIds.add(pl.problemId);
         problems.push({ placement: pl, problem: prob });
@@ -158,7 +160,7 @@ export function AppHeader({ title }: { title: string }) {
 
         {/* Floating Results Popover - Out-of-flow absolute positioning bounded below input */}
         {isOpen && trimmed && (
-          <div className="absolute right-0 top-full z-50 mt-1.5 w-[min(420px,calc(100vw-2rem))] max-h-[min(420px,calc(100vh-5rem))] overflow-y-auto rounded-xl border border-border/80 bg-surface/98 p-2 shadow-2xl backdrop-blur-2xl">
+          <div className="fixed inset-x-3 top-16 z-50 mt-1.5 w-[min(420px,calc(100vw-2rem))] max-h-[min(420px,calc(100vh-5rem))] overflow-y-auto rounded-xl border border-border/80 bg-surface/98 p-2 shadow-2xl backdrop-blur-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full">
             {searchResults.topics.length === 0 && searchResults.problems.length === 0 ? (
               <div className="py-6 text-center text-xs text-muted-foreground">
                 No topics or problems found matching{" "}

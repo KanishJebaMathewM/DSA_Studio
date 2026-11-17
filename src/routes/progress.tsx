@@ -10,13 +10,16 @@ import {
   Search,
   Sparkles,
   Trophy,
+  X,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ProgressBar } from "@/components/ProgressBar";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PROBLEM_MAP, TOPICS, UNIQUE_PROBLEM_IDS, type Platform } from "@/data/problems";
 import { ROADMAP, type RoadmapPhase } from "@/data/roadmap";
 import { useProgress } from "@/lib/progress-store";
+import { useGlobalSearch } from "@/lib/search-context";
 
 export const Route = createFileRoute("/progress")({
   head: () => ({
@@ -49,6 +52,7 @@ function topicStats(slug: string, progress: ReturnType<typeof useProgress>) {
 function ProgressPage() {
   const progress = useProgress();
   const [topicFilter, setTopicFilter] = useState("");
+  const { query: globalQuery, setQuery: setGlobalQuery } = useGlobalSearch();
 
   const total = UNIQUE_PROBLEM_IDS.length;
   const solvedIds = UNIQUE_PROBLEM_IDS.filter((id) => progress[id]?.completed);
@@ -109,10 +113,25 @@ function ProgressPage() {
   }, [progress]);
 
   const filteredTopicRows = useMemo(() => {
-    if (!topicFilter.trim()) return topicRows;
-    const q = topicFilter.toLowerCase();
-    return topicRows.filter((r) => r.topic.name.toLowerCase().includes(q));
-  }, [topicRows, topicFilter]);
+    const tq = topicFilter.trim().toLowerCase();
+    const gq = globalQuery.trim().toLowerCase();
+
+    return topicRows.filter((r) => {
+      // Global search matches topic name or roadmap tier phase
+      if (gq) {
+        const matchGlobal =
+          r.topic.name.toLowerCase().includes(gq) ||
+          (r.roadmap && r.roadmap.phase.toLowerCase().includes(gq));
+        if (!matchGlobal) return false;
+      }
+      // Local filter explicitly refines by topic name
+      if (tq) {
+        const matchLocal = r.topic.name.toLowerCase().includes(tq);
+        if (!matchLocal) return false;
+      }
+      return true;
+    });
+  }, [topicRows, topicFilter, globalQuery]);
 
   const strongest = [...topicRows].sort((a, b) => b.pct - a.pct).slice(0, 4);
   const weakest = [...topicRows]
@@ -320,53 +339,110 @@ function ProgressPage() {
           className="premium-card animate-card-enter rounded-xl border p-5"
         >
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-            <h3 className="font-display text-sm font-semibold tracking-tight text-foreground">
-              All Topic Tracks ({topicRows.length})
-            </h3>
-            <div className="relative w-full sm:w-60">
+            <div className="flex items-center gap-3">
+              <h3 className="font-display text-sm font-semibold tracking-tight text-foreground">
+                All Topic Tracks ({topicRows.length})
+              </h3>
+              {globalQuery.trim() && (
+                <div className="flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary-soft px-2.5 py-0.5 text-[11px] text-muted-foreground">
+                  <span>
+                    Global: <strong className="text-foreground font-mono">"{globalQuery}"</strong>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setGlobalQuery("")}
+                    className="rounded-full p-0.5 hover:bg-hover hover:text-foreground"
+                    title="Clear global search filter"
+                    aria-label="Clear global search filter"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="relative w-full sm:w-64">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={topicFilter}
                 onChange={(e) => setTopicFilter(e.target.value)}
-                placeholder="Search topic..."
-                className="h-8 rounded-lg border-border/70 bg-surface pl-8 text-xs focus-visible:border-primary/50"
+                placeholder="Filter topics..."
+                className="h-8 rounded-lg border-border/70 bg-surface pl-8 pr-7 text-xs focus-visible:border-primary/50"
               />
+              {topicFilter && (
+                <button
+                  type="button"
+                  onClick={() => setTopicFilter("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="Clear topic filter"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="mt-4 divide-y divide-border/60">
-            {filteredTopicRows.map((r) => (
-              <Link
-                key={r.topic.slug}
-                to="/topics/$slug"
-                params={{ slug: r.topic.slug }}
-                className="group flex flex-col justify-between gap-2 py-3 sm:flex-row sm:items-center hover:bg-hover/50 rounded-lg px-2 -mx-2 transition-colors"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-display font-medium text-xs text-foreground group-hover:text-primary transition-colors">
-                      {r.topic.name}
-                    </span>
-                    {r.roadmap && (
-                      <span className="rounded bg-surface-muted px-1.5 py-0.2 font-accent text-[10px] text-muted-foreground">
-                        {r.roadmap.phase}
+          {filteredTopicRows.length === 0 ? (
+            <div className="py-8 text-center text-xs text-muted-foreground">
+              <p>No topics match your active search filters.</p>
+              <div className="mt-3 flex justify-center gap-2">
+                {topicFilter && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setTopicFilter("")}
+                    className="h-7 text-xs"
+                  >
+                    Clear local filter
+                  </Button>
+                )}
+                {globalQuery.trim() && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setGlobalQuery("")}
+                    className="h-7 text-xs"
+                  >
+                    Clear global search
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-4 divide-y divide-border/60">
+              {filteredTopicRows.map((r) => (
+                <Link
+                  key={r.topic.slug}
+                  to="/topics/$slug"
+                  params={{ slug: r.topic.slug }}
+                  className="group flex flex-col justify-between gap-2 py-3 sm:flex-row sm:items-center hover:bg-hover/50 rounded-lg px-2 -mx-2 transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-display font-medium text-xs text-foreground group-hover:text-primary transition-colors">
+                        {r.topic.name}
                       </span>
-                    )}
+                      {r.roadmap && (
+                        <span className="rounded bg-surface-muted px-1.5 py-0.2 font-accent text-[10px] text-muted-foreground">
+                          {r.roadmap.phase}
+                        </span>
+                      )}
+                    </div>
+                    <ProgressBar value={r.pct} className="mt-2 h-1.5 max-w-sm" />
                   </div>
-                  <ProgressBar value={r.pct} className="mt-2 h-1.5 max-w-sm" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs tabular-nums text-muted-foreground">
-                    {r.solved} / {r.total}
-                  </span>
-                  <span className="w-10 text-right font-mono text-xs font-semibold tabular-nums text-foreground">
-                    {r.pct}%
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </div>
-              </Link>
-            ))}
-          </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                      {r.solved} / {r.total}
+                    </span>
+                    <span className="w-10 text-right font-mono text-xs font-semibold tabular-nums text-foreground">
+                      {r.pct}%
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </AppShell>

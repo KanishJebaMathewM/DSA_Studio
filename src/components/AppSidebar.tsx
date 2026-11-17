@@ -122,26 +122,26 @@ export function AppSidebar() {
     [progress],
   );
 
-  const tiers = [
-    {
-      name: "Foundation",
-      label: "Foundation Tier",
-      badge: "8 topics",
-      topics: ROADMAP.filter((r) => r.phase === "Foundation"),
-    },
-    {
-      name: "Intermediate",
-      label: "Intermediate Tier",
-      badge: "6 topics",
-      topics: ROADMAP.filter((r) => r.phase === "Intermediate"),
-    },
-    {
-      name: "Advanced",
-      label: "Advanced Tier",
-      badge: "8 topics",
-      topics: ROADMAP.filter((r) => r.phase === "Advanced"),
-    },
-  ];
+  const tiers = useMemo(
+    () => [
+      {
+        name: "Foundation",
+        label: "Foundation Tier",
+        topics: ROADMAP.filter((r) => r.phase === "Foundation"),
+      },
+      {
+        name: "Intermediate",
+        label: "Intermediate Tier",
+        topics: ROADMAP.filter((r) => r.phase === "Intermediate"),
+      },
+      {
+        name: "Advanced",
+        label: "Advanced Tier",
+        topics: ROADMAP.filter((r) => r.phase === "Advanced"),
+      },
+    ],
+    [],
+  );
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border/80">
@@ -269,14 +269,16 @@ export function AppSidebar() {
           return (
             <SidebarGroup key={tier.name} className="py-1">
               {!collapsed ? (
-                <div
+                <button
+                  type="button"
                   onClick={() => toggleTier(tier.name)}
-                  className="flex cursor-pointer items-center justify-between px-2 py-1.5 font-accent text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground select-none"
+                  aria-expanded={isOpen}
+                  className="flex w-full cursor-pointer items-center justify-between px-2 py-1.5 font-accent text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground select-none"
                 >
                   <span>{tier.label}</span>
                   <div className="flex items-center gap-1.5">
                     <span className="font-mono text-[10px] font-normal lowercase tracking-normal text-muted-foreground/70">
-                      {tier.badge}
+                      {tier.topics.length} topics
                     </span>
                     <ChevronDown
                       className={`h-3.5 w-3.5 transition-transform duration-200 ${
@@ -284,7 +286,7 @@ export function AppSidebar() {
                       }`}
                     />
                   </div>
-                </div>
+                </button>
               ) : (
                 <SidebarGroupLabel className="font-accent">{tier.name[0]}</SidebarGroupLabel>
               )}

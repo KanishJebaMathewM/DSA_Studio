@@ -1,17 +1,14 @@
 import type { ReactNode } from "react";
 import { Inbox } from "lucide-react";
 
-export function EmptyState({
-  title,
-  description,
-  action,
-  icon,
-}: {
+export interface EmptyStateProps {
   title: string;
   description?: string;
   action?: ReactNode;
   icon?: ReactNode;
-}) {
+}
+
+export function EmptyState({ title, description, action, icon }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/80 bg-surface-muted/30 px-6 py-14 text-center">
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-border/60 bg-surface shadow-xs text-muted-foreground">

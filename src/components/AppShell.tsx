@@ -10,12 +10,12 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
 
   return (
     <SidebarProvider>
-      {/* Prominent top loading bar on route navigation */}
+      {/* Top loading bar on route navigation */}
       {isLoading && (
-        <div className="fixed top-0 left-0 right-0 z-[100] h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-[0_0_14px_rgba(99,102,241,0.9)] animate-pulse" />
+        <div className="fixed top-0 left-0 right-0 z-[100] h-0.5 bg-gradient-to-r from-amber-700 via-amber-500 to-yellow-400 animate-pulse" />
       )}
 
-      <div className="flex min-h-screen w-full bg-background dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.07),transparent)]">
+      <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <AppHeader title={title} />

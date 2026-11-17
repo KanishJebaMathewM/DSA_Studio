@@ -47,7 +47,11 @@ export function ProblemTable({ rows }: { rows: ProblemTableRow[] }) {
                     <Checkbox
                       checked={done}
                       onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}
-                      aria-label="Mark completed"
+                      aria-label={
+                        done
+                          ? `Mark ${problem.title} as incomplete`
+                          : `Mark ${problem.title} as completed`
+                      }
                       className="transition-transform active:scale-95"
                     />
                   </td>
@@ -144,6 +148,11 @@ export function ProblemTable({ rows }: { rows: ProblemTableRow[] }) {
                 <Checkbox
                   checked={done}
                   onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}
+                  aria-label={
+                    done
+                      ? `Mark ${problem.title} as incomplete`
+                      : `Mark ${problem.title} as completed`
+                  }
                   className="mt-1"
                 />
                 <div className="min-w-0 flex-1">

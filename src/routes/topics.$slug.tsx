@@ -55,7 +55,7 @@ export const Route = createFileRoute("/topics/$slug")({
 function TopicPage() {
   const { topic } = Route.useLoaderData() as { topic: import("@/data/problems").Topic };
   const progress = useProgress();
-  const { query: globalQuery } = useGlobalSearch();
+  const { query: globalQuery, setQuery: setGlobalQuery } = useGlobalSearch();
 
   const [localSearch, setLocalSearch] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("all");
@@ -115,6 +115,12 @@ function TopicPage() {
     const q = activeQuery;
     return allLevels
       .map((lvl) => {
+        const topicMatch =
+          topic.name.toLowerCase().includes(q) ||
+          topic.slug.toLowerCase().includes(q) ||
+          (roadmapItem && roadmapItem.phase.toLowerCase().includes(q)) ||
+          (roadmapItem && roadmapItem.tagline.toLowerCase().includes(q));
+
         const problems = lvl.problems.filter((lp) => {
           const pr = PROBLEM_MAP[lp.id];
           if (!pr) return false;
@@ -122,7 +128,7 @@ function TopicPage() {
             q &&
             !pr.title.toLowerCase().includes(q) &&
             !lvl.title.toLowerCase().includes(q) &&
-            !topic.name.toLowerCase().includes(q)
+            !topicMatch
           )
             return false;
           if (difficulty !== "all" && pr.difficulty !== difficulty) return false;
@@ -137,7 +143,17 @@ function TopicPage() {
         return { ...lvl, problems };
       })
       .filter((lvl) => lvl.problems.length > 0);
-  }, [allLevels, activeQuery, difficulty, status, platform, progress, topic.name]);
+  }, [
+    allLevels,
+    activeQuery,
+    difficulty,
+    status,
+    platform,
+    progress,
+    topic.name,
+    topic.slug,
+    roadmapItem,
+  ]);
 
   // When filters are active and current open level is not in the filtered set, auto-open first match
   useEffect(() => {
@@ -156,6 +172,7 @@ function TopicPage() {
     setDifficulty("all");
     setStatus("all");
     setPlatform("all");
+    setGlobalQuery("");
   };
 
   const statusOptions = [
@@ -321,6 +338,9 @@ function TopicPage() {
             {filteredLevels.map((lvl, index) => {
               const levelKey = `${lvl.number}-${lvl.title}`;
               const isOpen = openLevelKey === levelKey;
+              const fullLevel = allLevels.find(
+                (l) => l.number === lvl.number && l.title === lvl.title,
+              );
               return (
                 <div
                   key={`${topic.slug}-${lvl.number}-${lvl.title}`}
@@ -329,6 +349,7 @@ function TopicPage() {
                 >
                   <LevelAccordion
                     level={lvl}
+                    fullLevel={fullLevel}
                     isOpen={isOpen}
                     onToggle={() => {
                       setOpenLevelKey((prev) => (prev === levelKey ? null : levelKey));

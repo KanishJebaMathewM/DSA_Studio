@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting"; // neutral console reporter
+import { SearchProvider } from "@/lib/search-context";
 
 function NotFoundComponent() {
   return (
@@ -126,8 +127,6 @@ function RootShell({ children }: { children: ReactNode }) {
     </html>
   );
 }
-
-import { SearchProvider } from "@/lib/search-context";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();

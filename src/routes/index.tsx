@@ -8,7 +8,6 @@ import {
   ListTodo,
   RotateCcw,
   Sparkles,
-  Trophy,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ProgressBar } from "@/components/ProgressBar";
@@ -17,6 +16,7 @@ import { PlatformBadge } from "@/components/PlatformBadge";
 import { ALL_PLACEMENTS, PROBLEM_MAP, TOPICS, UNIQUE_PROBLEM_IDS } from "@/data/problems";
 import { ROADMAP } from "@/data/roadmap";
 import { useProgress } from "@/lib/progress-store";
+import { useGlobalSearch } from "@/lib/search-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,45 +38,9 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-function getMasteryRank(solved: number) {
-  if (solved >= 300)
-    return {
-      title: "Grandmaster",
-      tier: "Tier V",
-      color: "text-amber-500",
-      bg: "bg-amber-500/10 border-amber-500/25",
-    };
-  if (solved >= 175)
-    return {
-      title: "Interview Contender",
-      tier: "Tier IV",
-      color: "text-violet-500",
-      bg: "bg-violet-500/10 border-violet-500/25",
-    };
-  if (solved >= 75)
-    return {
-      title: "Algorithm Specialist",
-      tier: "Tier III",
-      color: "text-sky-500",
-      bg: "bg-sky-500/10 border-sky-500/25",
-    };
-  if (solved >= 25)
-    return {
-      title: "Code Challenger",
-      tier: "Tier II",
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10 border-emerald-500/25",
-    };
-  return {
-    title: "Apprentice",
-    tier: "Tier I",
-    color: "text-primary",
-    bg: "bg-primary-soft border-primary/25",
-  };
-}
-
 function Dashboard() {
   const progress = useProgress();
+  const { query } = useGlobalSearch();
 
   const total = UNIQUE_PROBLEM_IDS.length;
   const solvedIds = UNIQUE_PROBLEM_IDS.filter((id) => progress[id]?.completed);
@@ -103,7 +67,6 @@ function Dashboard() {
   const hardPct = hardTotal ? Math.round((hardSolved / hardTotal) * 100) : 0;
 
   const revision = Object.entries(progress).filter(([, e]) => e.needsRevision);
-  const rank = getMasteryRank(solved);
 
   // Next unsolved problem (Continue Practicing)
   const nextPlacement = ALL_PLACEMENTS.find((pl) => !progress[pl.problemId]?.completed);
@@ -118,6 +81,40 @@ function Dashboard() {
   return (
     <AppShell title="Dashboard">
       <div className="space-y-6">
+        {/* Global Search Banner (when search active from header) */}
+        {query.trim() && (
+          <div className="flex items-center justify-between rounded-xl border border-primary/20 bg-primary-soft p-4 text-xs text-muted-foreground sm:text-sm">
+            <div>
+              Searching for <strong className="text-foreground">"{query}"</strong> — explore topics
+              and problems in the practice catalog.
+            </div>
+            <Link
+              to="/practice"
+              className="inline-flex items-center gap-1 font-semibold text-primary hover:underline ml-3 shrink-0"
+            >
+              Open Roadmap
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+
+        {/* Global Search Banner (when search active from header) */}
+        {query.trim() && (
+          <div className="flex items-center justify-between rounded-xl border border-primary/20 bg-primary-soft p-4 text-xs text-muted-foreground sm:text-sm">
+            <div>
+              Searching for <strong className="text-foreground">"{query}"</strong> — explore topics
+              and problems in the practice catalog.
+            </div>
+            <Link
+              to="/practice"
+              className="inline-flex items-center gap-1 font-semibold text-primary hover:underline ml-3 shrink-0"
+            >
+              Open Roadmap
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+
         {/* Welcome & Mastery Banner */}
         <div className="premium-card animate-card-enter relative overflow-hidden rounded-xl border p-6">
           <div className="relative z-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -126,11 +123,8 @@ function Dashboard() {
                 <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
                   Welcome back
                 </h2>
-                <span
-                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 font-accent text-xs font-semibold ${rank.bg} ${rank.color}`}
-                >
-                  <Trophy className="h-3 w-3" />
-                  {rank.title} • {rank.tier}
+                <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary-soft px-2.5 py-0.5 font-mono text-xs font-semibold text-primary">
+                  {pct}% completed
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground sm:text-sm">

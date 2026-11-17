@@ -22,19 +22,29 @@ export const Route = createFileRoute("/revision")({
 
 function RevisionPage() {
   const progress = useProgress();
-  const { query } = useGlobalSearch();
+  const { query, setQuery } = useGlobalSearch();
   const q = query.trim().toLowerCase();
 
-  const ids = new Set<string>();
+  // Calculate total revision queue (unfiltered, deduplicated)
+  const allRevisionIds = new Set<string>();
+  for (const pl of ALL_PLACEMENTS) {
+    if (allRevisionIds.has(pl.problemId)) continue;
+    if (!progress[pl.problemId]?.needsRevision) continue;
+    allRevisionIds.add(pl.problemId);
+  }
+  const totalInQueue = allRevisionIds.size;
+
+  // Apply search filter
+  const filteredIds = new Set<string>();
   const rows: ProblemTableRow[] = [];
   for (const pl of ALL_PLACEMENTS) {
-    if (ids.has(pl.problemId)) continue;
+    if (filteredIds.has(pl.problemId)) continue;
     if (!progress[pl.problemId]?.needsRevision) continue;
     const pr = PROBLEM_MAP[pl.problemId];
     if (!pr) continue;
     if (q && !pr.title.toLowerCase().includes(q) && !pl.topicName.toLowerCase().includes(q))
       continue;
-    ids.add(pl.problemId);
+    filteredIds.add(pl.problemId);
     rows.push({ problem: pr, pattern: `${pl.topicName} • ${pl.levelTitle}` });
   }
 
@@ -50,14 +60,15 @@ function RevisionPage() {
               Problems marked for reinforcement. Spaced repetition solidifies algorithmic intuition.
             </p>
           </div>
-          {rows.length > 0 && (
+          {totalInQueue > 0 && (
             <span className="self-start rounded-full border border-warning/25 bg-warning/10 px-3 py-1 font-mono text-xs font-semibold text-warning tabular-nums sm:self-auto">
-              {rows.length} {rows.length === 1 ? "problem" : "problems"} to revisit
+              {q ? `${rows.length} of ${totalInQueue}` : totalInQueue}{" "}
+              {totalInQueue === 1 ? "problem" : "problems"} to revisit
             </span>
           )}
         </div>
 
-        {rows.length === 0 ? (
+        {totalInQueue === 0 ? (
           <EmptyState
             icon={<RotateCcw className="h-6 w-6 text-warning" />}
             title="All caught up!"
@@ -69,6 +80,17 @@ function RevisionPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
+            }
+          />
+        ) : rows.length === 0 ? (
+          <EmptyState
+            icon={<RotateCcw className="h-6 w-6 text-warning" />}
+            title={`No revision problems match "${query}"`}
+            description="Your revision queue still has problems. Try a different search term."
+            action={
+              <Button variant="outline" onClick={() => setQuery("")} className="gap-1.5">
+                <span>Clear search</span>
+              </Button>
             }
           />
         ) : (
