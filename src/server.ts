@@ -11,10 +11,22 @@ let serverEntryPromise: Promise<ServerEntry> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
-    serverEntryPromise = import("@tanstack/react-start/server-entry").then(
+    const loading = import("@tanstack/react-start/server-entry").then(
       (m) => (m.default ?? m) as ServerEntry,
     );
+
+    serverEntryPromise = loading;
+
+    try {
+      return await loading;
+    } catch (error) {
+      if (serverEntryPromise === loading) {
+        serverEntryPromise = undefined;
+      }
+      throw error;
+    }
   }
+
   return serverEntryPromise;
 }
 
