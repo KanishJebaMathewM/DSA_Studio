@@ -91,31 +91,37 @@ export function getAllProgress(): ProgressMap {
   return read();
 }
 
-function update(id: string, patch: Partial<ProgressEntry>): void {
+type EntryPatch = Partial<ProgressEntry> | ((entry: ProgressEntry) => Partial<ProgressEntry>);
+
+function update(id: string, patch: EntryPatch): void {
+  // Re-read from storage before writing so we build on the latest data,
+  // not a stale in-memory copy. Otherwise a write from this tab could
+  // overwrite changes another tab saved since we last read.
+  cache = null;
   const current = read();
   const existing = current[id] ? { ...defaultEntry(), ...current[id] } : defaultEntry();
-  const next: ProgressMap = { ...current, [id]: { ...existing, ...patch } };
+  // Updater functions receive the freshly read entry, so toggles flip the
+  // latest stored value rather than a stale cached one.
+  const changes = typeof patch === "function" ? patch(existing) : patch;
+  const next: ProgressMap = { ...current, [id]: { ...existing, ...changes } };
   write(next);
 }
 
 export const progressRepo = {
   toggleCompleted(id: string): void {
-    const e = getEntry(id);
-    update(id, {
+    update(id, (e) => ({
       completed: !e.completed,
       completedAt: !e.completed ? new Date().toISOString() : null,
-    });
+    }));
   },
   toggleBookmarked(id: string): void {
-    const e = getEntry(id);
-    update(id, { bookmarked: !e.bookmarked });
+    update(id, (e) => ({ bookmarked: !e.bookmarked }));
   },
   toggleNeedsRevision(id: string): void {
-    const e = getEntry(id);
-    update(id, {
+    update(id, (e) => ({
       needsRevision: !e.needsRevision,
       lastRevisedAt: !e.needsRevision ? null : new Date().toISOString(),
-    });
+    }));
   },
   setNotes(id: string, notes: string): void {
     update(id, { notes });
@@ -125,9 +131,30 @@ export const progressRepo = {
   },
 };
 
+// The browser fires `storage` in every *other* tab of the same origin when
+// localStorage changes. Drop our cache and re-render so this tab shows the
+// new progress. `key === null` means the other tab called localStorage.clear().
+function onStorage(e: StorageEvent): void {
+  if (e.key !== null && e.key !== STORAGE_KEY) return;
+  cache = null;
+  listeners.forEach((l) => l());
+}
+
 function subscribe(cb: () => void): () => void {
+  if (listeners.size === 0 && isBrowser()) {
+    // No listener was attached while there were no subscribers, so storage
+    // events from other tabs may have been missed. Drop the cache so the
+    // next read loads fresh data from localStorage.
+    cache = null;
+    window.addEventListener("storage", onStorage);
+  }
   listeners.add(cb);
-  return () => listeners.delete(cb);
+  return () => {
+    listeners.delete(cb);
+    if (listeners.size === 0 && isBrowser()) {
+      window.removeEventListener("storage", onStorage);
+    }
+  };
 }
 
 // Hook: subscribe components to progress changes.
