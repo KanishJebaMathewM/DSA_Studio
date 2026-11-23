@@ -78,9 +78,10 @@ export function LevelAccordion({
         />
       </button>
       <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+        className={`grid duration-300 ease-in-out ${
           open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
+        style={{ transitionProperty: "grid-template-rows, opacity" }}
       >
         <div className="overflow-hidden">
           <div
