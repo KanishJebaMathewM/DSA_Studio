@@ -33,6 +33,10 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+  width: number;
+  setWidth: (width: number) => void;
+  isResizing: boolean;
+  setIsResizing: (resizing: boolean) => void;
 };
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
@@ -106,6 +110,23 @@ const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [toggleSidebar]);
 
+    // Custom adjustable width state for desktop sidebar
+    const [width, setWidth] = React.useState<number>(() => {
+      if (typeof window !== "undefined") {
+        try {
+          const saved = localStorage.getItem("dsa-studio-sidebar-width");
+          if (saved) {
+            const parsed = parseInt(saved, 10);
+            if (!isNaN(parsed) && parsed >= 200 && parsed <= 380) {
+              return parsed;
+            }
+          }
+        } catch {}
+      }
+      return 256;
+    });
+    const [isResizing, setIsResizing] = React.useState(false);
+
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? "expanded" : "collapsed";
@@ -119,8 +140,12 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        width,
+        setWidth,
+        isResizing,
+        setIsResizing,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, width, isResizing],
     );
 
     return (
@@ -129,13 +154,14 @@ const SidebarProvider = React.forwardRef<
           <div
             style={
               {
-                "--sidebar-width": SIDEBAR_WIDTH,
+                "--sidebar-width": `${width}px`,
                 "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
                 ...style,
               } as React.CSSProperties
             }
             className={cn(
               "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+              isResizing && "select-none [&_*]:!transition-none",
               className,
             )}
             ref={ref}
@@ -285,23 +311,69 @@ SidebarTrigger.displayName = "SidebarTrigger";
 
 const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
   ({ className, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar();
+    const { toggleSidebar, width, setWidth, state, isResizing, setIsResizing } = useSidebar();
+
+    const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (state === "collapsed") {
+        toggleSidebar();
+        return;
+      }
+      e.preventDefault();
+      const startX = e.clientX;
+      const startWidth = width;
+      let didMove = false;
+      setIsResizing(true);
+
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        const delta = moveEvent.clientX - startX;
+        if (Math.abs(delta) > 3) {
+          didMove = true;
+        }
+        const newWidth = Math.min(Math.max(startWidth + delta, 200), 380);
+        setWidth(newWidth);
+      };
+
+      const onMouseUp = () => {
+        setIsResizing(false);
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        document.body.style.removeProperty("cursor");
+        document.body.style.removeProperty("user-select");
+        if (!didMove) {
+          toggleSidebar();
+        } else {
+          try {
+            localStorage.setItem("dsa-studio-sidebar-width", String(width));
+          } catch {}
+        }
+      };
+
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    };
+
+    const handleDoubleClick = () => {
+      setWidth(256);
+      try {
+        localStorage.setItem("dsa-studio-sidebar-width", "256");
+      } catch {}
+    };
 
     return (
       <button
         ref={ref}
         data-sidebar="rail"
-        aria-label="Toggle Sidebar"
+        aria-label="Toggle or resize sidebar"
         tabIndex={-1}
-        onClick={toggleSidebar}
-        title="Toggle Sidebar"
+        onMouseDown={handleMouseDown}
+        onDoubleClick={handleDoubleClick}
+        title="Drag to resize, click to toggle, double-click to reset"
         className={cn(
-          "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
-          "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",
-          "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
-          "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar",
-          "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
-          "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+          "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 cursor-col-resize transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[3px] hover:after:bg-primary/50 group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
+          "group-data-[variant=floating]:-right-1",
+          isResizing && "after:bg-primary",
           className,
         )}
         {...props}

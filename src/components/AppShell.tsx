@@ -5,7 +5,7 @@ import { ThemeBackground } from "./ThemeBackground";
 
 export function AppShell({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="relative flex min-h-screen w-full overflow-x-clip">
+    <div className="relative flex min-h-dvh w-full overflow-x-clip">
       <ThemeBackground />
       <AppSidebar />
       <div className="relative z-10 flex min-w-0 flex-1 flex-col">

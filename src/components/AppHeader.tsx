@@ -37,7 +37,7 @@ export function AppHeader({ title }: { title: string }) {
   return (
     <header className="sticky top-2 z-30 mx-auto w-full max-w-7xl px-2.5 sm:px-4 md:top-3 md:px-6">
       <div className="flex h-13 sm:h-14 items-center gap-2 sm:gap-3 rounded-2xl border border-border/60 bg-card px-2.5 sm:px-4 shadow-md backdrop-blur-xl">
-        <SidebarTrigger className="shrink-0 text-muted-foreground hover:text-foreground" />
+        <SidebarTrigger className="md:hidden shrink-0 text-muted-foreground hover:text-foreground cursor-pointer" />
         <div className="hidden min-w-0 items-center md:flex">
           <h1 className="truncate text-sm font-semibold text-foreground">{title}</h1>
         </div>
