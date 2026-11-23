@@ -117,13 +117,13 @@ const SidebarProvider = React.forwardRef<
           const saved = localStorage.getItem("dsa-studio-sidebar-width");
           if (saved) {
             const parsed = parseInt(saved, 10);
-            if (!isNaN(parsed) && parsed >= 200 && parsed <= 380) {
+            if (!isNaN(parsed) && parsed >= 200 && parsed <= 450) {
               return parsed;
             }
           }
         } catch {}
       }
-      return 256;
+      return 0; // 0 = default responsive proportional mode (20–25%)
     });
     const [isResizing, setIsResizing] = React.useState(false);
 
@@ -195,7 +195,7 @@ const Sidebar = React.forwardRef<
     },
     ref,
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+    const { isMobile, state, openMobile, setOpenMobile, width } = useSidebar();
 
     if (collapsible === "none") {
       return (
@@ -243,9 +243,16 @@ const Sidebar = React.forwardRef<
           "group peer hidden text-sidebar-foreground md:flex shrink-0 relative transition-[width] duration-200 ease-linear h-full",
           state === "collapsed"
             ? "w-[var(--sidebar-width-icon)]"
-            : "w-[var(--sidebar-width)]",
+            : width > 0
+              ? ""
+              : "w-[26%] md:w-[25%] lg:w-[22%] xl:w-[20%] 2xl:w-[18%] min-w-[220px] max-w-[380px]",
           className,
         )}
+        style={
+          state !== "collapsed" && width > 0
+            ? { width: `${width}px` }
+            : undefined
+        }
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
@@ -305,7 +312,8 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
       }
       e.preventDefault();
       const startX = e.clientX;
-      const startWidth = width;
+      const currentElement = (e.currentTarget.parentElement || e.currentTarget.closest("[data-sidebar]")) as HTMLElement | null;
+      const startWidth = width > 0 ? width : (currentElement?.getBoundingClientRect().width || 256);
       let didMove = false;
       setIsResizing(true);
 
@@ -314,7 +322,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
         if (Math.abs(delta) > 3) {
           didMove = true;
         }
-        const newWidth = Math.min(Math.max(startWidth + delta, 200), 380);
+        const newWidth = Math.min(Math.max(startWidth + delta, 200), 450);
         setWidth(newWidth);
       };
 
@@ -340,9 +348,9 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
     };
 
     const handleDoubleClick = () => {
-      setWidth(256);
+      setWidth(0);
       try {
-        localStorage.setItem("dsa-studio-sidebar-width", "256");
+        localStorage.removeItem("dsa-studio-sidebar-width");
       } catch {}
     };
 
@@ -487,7 +495,7 @@ const SidebarGroupLabel = React.forwardRef<
       ref={ref}
       data-sidebar="group-label"
       className={cn(
-        "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-all duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
         "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
         className,
       )}
@@ -557,7 +565,7 @@ const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li
 SidebarMenuItem.displayName = "SidebarMenuItem";
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring cursor-pointer transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring cursor-pointer transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
