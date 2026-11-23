@@ -10,23 +10,24 @@ import {
 const REPOSITORY_URL =
   "https://github.com/KanishJebaMathewM/DSA_Studio";
 
-const links = [
+  const links = [
   {
     label: "Star on GitHub",
     description: "Support the project",
     href: REPOSITORY_URL,
     icon: Star,
+    highlight: true,
   },
   {
     label: "Report an Issue",
-    description: "Report bugs or suggest improvements",
+    description: "Report bugs or suggest features",
     href: `${REPOSITORY_URL}/issues`,
     icon: Bug,
   },
   {
     label: "Contribute",
     description: "Help us improve DSA Studio",
-    href: `${REPOSITORY_URL}/blob/main/CONTRIBUTING.md`,
+    href: `${REPOSITORY_URL}#-contributing`,
     icon: GitPullRequest,
   },
 ];
@@ -56,20 +57,34 @@ export function OpenSourceFooter() {
           aria-label="Open source and community links"
           className="flex flex-wrap items-center gap-x-5 gap-y-3"
         >
-          {links.map(({ label, description, href, icon: Icon }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={description}
-              aria-label={label}
-              className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:text-primary"
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </a>
-          ))}
+          {links.map(({ label, description, href, icon: Icon, highlight }) => (
+  <a
+    key={label}
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    title={description}
+    className={`group flex items-center gap-2 rounded-lg border px-4 py-3 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+      highlight
+        ? "border-indigo-500 bg-indigo-500/10 hover:bg-indigo-500/20"
+        : "border-border hover:border-indigo-500 hover:bg-indigo-500/5"
+    }`}
+  >
+    <Icon
+      className={`h-4 w-4 ${
+        highlight
+          ? "text-indigo-500"
+          : "text-muted-foreground group-hover:text-indigo-500"
+      }`}
+    />
+
+    <span className="text-sm font-semibold text-foreground">
+      {label}
+    </span>
+
+    <ExternalLink className="h-3 w-3 text-muted-foreground" />
+  </a>
+))}
         </nav>
       </div>
     </footer>
