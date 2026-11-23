@@ -132,95 +132,97 @@ function TopicPage() {
 
   return (
     <AppShell title={topic.name}>
-      <div className="mb-6 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
-          {topic.name}
-        </h2>
-        <p className="mt-1 max-w-2xl text-xs sm:text-sm text-muted-foreground">
-          {topic.description}
-        </p>
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-          <ProgressBar value={pct} className="w-full sm:max-w-md" />
-          <div className="text-xs font-medium text-muted-foreground shrink-0">
-            {solved} / {total} completed •{" "}
-            <span className="text-primary font-semibold">{pct}%</span>
+      <div className="flex flex-1 flex-col">
+        <div className="mb-6 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
+            {topic.name}
+          </h2>
+          <p className="mt-1 max-w-2xl text-xs sm:text-sm text-muted-foreground">
+            {topic.description}
+          </p>
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <ProgressBar value={pct} className="w-full sm:max-w-md" />
+            <div className="text-xs font-medium text-muted-foreground shrink-0">
+              {solved} / {total} completed •{" "}
+              <span className="text-primary font-semibold">{pct}%</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Filters */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <FilterSelect
-          value={difficulty}
-          onChange={setDifficulty}
-          placeholder="Difficulty"
-          options={[
-            { v: "all", l: "All difficulties" },
-            { v: "Easy", l: "Easy" },
-            { v: "Medium", l: "Medium" },
-            { v: "Hard", l: "Hard" },
-          ]}
-        />
-        <FilterSelect
-          value={platform}
-          onChange={setPlatform}
-          placeholder="Platform"
-          options={[
-            { v: "all", l: "All platforms" },
-            { v: "LeetCode", l: "LeetCode" },
-            { v: "GFG", l: "GFG" },
-            { v: "CSES", l: "CSES" },
-            { v: "AtCoder", l: "AtCoder" },
-          ]}
-        />
-        <FilterSelect
-          value={status}
-          onChange={setStatus}
-          placeholder="Status"
-          options={[
-            { v: "all", l: "All status" },
-            { v: "solved", l: "Solved" },
-            { v: "unsolved", l: "Unsolved" },
-            { v: "revision", l: "Needs Revision" },
-            { v: "bookmarked", l: "Bookmarked" },
-          ]}
-        />
-        {filtersActive && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={clear}
-            className="h-9 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
-          >
-            Clear filters
-          </Button>
-        )}
-      </div>
-
-      {filteredLevels.length === 0 ? (
-        <EmptyState
-          title="No problems match your filters."
-          action={
-            <Button variant="outline" size="sm" onClick={clear}>
+        {/* Filters */}
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <FilterSelect
+            value={difficulty}
+            onChange={setDifficulty}
+            placeholder="Difficulty"
+            options={[
+              { v: "all", l: "All difficulties" },
+              { v: "Easy", l: "Easy" },
+              { v: "Medium", l: "Medium" },
+              { v: "Hard", l: "Hard" },
+            ]}
+          />
+          <FilterSelect
+            value={platform}
+            onChange={setPlatform}
+            placeholder="Platform"
+            options={[
+              { v: "all", l: "All platforms" },
+              { v: "LeetCode", l: "LeetCode" },
+              { v: "GFG", l: "GFG" },
+              { v: "CSES", l: "CSES" },
+              { v: "AtCoder", l: "AtCoder" },
+            ]}
+          />
+          <FilterSelect
+            value={status}
+            onChange={setStatus}
+            placeholder="Status"
+            options={[
+              { v: "all", l: "All status" },
+              { v: "solved", l: "Solved" },
+              { v: "unsolved", l: "Unsolved" },
+              { v: "revision", l: "Needs Revision" },
+              { v: "bookmarked", l: "Bookmarked" },
+            ]}
+          />
+          {filtersActive && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clear}
+              className="h-9 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+            >
               Clear filters
             </Button>
-          }
-        />
-      ) : (
-        <div className="space-y-3">
-          {filteredLevels.map((lvl) => {
-            const levelId = `${lvl.number}-${lvl.title}`;
-            return (
-              <LevelAccordion
-                key={`${topic.slug}-${levelId}`}
-                level={lvl}
-                isOpen={openLevelId === levelId}
-                onToggle={() => setOpenLevelId((prev) => (prev === levelId ? null : levelId))}
-              />
-            );
-          })}
+          )}
         </div>
-      )}
+
+        {filteredLevels.length === 0 ? (
+          <EmptyState
+            title="No problems match your filters."
+            action={
+              <Button variant="outline" size="sm" onClick={clear}>
+                Clear filters
+              </Button>
+            }
+          />
+        ) : (
+          <div className="flex-1 space-y-3">
+            {filteredLevels.map((lvl) => {
+              const levelId = `${lvl.number}-${lvl.title}`;
+              return (
+                <LevelAccordion
+                  key={`${topic.slug}-${levelId}`}
+                  level={lvl}
+                  isOpen={openLevelId === levelId}
+                  onToggle={() => setOpenLevelId((prev) => (prev === levelId ? null : levelId))}
+                />
+              );
+            })}
+          </div>
+        )}
+      </div>
     </AppShell>
   );
 }
