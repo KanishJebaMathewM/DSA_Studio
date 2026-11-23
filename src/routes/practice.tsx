@@ -12,9 +12,9 @@ import { useGlobalSearch } from "@/lib/search-context";
 export const Route = createFileRoute("/practice")({
   head: () => ({
     meta: [
-      { title: "Practice — DSA Sheet" },
+      { title: "Practice — DSA Studio" },
       { name: "description", content: "Browse DSA topics and pick a track to practice." },
-      { property: "og:title", content: "Practice — DSA Sheet" },
+      { property: "og:title", content: "Practice — DSA Studio" },
       { property: "og:description", content: "Choose a topic to start practicing." },
     ],
   }),
@@ -39,9 +39,9 @@ function PracticePage() {
 
   return (
     <AppShell title="Practice">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 bg-card p-5 shadow-sm backdrop-blur-md">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Topics</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Topics</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Structured practice tracks organized by pattern and level.
           </p>
@@ -89,16 +89,16 @@ function PracticePage() {
                 key={t.slug}
                 to="/topics/$slug"
                 params={{ slug: t.slug }}
-                className="group rounded-lg border bg-surface p-5 transition-colors hover:border-primary/50"
+                className="group relative rounded-xl border border-border/70 bg-surface backdrop-blur-md p-5 shadow-xs transition-all duration-250 ease-out hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-semibold text-foreground">
+                    <h3 className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
                       {t.name}
                     </h3>
                     <p className="mt-1 text-xs text-muted-foreground">{t.short}</p>
                   </div>
-                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-all duration-200 ease-out group-hover:text-primary group-hover:translate-x-1" />
                 </div>
                 <div className="mt-4">
                   <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">

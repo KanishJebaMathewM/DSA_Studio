@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting"; // neutral console reporter
 import { SearchProvider } from "@/lib/search-context";
+import { ThemeProvider } from "@/lib/theme";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -81,13 +82,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DSA Sheet — Practice Tracker" },
+      { title: "DSA Studio — Practice Tracker" },
       {
         name: "description",
         content:
           "A clean workspace for structured DSA practice — track progress, revise, and master patterns.",
       },
-      { property: "og:title", content: "DSA Sheet — Practice Tracker" },
+      { property: "og:title", content: "DSA Studio — Practice Tracker" },
       {
         property: "og:description",
         content:
@@ -108,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
-        children: `try{var t=localStorage.getItem('dsa-sheet-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}`,
+        children: `try{var m=localStorage.getItem('dsa-sheet-theme');if(!m){m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(m==='dark'){document.documentElement.classList.add('dark');}var p=localStorage.getItem('dsa-studio-theme-preset')||'cozy-room';document.documentElement.setAttribute('data-theme',p);var a=localStorage.getItem('dsa-studio-theme-artwork');var isArt=(a===null||a==='true')&&(p!=='clean-slate');document.documentElement.setAttribute('data-theme-artwork',isArt?'true':'false');}catch(e){}`,
       },
     ],
   }),
@@ -150,14 +151,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SearchProvider>
-        <SidebarProvider>
-          <MobileSidebarCloser />
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-          <Analytics />
-        </SidebarProvider>
-      </SearchProvider>
+      <ThemeProvider>
+        <SearchProvider>
+          <SidebarProvider>
+            <MobileSidebarCloser />
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+            <Analytics />
+          </SidebarProvider>
+        </SearchProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

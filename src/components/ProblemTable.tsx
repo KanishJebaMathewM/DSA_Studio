@@ -26,10 +26,10 @@ export function ProblemTable({
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-hidden rounded-lg border bg-surface md:block">
+      <div className="hidden overflow-hidden rounded-lg border border-border/70 bg-surface shadow-xs backdrop-blur-md md:block">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b bg-surface-muted/60 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <tr className="border-b border-border/60 bg-surface-muted/80 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
               <th className="w-10 px-3 py-2.5"></th>
               <th className="px-3 py-2.5">Problem</th>
               <th className="w-24 px-3 py-2.5">Difficulty</th>
@@ -47,13 +47,14 @@ export function ProblemTable({
               return (
                 <tr
                   key={`${problem.id}-${i}`}
-                  className="group border-b border-border/60 last:border-b-0 transition-colors hover:bg-hover"
+                  className="group border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80"
                 >
                   <td className="px-3 py-2 align-middle">
                     <Checkbox
                       checked={done}
                       onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}
-                      aria-label="Mark completed"
+                      aria-label={`Mark ${problem.title} as completed`}
+                      className="transition-transform duration-150 active:scale-90 cursor-pointer"
                     />
                   </td>
                   <td className="px-3 py-2 align-middle">
@@ -62,14 +63,14 @@ export function ProblemTable({
                         href={problem.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`font-medium text-foreground hover:text-primary ${
+                        className={`font-medium text-foreground transition-colors duration-150 hover:text-primary ${
                           done ? "text-muted-foreground" : ""
                         }`}
                       >
                         {problem.title}
                       </a>
                       {done && (
-                        <Check className="h-3.5 w-3.5 text-success" />
+                        <Check aria-hidden="true" className="h-3.5 w-3.5 text-success animate-in fade-in-50 duration-200" />
                       )}
                       <div className="ml-auto flex items-center gap-2">
                         <ProblemNotes
@@ -78,14 +79,18 @@ export function ProblemTable({
                           variant="desktop"
                         />
                         <button
-                          aria-label="Toggle bookmark"
+                          aria-label={`Bookmark ${problem.title}`}
+                          aria-pressed={bookmarked}
                           onClick={() => progressRepo.toggleBookmarked(problem.id)}
-                          className={`opacity-0 transition-opacity group-hover:opacity-100 ${
-                            bookmarked ? "opacity-100" : ""
+                          className={`cursor-pointer transition-all duration-200 hover:scale-115 active:scale-90 focus-visible:opacity-100 ${
+                            bookmarked
+                              ? "opacity-100"
+                              : "opacity-0 group-hover:opacity-100"
                           }`}
                         >
                           <Bookmark
-                            className={`h-3.5 w-3.5 ${
+                            aria-hidden="true"
+                            className={`h-3.5 w-3.5 transition-colors duration-150 ${
                               bookmarked
                                 ? "fill-gold text-gold"
                                 : "text-muted-foreground hover:text-foreground"
@@ -109,11 +114,13 @@ export function ProblemTable({
                   <td className="px-3 py-2 text-center align-middle">
                     <button
                       onClick={() => progressRepo.toggleNeedsRevision(problem.id)}
-                      aria-label="Toggle needs revision"
-                      className="inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:bg-hover hover:text-foreground"
+                      aria-label={`Mark ${problem.title} as needs revision`}
+                      aria-pressed={rev}
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-hover hover:text-foreground hover:scale-115 active:scale-90 cursor-pointer"
                     >
                       <RotateCcw
-                        className={`h-3.5 w-3.5 ${
+                        aria-hidden="true"
+                        className={`h-3.5 w-3.5 transition-colors duration-150 ${
                           rev ? "text-warning" : ""
                         }`}
                       />
@@ -124,10 +131,10 @@ export function ProblemTable({
                       href={problem.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-primary hover:bg-primary-soft"
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-primary hover:bg-primary-soft transition-all duration-150 hover:translate-x-0.5"
                     >
                       Solve
-                      <ExternalLink className="h-3 w-3" />
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" />
                     </a>
                   </td>
                 </tr>
@@ -147,19 +154,20 @@ export function ProblemTable({
           return (
             <div
               key={`${problem.id}-m-${i}`}
-              className="flex items-start gap-3 rounded-lg border bg-surface p-3"
+              className="flex items-start gap-3 rounded-lg border border-border/60 bg-surface backdrop-blur-md p-3 transition-all duration-200 hover:border-primary/40 hover:shadow-sm"
             >
               <Checkbox
                 checked={done}
                 onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}
-                className="mt-0.5"
+                aria-label={`Mark ${problem.title} as completed`}
+                className="mt-0.5 transition-transform duration-150 active:scale-90 cursor-pointer"
               />
               <div className="min-w-0 flex-1">
                 <a
                   href={problem.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block truncate text-sm font-medium text-foreground"
+                  className="block truncate text-sm font-medium text-foreground transition-colors hover:text-primary"
                 >
                   {problem.title}
                 </a>
@@ -173,29 +181,41 @@ export function ProblemTable({
                   </p>
                 )}
               </div>
-              <div className="flex flex-col items-end gap-1">
+              <div className="flex flex-col items-end gap-1.5">
                 <ProblemNotes
                   problemId={problem.id}
                   problemTitle={problem.title}
                   variant="mobile"
                 />
-                <button onClick={() => progressRepo.toggleBookmarked(problem.id)}>
+                <button
+                  aria-label={`Bookmark ${problem.title}`}
+                  aria-pressed={bookmarked}
+                  onClick={() => progressRepo.toggleBookmarked(problem.id)}
+                  className="transition-transform duration-150 hover:scale-115 active:scale-90 cursor-pointer"
+                >
                   <Bookmark
-                    className={`h-4 w-4 ${
+                    aria-hidden="true"
+                    className={`h-4 w-4 transition-colors ${
                       bookmarked ? "fill-gold text-gold" : "text-muted-foreground"
                     }`}
                   />
                 </button>
-                <button onClick={() => progressRepo.toggleNeedsRevision(problem.id)}>
+                <button
+                  aria-label={`Mark ${problem.title} as needs revision`}
+                  aria-pressed={rev}
+                  onClick={() => progressRepo.toggleNeedsRevision(problem.id)}
+                  className="transition-transform duration-150 hover:scale-115 active:scale-90 cursor-pointer"
+                >
                   <RotateCcw
-                    className={`h-4 w-4 ${rev ? "text-warning" : "text-muted-foreground"}`}
+                    aria-hidden="true"
+                    className={`h-4 w-4 transition-colors ${rev ? "text-warning" : "text-muted-foreground"}`}
                   />
                 </button>
                 <a
                   href={problem.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 text-xs font-medium text-primary"
+                  className="mt-0.5 text-xs font-medium text-primary hover:underline"
                 >
                   Solve ↗
                 </a>

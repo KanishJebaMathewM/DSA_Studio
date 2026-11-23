@@ -1,4 +1,4 @@
-// DSA Sheet dataset. Metadata-only; user progress lives in the progress store.
+// DSA Studio dataset. Metadata-only; user progress lives in the progress store.
 // Difficulty values reflect known platform metadata where confidently known,
 // otherwise "Unverified" per the master spec's rule against guessing.
 

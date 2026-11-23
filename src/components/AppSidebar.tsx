@@ -47,6 +47,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, LucideIcon> = {
   Share2, Network, Sigma, MoveHorizontal, ArrowLeftRight,
@@ -55,23 +56,34 @@ const iconMap: Record<string, LucideIcon> = {
   CaseSensitive, Grid3x3, Calculator, LayoutList, Type, Hash, AppWindow,
 };
 
+const sourceUrl =
+  import.meta.env.VITE_SOURCE_URL ||
+  "https://github.com/KanishJebaMathewM/DSA_Studio";
+
 export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const { state, toggleSidebar } = useSidebar();
+  const { state, toggleSidebar, isMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const isActive = (p: string) => pathname === p;
   const isTopicActive = (slug: string) => pathname === `/topics/${slug}`;
 
   return (
-    <Sidebar collapsible="icon" className="border-r">
-      <SidebarHeader className="border-b">
-        <div className="flex h-12 items-center gap-2 px-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
+    <Sidebar variant="floating" collapsible="icon">
+      <SidebarHeader className="border-b border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
+        <div
+          className={cn(
+            "flex h-10 items-center gap-2.5 transition-all",
+            collapsed
+              ? "h-8 w-8 justify-center p-0"
+              : "px-2 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
+          )}
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
             <Code2 className="h-4 w-4" />
           </div>
           {!collapsed && (
-            <div className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold">DSA Sheet</span>
+            <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
+              <span className="text-sm font-semibold">DSA Studio</span>
               <span className="text-[11px] text-muted-foreground">
                 Practice tracker
               </span>
@@ -164,17 +176,42 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t p-2">
+      <SidebarFooter className="border-t border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
+        {!collapsed && (
+          <div className="mb-1 flex items-center justify-center gap-3 px-2 text-[11px] text-muted-foreground">
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground"
+            >
+              Source
+            </a>
+            <a
+              href="https://www.gnu.org/licenses/agpl-3.0.html"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground"
+            >
+              AGPL-3.0-only
+            </a>
+          </div>
+        )}
         <Button
           variant="ghost"
           size="sm"
           onClick={toggleSidebar}
-          className="w-full justify-start gap-2 text-muted-foreground"
+          className="w-full justify-start gap-2 text-muted-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+          title={isMobile ? "Close sidebar" : collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <ChevronsLeft
             className={`h-4 w-4 transition-transform ${collapsed ? "rotate-180" : ""}`}
           />
-          {!collapsed && <span>Collapse</span>}
+          {!collapsed && (
+            <span className="group-data-[collapsible=icon]:hidden">
+              {isMobile ? "Close" : "Collapse"}
+            </span>
+          )}
         </Button>
       </SidebarFooter>
     </Sidebar>

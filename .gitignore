@@ -30,3 +30,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw theme source art (optimized webp versions in public/themes/)
+/*.png
+!/public/

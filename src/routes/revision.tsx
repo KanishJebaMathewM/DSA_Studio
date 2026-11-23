@@ -10,9 +10,9 @@ import { useGlobalSearch } from "@/lib/search-context";
 export const Route = createFileRoute("/revision")({
   head: () => ({
     meta: [
-      { title: "Revision — DSA Sheet" },
+      { title: "Revision — DSA Studio" },
       { name: "description", content: "Problems flagged for revision." },
-      { property: "og:title", content: "Revision — DSA Sheet" },
+      { property: "og:title", content: "Revision — DSA Studio" },
       { property: "og:description", content: "Problems flagged for revision." },
     ],
   }),
@@ -24,27 +24,31 @@ function RevisionPage() {
   const { query, setQuery } = useGlobalSearch();
   const q = query.trim().toLowerCase();
 
-  const ids = new Set<string>();
+  const seenMatching = new Set<string>();
+  const seenRevision = new Set<string>();
   const rows: ProblemTableRow[] = [];
-  let totalRevisionCount = 0;
 
   for (const pl of ALL_PLACEMENTS) {
-    if (ids.has(pl.problemId)) continue;
     if (!progress[pl.problemId]?.needsRevision) continue;
     const pr = PROBLEM_MAP[pl.problemId];
     if (!pr) continue;
-    ids.add(pl.problemId);
-    totalRevisionCount++;
+    seenRevision.add(pl.problemId);
+
+    if (seenMatching.has(pl.problemId)) continue;
     if (q && !pr.title.toLowerCase().includes(q) && !pl.topicName.toLowerCase().includes(q))
       continue;
+
+    seenMatching.add(pl.problemId);
     rows.push({ problem: pr, pattern: `${pl.topicName} • ${pl.levelTitle}` });
   }
 
+  const totalRevisionCount = seenRevision.size;
+
   return (
     <AppShell title="Revision">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 bg-card p-5 shadow-sm backdrop-blur-md">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Needs Revision</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Needs Revision</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Problems you've marked to revisit. Click the revision icon on any row to add or remove it.
           </p>

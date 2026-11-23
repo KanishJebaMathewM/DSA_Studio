@@ -10,9 +10,9 @@ import { useGlobalSearch } from "@/lib/search-context";
 export const Route = createFileRoute("/bookmarks")({
   head: () => ({
     meta: [
-      { title: "Bookmarks — DSA Sheet" },
+      { title: "Bookmarks — DSA Studio" },
       { name: "description", content: "Bookmarked DSA problems." },
-      { property: "og:title", content: "Bookmarks — DSA Sheet" },
+      { property: "og:title", content: "Bookmarks — DSA Studio" },
       { property: "og:description", content: "Bookmarked DSA problems." },
     ],
   }),
@@ -24,26 +24,31 @@ function BookmarksPage() {
   const { query, setQuery } = useGlobalSearch();
   const q = query.trim().toLowerCase();
 
-  const seen = new Set<string>();
+  const seenMatching = new Set<string>();
+  const seenBookmarked = new Set<string>();
   const rows: ProblemTableRow[] = [];
-  let totalBookmarkedCount = 0;
 
   for (const pl of ALL_PLACEMENTS) {
-    if (seen.has(pl.problemId)) continue;
     if (!progress[pl.problemId]?.bookmarked) continue;
     const pr = PROBLEM_MAP[pl.problemId];
     if (!pr) continue;
-    seen.add(pl.problemId);
-    totalBookmarkedCount++;
-    if (q && !pr.title.toLowerCase().includes(q)) continue;
+    seenBookmarked.add(pl.problemId);
+
+    if (seenMatching.has(pl.problemId)) continue;
+    if (q && !pr.title.toLowerCase().includes(q) && !pl.topicName.toLowerCase().includes(q))
+      continue;
+
+    seenMatching.add(pl.problemId);
     rows.push({ problem: pr, pattern: `${pl.topicName} • ${pl.levelTitle}` });
   }
 
+  const totalBookmarkedCount = seenBookmarked.size;
+
   return (
     <AppShell title="Bookmarks">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 bg-card p-5 shadow-sm backdrop-blur-md">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Bookmarks</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Bookmarks</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Save problems for quick access. Toggle the bookmark icon on any row.
           </p>

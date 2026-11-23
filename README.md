@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0.html)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/7MhyE48Au)
 [![GitHub Stars](https://img.shields.io/github/stars/KanishJebaMathewM/DSA_Studio?style=for-the-badge&logo=github&color=blue)](https://github.com/KanishJebaMathewM/DSA_Studio/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/KanishJebaMathewM/DSA_Studio?style=for-the-badge&logo=github&color=blue)](https://github.com/KanishJebaMathewM/DSA_Studio/network/members)
@@ -13,7 +13,7 @@
 
 **A modern, structured zero-to-hero Data Structures & Algorithms practice platform, tracker, and revision system.**
 
-[Explore Problems](#-detailed-learning-roadmap) • [Features](#-core-features) • [Quickstart](#-getting-started) • [Contributing](#-contributing) • [Join Discord](#-community--discussion)
+[Explore Problems](#-detailed-learning-roadmap) • [Features](#-core-features) • [Quickstart](#-getting-started) • [Contributing](#-contributing) • [Community](#-community--discussion) • [Contributors](#-contributors)
 
 </div>
 
@@ -58,6 +58,7 @@ We have an active Discord server for discussing **DSA Studio**, sharing intervie
 - [Deployment](#-deployment)
 - [Contributing](#-contributing)
 - [Community & Discussion](#-community--discussion)
+- [Contributors](#-contributors)
 - [License](#-license)
 
 ---
@@ -69,7 +70,7 @@ When preparing for technical interviews or competitive programming, learners oft
 - **Lack of continuity:** Jumping haphazardly between unrelated topics without solidifying core mental models.
 - **Retention loss:** Forgetting solved problems due to the absence of spaced repetition and targeted revision.
 
-**DSA Studio** solves this by providing a carefully curated, zero-to-hero learning progression across **22 foundational, intermediate, and advanced topic modules**. It unifies curated challenges from **LeetCode**, **GeeksforGeeks**, **CSES**, and **AtCoder**, paired with a persistent tracking and revision workflow.
+**DSA Studio** solves this by providing a carefully curated, zero-to-hero learning progression across **23 foundational, intermediate, and advanced topic modules**. It unifies curated challenges from **LeetCode**, **GeeksforGeeks**, **CSES**, and **AtCoder**, paired with a persistent tracking and revision workflow.
 
 ---
 
@@ -100,7 +101,7 @@ When preparing for technical interviews or competitive programming, learners oft
 +-------------------------------------------------------------------------------+
 |                          PROGRESS & REVISION ENGINE                           |
 |                                                                               |
-|   [ Checklist / Solved ]   |    [ Bookmarks ]    |    [ Spaced Revision ]     |
+|   [ Checklist / Solved ]   |    [ Bookmarks ]    |    [ Revision Queue ]      |
 |   [ Topic Breakdown % ]    |    [ Difficulty ]   |    [ Local Persistence ]   |
 +-------------------------------------------------------------------------------+
 ```
@@ -109,11 +110,11 @@ When preparing for technical interviews or competitive programming, learners oft
 
 ## ✨ Core Features
 
-- **Structured 22-Topic Progression**: Progressive roadmap starting from elementary mathematics and two-pointer basics up to complex graph theory, dynamic programming, and range query trees.
+- **Structured 23-Topic Progression**: Progressive roadmap starting from elementary mathematics and two-pointer basics up to complex graph theory, dynamic programming, and range query trees.
 - **Multi-Platform Integration**: Direct links to vetted problems on LeetCode and GeeksforGeeks, plus CSES and AtCoder challenge suites.
-- **Revision Queue & Bookmarks**: Flag problems that need spaced repetition revisit. Maintain a custom list of bookmarked questions for quick reference before interview rounds.
-- **Instant Search & Topic Filters**: Find problems by name, platform, pattern, or difficulty tag in real-time.
-- **Local-First Privacy**: Progress is stored locally in your browser — no mandatory login, cookies, or cloud telemetry.
+- **Revision Queue & Bookmarks**: Flag problems you want to revisit and work through them from a dedicated revision list. Maintain a custom list of bookmarked questions for quick reference before interview rounds.
+- **Instant Search & Topic Filters**: Search problems by name, topic, or pattern from any page, then narrow each topic by difficulty, platform, and status (solved, unsolved, revision, bookmarked).
+- **Local-First Privacy**: Your progress is stored only in your browser — no account or login required. The hosted site uses Vercel Web Analytics for anonymous page-view counts, and a single cookie remembers whether the sidebar is collapsed; your progress data never leaves your device.
 - **Responsive & Modern UI**: Built with React 19, Tailwind CSS v4, Lucide icons, and Radix UI components with complete Dark/Light mode support.
 
 ---
@@ -123,7 +124,7 @@ When preparing for technical interviews or competitive programming, learners oft
 The curriculum is structured into 3 comprehensive tiers:
 
 ```
-Foundation (Phases 1–8)  ──►  Intermediate (Phases 9–15)  ──►  Advanced (Phases 16–22)
+Foundation (Phases 1–8)  ──►  Intermediate (Phases 9–15)  ──►  Advanced (Phases 16–23)
 ```
 
 ### Phase 1: Foundation Tier
@@ -181,6 +182,7 @@ Foundation (Phases 1–8)  ──►  Intermediate (Phases 9–15)  ──►  A
 20. **Matrix / 2D Grid**: In-place rotations, spiral matrix, word search in grid, flood fill, and island counting.
 21. **Advanced String Algorithms**: Knuth-Morris-Pratt (KMP), Z-Algorithm, Rabin-Karp rolling hash, and Manacher's algorithm.
 22. **Segment Tree & Fenwick Tree (BIT)**: Point updates, range sum/min/max queries, and lazy propagation.
+23. **Graphs — Node-Based**: Adjacency-list graphs built from node references — graph cloning, Disjoint Set Union, weighted shortest paths, and strongly connected components. Complements the grid-focused Graphs track.
 
 ---
 
@@ -213,37 +215,51 @@ Foundation (Phases 1–8)  ──►  Intermediate (Phases 9–15)  ──►  A
 
 ```
 DSA_Studio/
-├── public/                 # Static assets & icons
+├── .github/
+│   └── workflows/              # CI (typecheck, tests, build) & community bot
+├── public/                     # Static assets & icons
 ├── src/
-│   ├── components/         # Reusable UI components
-│   │   ├── ui/             # Radix-based UI building blocks
-│   │   ├── AppHeader.tsx   # Top navigation header & search bar
-│   │   ├── AppShell.tsx    # Responsive shell layout
-│   │   ├── AppSidebar.tsx  # Topic navigation sidebar
-│   │   ├── LevelAccordion.tsx
-│   │   ├── ProblemTable.tsx
+│   ├── components/             # Reusable UI components
+│   │   ├── ui/                 # Radix-based UI building blocks (shadcn/ui)
+│   │   ├── AppHeader.tsx       # Top navigation header & search bar
+│   │   ├── AppShell.tsx        # Responsive shell layout
+│   │   ├── AppSidebar.tsx      # Topic navigation sidebar
+│   │   ├── DifficultyBadge.tsx # Easy / Medium / Hard badge
+│   │   ├── EmptyState.tsx      # Placeholder for empty lists & no search results
+│   │   ├── LevelAccordion.tsx  # Collapsible level with its problem table
+│   │   ├── PlatformBadge.tsx   # LeetCode / GFG / CSES / AtCoder badge
+│   │   ├── ProblemNotes.tsx    # Per-problem notes popover / sheet
+│   │   ├── ProblemTable.tsx    # Problem rows with solve, bookmark & revision toggles
 │   │   └── ProgressBar.tsx
-│   ├── data/               # Curated DSA problem catalogs
-│   │   ├── problems.ts     # Main dataset & types
-│   │   ├── dsa-topics.ts   # Core topic definitions
+│   ├── data/                   # Curated DSA problem catalogs
+│   │   ├── problems.ts         # Main dataset & types
+│   │   ├── dsa-topics.ts       # Core topic definitions
 │   │   ├── remaining-topics.ts
-│   │   ├── roadmap.ts      # Topic roadmap hierarchy
+│   │   ├── roadmap.ts          # Topic roadmap hierarchy
 │   │   └── roadmap-additions.ts
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Contexts, stores, theme, & utilities
-│   │   ├── progress-store.ts # LocalStorage progress sync
-│   │   ├── search-context.ts
-│   │   └── theme.ts
-│   ├── routes/             # TanStack file-based routes
-│   │   ├── __root.tsx      # App shell layout route
-│   │   ├── index.tsx       # Dashboard
-│   │   ├── practice.tsx    # Practice catalog
-│   │   ├── bookmarks.tsx   # Saved problems
-│   │   ├── revision.tsx    # Spaced repetition queue
-│   │   ├── progress.tsx    # Analytics & completion stats
-│   │   └── topics.$slug.tsx# Individual topic view
-│   ├── router.tsx          # Router instantiation
-│   └── styles.css          # Global styling & Tailwind rules
+│   ├── hooks/                  # Custom React hooks
+│   ├── lib/                    # Contexts, stores, theme, & utilities
+│   │   ├── progress-store.ts   # LocalStorage progress sync
+│   │   ├── search-context.tsx  # Global search state
+│   │   ├── theme.ts            # Light / dark mode
+│   │   ├── error-*.ts          # Server error capture & fallback error page
+│   │   └── utils.ts
+│   ├── routes/                 # TanStack file-based routes
+│   │   ├── README.md           # Routing conventions — read before adding routes
+│   │   ├── __root.tsx          # App shell layout route
+│   │   ├── index.tsx           # Dashboard
+│   │   ├── practice.tsx        # Practice catalog
+│   │   ├── bookmarks.tsx       # Saved problems
+│   │   ├── revision.tsx        # Problems flagged for revision
+│   │   ├── progress.tsx        # Analytics & completion stats
+│   │   └── topics.$slug.tsx    # Individual topic view
+│   ├── routeTree.gen.ts        # ⚠️ Auto-generated by TanStack Router — do not edit
+│   ├── router.tsx              # Router instantiation
+│   ├── server.ts               # SSR server entry (wraps requests with error handling)
+│   ├── start.ts                # TanStack Start setup & server middleware
+│   └── styles.css              # Global styling & Tailwind rules
+├── tests/
+│   └── data-safety.test.mjs    # Progress-store regression tests
 ├── package.json
 ├── tsconfig.json
 └── vite.config.ts
@@ -255,8 +271,8 @@ DSA_Studio/
 
 ### Prerequisites
 
-- **Node.js**: `v20.x` or higher
-- Package manager: `npm`, `bun`, or `pnpm`
+- **Node.js**: `^20.19.0 || >=22.12.0`
+- **Package manager**: npm (official)
 
 ### Installation & Local Run
 
@@ -268,20 +284,16 @@ DSA_Studio/
 
 2. **Install dependencies:**
    ```bash
-   npm install
-   # or
-   bun install
+   npm ci
    ```
 
 3. **Start the development server:**
    ```bash
    npm run dev
-   # or
-   bun dev
    ```
 
 4. **Open in your browser:**
-   Navigate to `http://localhost:3000` (or the port indicated in terminal).
+   Open the local URL printed in your terminal.
 
 ### Available Scripts
 
@@ -290,8 +302,11 @@ DSA_Studio/
 | `npm run dev` | Starts the Vite development server with hot-reload |
 | `npm run build` | Builds the client and server output for production |
 | `npm run preview` | Previews the production build locally |
+| `npm test` | Runs data-safety regression tests |
 | `npm run lint` | Runs ESLint across the codebase |
 | `npm run format` | Formats all files using Prettier |
+
+**Note:** The data-safety tests require Node.js `v22.6.0` or later, or Bun, because they import TypeScript files directly.
 
 ---
 
@@ -369,6 +384,22 @@ Join our growing community of developers, competitive programmers, and open-sour
 
 ---
 
+## 👥 Contributors
+
+A huge thank you to everyone contributing to DSA Studio! ❤️
+
+[![Contributors](https://contrib.rocks/image?repo=KanishJebaMathewM/DSA_Studio&max=500)](https://github.com/KanishJebaMathewM/DSA_Studio/graphs/contributors)
+
+---
+
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE) — see the LICENSE file for details.
+DSA Studio is licensed under the [GNU Affero General Public License v3.0 only](LICENSE) (`AGPL-3.0-only`).
+
+Previous releases and copies distributed under the original MIT licence retain the permissions granted by the [original MIT License](LICENSE-MIT). Moving forward, newly published project releases and contributions are covered by AGPL-3.0-only.
+
+Forking, modifying, redistributing, commercial use and network deployment are permitted subject to the licence terms. If you modify DSA Studio and make the modified version available to users through a network service, Section 13 requires you to provide the Corresponding Source of your modified version to those users through a standard, accessible mechanism.
+
+For deployed modified versions, configure `VITE_SOURCE_URL` to a public location containing the exact Corresponding Source offered by that deployment. The application otherwise links to this repository as the source for the unmodified project.
+
+The licence does not require contributors to submit improvements back to this repository. Contributors retain copyright in their contributions unless they enter a separate agreement otherwise. Third-party dependencies and copied components remain subject to their own licences and notices.

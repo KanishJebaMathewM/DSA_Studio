@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { LevelAccordion } from "@/components/LevelAccordion";
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/topics/$slug")({
   },
   head: ({ loaderData }) => {
     const t = loaderData?.topic;
-    const title = t ? `${t.name} — DSA Sheet` : "Topic — DSA Sheet";
+    const title = t ? `${t.name} — DSA Studio` : "Topic — DSA Studio";
     const desc = t?.description ?? "DSA practice topic.";
     return {
       meta: [
@@ -48,6 +48,17 @@ function TopicPage() {
   const [platform, setPlatform] = useState<string>("all");
 
   const allLevels = topic.levels ?? topic.parts?.flatMap((p) => p.levels) ?? [];
+
+  const [openLevelId, setOpenLevelId] = useState<string | null>(() => {
+    const first = allLevels[0];
+    return first ? `${first.number}-${first.title}` : null;
+  });
+
+  // Reset to first level when navigating between topics
+  useEffect(() => {
+    const first = allLevels[0];
+    setOpenLevelId(first ? `${first.number}-${first.title}` : null);
+  }, [topic.slug]);
 
   const allIds = new Set<string>();
   allLevels.forEach((lvl) => lvl.problems.forEach((lp) => allIds.add(lp.id)));
@@ -90,6 +101,31 @@ function TopicPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allLevels, query, difficulty, status, platform, progress]);
 
+  const filterKey = `${query}|${difficulty}|${status}|${platform}`;
+  const prevFilterKeyRef = useRef(filterKey);
+
+  // When filters or search criteria change, automatically open the first matching level.
+  // When results change and invalidate a previously selected level, select the first match.
+  // If the user explicitly closes the level (openLevelId === null), keep it closed!
+  useEffect(() => {
+    const filterChanged = prevFilterKeyRef.current !== filterKey;
+    prevFilterKeyRef.current = filterKey;
+
+    if (filtersActive && filteredLevels.length > 0) {
+      const isCurrentInFiltered =
+        openLevelId !== null &&
+        filteredLevels.some((lvl) => `${lvl.number}-${lvl.title}` === openLevelId);
+
+      if (filterChanged) {
+        if (!isCurrentInFiltered) {
+          setOpenLevelId(`${filteredLevels[0].number}-${filteredLevels[0].title}`);
+        }
+      } else if (openLevelId !== null && !isCurrentInFiltered) {
+        setOpenLevelId(`${filteredLevels[0].number}-${filteredLevels[0].title}`);
+      }
+    }
+  }, [filtersActive, filteredLevels, openLevelId, filterKey]);
+
   const clear = () => {
     setDifficulty("all");
     setStatus("all");
@@ -99,8 +135,8 @@ function TopicPage() {
 
   return (
     <AppShell title={topic.name}>
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight">{topic.name}</h2>
+      <div className="mb-6 rounded-xl border border-border/60 bg-card p-5 shadow-sm backdrop-blur-md">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">{topic.name}</h2>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
           {topic.description}
         </p>
@@ -168,13 +204,19 @@ function TopicPage() {
         />
       ) : (
         <div className="space-y-3">
-          {filteredLevels.map((lvl) => (
-            <LevelAccordion
-              key={`${topic.slug}-${lvl.number}-${lvl.title}`}
-              level={lvl}
-              defaultOpen={filtersActive || lvl.number === 1}
-            />
-          ))}
+          {filteredLevels.map((lvl) => {
+            const levelId = `${lvl.number}-${lvl.title}`;
+            return (
+              <LevelAccordion
+                key={`${topic.slug}-${levelId}`}
+                level={lvl}
+                isOpen={openLevelId === levelId}
+                onToggle={() =>
+                  setOpenLevelId((prev) => (prev === levelId ? null : levelId))
+                }
+              />
+            );
+          })}
         </div>
       )}
     </AppShell>
@@ -194,7 +236,7 @@ function FilterSelect({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-9 w-[160px] bg-surface text-sm">
+      <SelectTrigger className="h-9 w-[160px] border-border/70 bg-surface shadow-xs backdrop-blur-md text-sm">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
