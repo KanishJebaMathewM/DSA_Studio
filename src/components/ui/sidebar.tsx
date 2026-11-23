@@ -239,35 +239,20 @@ const Sidebar = React.forwardRef<
     return (
       <div
         ref={ref}
-        className="group peer hidden text-sidebar-foreground md:block"
+        className={cn(
+          "group peer hidden text-sidebar-foreground md:flex shrink-0 relative transition-[width] duration-200 ease-linear",
+          state === "collapsed"
+            ? "w-[var(--sidebar-width-icon)]"
+            : "w-[var(--sidebar-width)]",
+          className,
+        )}
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
         data-side={side}
       >
-        {/* This is what handles the sidebar gap on desktop */}
         <div
-          className={cn(
-            "relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
-            "group-data-[collapsible=offcanvas]:w-0",
-            "group-data-[side=right]:rotate-180",
-            variant === "floating" || variant === "inset"
-              ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-              : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)",
-          )}
-        />
-        <div
-          className={cn(
-            "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
-            side === "left"
-              ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-              : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-            // Adjust the padding for floating and inset variants.
-            variant === "floating" || variant === "inset"
-              ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-              : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
-            className,
-          )}
+          className="sticky top-2 md:top-3 z-10 flex h-[calc(100dvh-1rem)] md:h-[calc(100dvh-1.5rem)] w-full flex-col transition-all duration-200 ease-linear"
           {...props}
         >
           <div
@@ -371,8 +356,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
         onDoubleClick={handleDoubleClick}
         title="Drag to resize, click to toggle, double-click to reset"
         className={cn(
-          "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 cursor-col-resize transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[3px] hover:after:bg-primary/50 group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
-          "group-data-[variant=floating]:-right-1",
+          "absolute inset-y-0 -right-1.5 z-20 hidden w-4 cursor-col-resize transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[3px] hover:after:bg-primary/50 sm:flex",
           isResizing && "after:bg-primary",
           className,
         )}
