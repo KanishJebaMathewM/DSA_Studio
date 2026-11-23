@@ -207,7 +207,7 @@ function TopicPage() {
           }
         />
       ) : (
-        <div className="space-y-3">
+        <div className="flex-1 space-y-3">
           {filteredLevels.map((lvl) => {
             const levelId = `${lvl.number}-${lvl.title}`;
             return (

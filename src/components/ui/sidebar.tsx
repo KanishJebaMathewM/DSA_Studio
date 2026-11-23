@@ -252,7 +252,7 @@ const Sidebar = React.forwardRef<
         data-side={side}
       >
         <div
-          className="sticky top-2 md:top-3 z-10 flex h-full min-h-[320px] max-h-[calc(100dvh-1rem)] md:max-h-[calc(100dvh-1.5rem)] w-full flex-col transition-all duration-200 ease-linear"
+          className="sticky top-2 md:top-3 z-10 flex h-[calc(100dvh-1rem)] md:h-[calc(100dvh-1.5rem)] w-full flex-col transition-all duration-200 ease-linear"
           {...props}
         >
           <div
