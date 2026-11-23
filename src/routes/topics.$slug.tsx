@@ -4,6 +4,7 @@ import { AppShell } from "@/components/AppShell";
 import { LevelAccordion } from "@/components/LevelAccordion";
 import { ProgressBar } from "@/components/ProgressBar";
 import { EmptyState } from "@/components/EmptyState";
+import { TopicVisualizations } from "@/components/visualizations/TopicVisualizations";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -146,6 +147,7 @@ function TopicPage() {
             <span className="text-primary font-semibold">{pct}%</span>
           </div>
         </div>
+        <TopicVisualizations topicSlug={topic.slug} />
       </div>
 
       {/* Filters */}
