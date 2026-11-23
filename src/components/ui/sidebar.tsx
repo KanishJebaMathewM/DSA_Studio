@@ -240,7 +240,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "group peer hidden text-sidebar-foreground md:flex shrink-0 relative transition-[width] duration-200 ease-linear",
+          "group peer hidden text-sidebar-foreground md:flex shrink-0 relative transition-[width] duration-200 ease-linear h-full",
           state === "collapsed"
             ? "w-[var(--sidebar-width-icon)]"
             : "w-[var(--sidebar-width)]",
@@ -252,7 +252,7 @@ const Sidebar = React.forwardRef<
         data-side={side}
       >
         <div
-          className="sticky top-2 md:top-3 z-10 flex h-[calc(100dvh-1rem)] md:h-[calc(100dvh-1.5rem)] w-full flex-col transition-all duration-200 ease-linear"
+          className="sticky top-2 md:top-3 z-10 flex h-full min-h-[320px] max-h-[calc(100dvh-1rem)] md:max-h-[calc(100dvh-1.5rem)] w-full flex-col transition-all duration-200 ease-linear"
           {...props}
         >
           <div
