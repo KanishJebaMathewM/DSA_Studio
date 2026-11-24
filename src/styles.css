@@ -531,7 +531,8 @@ html[data-theme="mountain-observatory"].dark,
 /* Hairline gradient accent divider */
 .hairline-divider {
   height: 1px;
-  width: 100%;
+  width: auto;
+  flex-shrink: 0;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -542,7 +543,8 @@ html[data-theme="mountain-observatory"].dark,
 
 .hairline-divider-primary {
   height: 1px;
-  width: 100%;
+  width: auto;
+  flex-shrink: 0;
   background: linear-gradient(
     90deg,
     transparent 0%,
