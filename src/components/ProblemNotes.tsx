@@ -10,7 +10,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { getEntry, hasNotes, progressRepo, useProgressEntry } from "@/lib/progress-store";
+import { createDraft, editDraft, isDirty, syncDraft } from "@/lib/notes-draft";
+import { hasNotes, progressRepo, useProgressEntry } from "@/lib/progress-store";
 
 const SAVE_DELAY_MS = 500;
 const MAX_LENGTH = 2000;
@@ -20,21 +21,27 @@ const MAX_LENGTH = 2000;
 // once more on unmount (panel closed) so the last keystrokes aren't lost.
 function NotesEditor({ problemId, autoFocus }: { problemId: string; autoFocus?: boolean }) {
   const saved = useProgressEntry(problemId).notes ?? "";
-  const [draft, setDraft] = useState(saved);
-  const draftRef = useRef(draft);
-  draftRef.current = draft;
+  const [stored, setStored] = useState(() => createDraft(saved));
+  // Adopt notes saved elsewhere (e.g. another tab) unless there are unsaved edits.
+  const state = syncDraft(stored, saved);
+  if (state !== stored) setStored(state);
+
+  const { draft } = state;
+  const dirty = isDirty(state);
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   useEffect(() => {
-    if (draft === saved) return;
+    if (!dirty) return;
     const t = setTimeout(() => progressRepo.setNotes(problemId, draft), SAVE_DELAY_MS);
     return () => clearTimeout(t);
-  }, [draft, saved, problemId]);
+  }, [draft, dirty, problemId]);
 
   useEffect(() => {
     return () => {
-      // Flush pending edits when the panel closes.
-      if ((getEntry(problemId).notes ?? "") !== draftRef.current) {
-        progressRepo.setNotes(problemId, draftRef.current);
+      // Flush unsaved edits when the panel closes.
+      if (isDirty(stateRef.current)) {
+        progressRepo.setNotes(problemId, stateRef.current.draft);
       }
     };
   }, [problemId]);
@@ -43,7 +50,7 @@ function NotesEditor({ problemId, autoFocus }: { problemId: string; autoFocus?: 
     <div className="space-y-1.5">
       <Textarea
         value={draft}
-        onChange={(e) => setDraft(e.target.value)}
+        onChange={(e) => setStored(editDraft(state, e.target.value))}
         maxLength={MAX_LENGTH}
         autoFocus={autoFocus}
         rows={6}
@@ -52,7 +59,7 @@ function NotesEditor({ problemId, autoFocus }: { problemId: string; autoFocus?: 
         className="resize-y text-sm"
       />
       <div className="flex justify-between text-[11px] text-muted-foreground">
-        <span>{draft === saved ? "Saved" : "Saving…"}</span>
+        <span>{dirty ? "Saving…" : "Saved"}</span>
         <span>
           {draft.length} / {MAX_LENGTH}
         </span>
