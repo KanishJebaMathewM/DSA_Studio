@@ -15,8 +15,10 @@ import {
 import { getTopic, PROBLEM_MAP } from "@/data/problems";
 import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
+import { TopicSkeleton } from "@/components/LoadingSkeletons";
 
 export const Route = createFileRoute("/topics/$slug")({
+  pendingComponent: TopicSkeleton,
   loader: ({ params }) => {
     const topic = getTopic(params.slug);
     if (!topic) throw notFound();
@@ -132,7 +134,7 @@ function TopicPage() {
 
   return (
     <AppShell title={topic.name}>
-      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.35rem)] shadow-sm backdrop-blur-md">
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.35rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
           {topic.name}
         </h2>

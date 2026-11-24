@@ -80,7 +80,7 @@ function ProgressPage() {
 
   return (
     <AppShell title="Progress">
-      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md">
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Progress</h2>
         <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
           Your overall stats and topic-by-topic completion.

@@ -159,6 +159,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        <div className="mx-3 my-0.5 hairline-divider group-data-[collapsible=icon]:hidden" />
+
         <SidebarGroup>
           <SidebarGroupLabel>Topics</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -179,6 +181,8 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <div className="mx-3 my-0.5 hairline-divider group-data-[collapsible=icon]:hidden" />
 
         <SidebarGroup>
           <SidebarGroupContent>

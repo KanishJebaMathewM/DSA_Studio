@@ -47,7 +47,7 @@ export function ProblemTable({
               return (
                 <tr
                   key={`${problem.id}-${i}`}
-                  className="group border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80"
+                  className="group relative border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80 hover:before:absolute hover:before:left-0 hover:before:top-1.5 hover:before:bottom-1.5 hover:before:w-[3px] hover:before:rounded-r-full hover:before:bg-primary"
                 >
                   <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <Checkbox
@@ -132,7 +132,7 @@ export function ProblemTable({
                       href={problem.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-primary hover:bg-primary-soft transition-all duration-150 hover:translate-x-0.5"
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-primary hover:bg-primary-soft active:scale-95 transition-all duration-150 hover:translate-x-0.5"
                     >
                       Solve
                       <ExternalLink aria-hidden="true" className="h-3 w-3" />
@@ -155,7 +155,7 @@ export function ProblemTable({
           return (
             <div
               key={`${problem.id}-m-${i}`}
-              className="rounded-lg border border-border/60 bg-surface backdrop-blur-md p-[clamp(0.625rem,1.4vh,0.875rem)] transition-all duration-200 hover:border-primary/40 hover:shadow-xs"
+              className="rounded-lg border border-border/60 bg-surface backdrop-blur-md p-[clamp(0.625rem,1.4vh,0.875rem)] transition-all duration-200 hover:border-primary/40 hover:shadow-xs card-glass-line"
             >
               <div className="flex items-start gap-2.5">
                 <Checkbox

@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { AppSidebar } from "./AppSidebar";
 import { AppHeader } from "./AppHeader";
 import { ThemeBackground } from "./ThemeBackground";
 
 export function AppShell({ title, children }: { title: string; children: ReactNode }) {
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
+
   return (
     <div className="relative flex min-h-dvh w-full overflow-x-clip">
       <ThemeBackground />
@@ -12,7 +15,10 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <AppHeader title={title} />
-          <main className="w-full pt-[clamp(0.5rem,1.5vh,1rem)] pb-[clamp(0.75rem,2.5vh,1.75rem)]">
+          <main
+            key={pathname}
+            className="w-full pt-[clamp(0.5rem,1.5vh,1rem)] pb-[clamp(0.75rem,2.5vh,1.75rem)] animate-fade-in-up"
+          >
             {children}
           </main>
         </div>

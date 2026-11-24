@@ -17,8 +17,10 @@ import { PlatformBadge } from "@/components/PlatformBadge";
 import { ALL_PLACEMENTS, PROBLEM_MAP, TOPICS, UNIQUE_PROBLEM_IDS } from "@/data/problems";
 import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
+import { DashboardSkeleton } from "@/components/LoadingSkeletons";
 
 export const Route = createFileRoute("/")({
+  pendingComponent: DashboardSkeleton,
   head: () => ({
     meta: [
       { title: "Dashboard — DSA Studio" },
@@ -214,7 +216,7 @@ function Dashboard() {
       ) : (
         <div className="space-y-[clamp(0.75rem,2vh,1.5rem)]">
           {/* Welcome Hero Banner */}
-          <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between card-glass-line hover-lift-glow">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Welcome back
@@ -224,7 +226,7 @@ function Dashboard() {
               </p>
             </div>
             <div className="flex items-center gap-2 self-start sm:self-auto">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 sm:px-3 py-1 text-xs font-medium text-primary">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 sm:px-3 py-1 text-xs font-medium text-primary shadow-xs">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>
                   {solved} / {total} Solved
@@ -234,7 +236,7 @@ function Dashboard() {
           </div>
 
           {/* Overall progress */}
-          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-xs backdrop-blur-md">
+          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-xs backdrop-blur-md card-glass-line hover-lift-glow">
             <div className="flex flex-wrap items-end justify-between gap-2">
               <div>
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -281,7 +283,7 @@ function Dashboard() {
 
           <div className="grid gap-[clamp(0.75rem,2vh,1.25rem)] lg:grid-cols-3">
             {/* Continue practicing */}
-            <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md">
+            <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md card-glass-line hover-lift-glow">
               <div>
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground">Continue Practicing</h3>
@@ -306,7 +308,7 @@ function Dashboard() {
                     <Link
                       to="/topics/$slug"
                       params={{ slug: nextPlacement.topicSlug }}
-                      className="self-start sm:self-auto inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                      className="self-start sm:self-auto inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all"
                     >
                       Continue
                       <ArrowRight className="h-3 w-3" />
@@ -321,7 +323,7 @@ function Dashboard() {
             </div>
 
             {/* Recently practiced */}
-            <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md">
+            <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md card-glass-line hover-lift-glow">
               <div>
                 <h3 className="text-sm font-semibold text-foreground">Recently Practiced</h3>
                 {recent.length === 0 ? (
@@ -362,7 +364,7 @@ function Dashboard() {
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-3 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-sm">
+    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-3 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs card-glass-line hover-lift-glow">
       <div className="flex items-center justify-between text-[11px] sm:text-xs font-medium uppercase tracking-wide text-muted-foreground">
         <span className="truncate pr-1">{label}</span>
         <span className="shrink-0">{icon}</span>
@@ -389,7 +391,7 @@ function DiffCard({
     hard: "bg-hard-bg text-hard-foreground",
   } as const;
   return (
-    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-2.5 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-sm">
+    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-2.5 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs card-glass-line hover-lift-glow">
       <div className="flex items-center justify-between gap-1">
         <span className="truncate text-[10px] sm:text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
