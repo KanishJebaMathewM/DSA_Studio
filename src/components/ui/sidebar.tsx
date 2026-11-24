@@ -110,23 +110,22 @@ const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [toggleSidebar]);
 
-    // Custom adjustable width state for desktop sidebar
-    const [width, setWidth] = React.useState<number>(() => {
-      if (typeof window !== "undefined") {
-        try {
-          const saved = localStorage.getItem("dsa-studio-sidebar-width");
-          if (saved) {
-            const parsed = parseInt(saved, 10);
-            if (!isNaN(parsed) && parsed >= 200 && parsed <= 450) {
-              return parsed;
-            }
+    // Custom adjustable width state for desktop sidebar (0 = default responsive proportional mode)
+    const [width, setWidth] = React.useState<number>(0);
+
+    React.useEffect(() => {
+      try {
+        const saved = localStorage.getItem("dsa-studio-sidebar-width");
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!isNaN(parsed) && parsed >= 200 && parsed <= 450) {
+            setWidth(parsed);
           }
-        } catch {
-          // ignore storage errors
         }
+      } catch {
+        // ignore storage errors
       }
-      return 0; // 0 = default responsive proportional mode (20–25%)
-    });
+    }, []);
     const [isResizing, setIsResizing] = React.useState(false);
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
@@ -243,7 +242,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "group peer hidden text-sidebar-foreground md:flex shrink-0 relative transition-[width] duration-200 ease-linear h-full",
+          "group peer hidden text-sidebar-foreground md:flex shrink-0 relative transition-[width] duration-200 ease-linear",
           state === "collapsed"
             ? "w-[var(--sidebar-width-icon)]"
             : width > 0
