@@ -316,6 +316,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
       const currentElement = (e.currentTarget.parentElement || e.currentTarget.closest("[data-sidebar]")) as HTMLElement | null;
       const startWidth = width > 0 ? width : (currentElement?.getBoundingClientRect().width || 256);
       let didMove = false;
+      let currentWidth = startWidth;
       setIsResizing(true);
 
       const onMouseMove = (moveEvent: MouseEvent) => {
@@ -323,8 +324,8 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
         if (Math.abs(delta) > 3) {
           didMove = true;
         }
-        const newWidth = Math.min(Math.max(startWidth + delta, 200), 450);
-        setWidth(newWidth);
+        currentWidth = Math.min(Math.max(startWidth + delta, 200), 450);
+        setWidth(currentWidth);
       };
 
       const onMouseUp = () => {
@@ -337,7 +338,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
           toggleSidebar();
         } else {
           try {
-            localStorage.setItem("dsa-studio-sidebar-width", String(width));
+            localStorage.setItem("dsa-studio-sidebar-width", String(currentWidth));
           } catch {}
         }
       };

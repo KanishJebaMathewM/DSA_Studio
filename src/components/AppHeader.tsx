@@ -89,7 +89,7 @@ export function AppHeader({ title }: { title: string }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search problems, topics…"
-                className="h-8 flex-1 border-0 bg-transparent px-1 text-xs sm:text-sm shadow-none focus-visible:ring-0 focus-visible:outline-none placeholder:text-muted-foreground/70"
+                className="h-8 min-w-0 flex-1 border-0 bg-transparent px-1 text-xs sm:text-sm shadow-none focus-visible:ring-0 focus-visible:outline-none placeholder:text-muted-foreground/70"
                 aria-label="Search problems and topics"
               />
               {query && (
