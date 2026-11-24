@@ -46,7 +46,7 @@ function RevisionPage() {
 
   return (
     <AppShell title="Revision">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
             Needs Revision

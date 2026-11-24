@@ -12,7 +12,7 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <AppHeader title={title} />
-          <main className="w-full pt-2.5 sm:pt-3 md:pt-3">
+          <main className="w-full pt-[clamp(0.5rem,1.5vh,1rem)] pb-[clamp(0.75rem,2.5vh,1.75rem)]">
             {children}
           </main>
         </div>

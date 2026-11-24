@@ -132,14 +132,14 @@ function TopicPage() {
 
   return (
     <AppShell title={topic.name}>
-      <div className="mb-6 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.35rem)] shadow-sm backdrop-blur-md">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
           {topic.name}
         </h2>
         <p className="mt-1 max-w-2xl text-xs sm:text-sm text-muted-foreground">
           {topic.description}
         </p>
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+        <div className="mt-[clamp(0.5rem,1.4vh,1rem)] flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
           <ProgressBar value={pct} className="w-full sm:max-w-md" />
           <div className="text-xs font-medium text-muted-foreground shrink-0">
             {solved} / {total} completed •{" "}
@@ -149,7 +149,7 @@ function TopicPage() {
       </div>
 
       {/* Filters */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-[clamp(0.5rem,1.5vh,1rem)] flex flex-wrap items-center gap-2">
         <FilterSelect
           value={difficulty}
           onChange={setDifficulty}
@@ -207,7 +207,7 @@ function TopicPage() {
           }
         />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-[clamp(0.5rem,1.4vh,0.875rem)]">
           {filteredLevels.map((lvl) => {
             const levelId = `${lvl.number}-${lvl.title}`;
             return (

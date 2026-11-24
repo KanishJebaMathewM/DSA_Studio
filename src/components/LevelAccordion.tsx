@@ -47,9 +47,9 @@ export function LevelAccordion({
         onClick={handleToggle}
         aria-expanded={open}
         aria-controls={`level-panel-${level.number}`}
-        className="group flex w-full items-center gap-3 sm:gap-4 p-3 sm:px-4 sm:py-3 text-left hover:bg-hover/80 transition-colors duration-150 cursor-pointer"
+        className="group flex w-full items-center gap-3 sm:gap-4 px-3 sm:px-4 py-[clamp(0.625rem,1.4vh,0.875rem)] text-left hover:bg-hover/80 transition-colors duration-150 cursor-pointer"
       >
-        <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-md bg-primary-soft text-xs font-semibold text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
+        <div className="flex h-[clamp(1.75rem,3.8vh,2.25rem)] w-[clamp(1.75rem,3.8vh,2.25rem)] shrink-0 items-center justify-center rounded-md bg-primary-soft text-xs font-semibold text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
           {level.number}
         </div>
         <div className="min-w-0 flex-1">
@@ -86,7 +86,7 @@ export function LevelAccordion({
         <div className="overflow-hidden">
           <div
             id={`level-panel-${level.number}`}
-            className="border-t border-border/50 bg-surface/40 backdrop-blur-md p-2.5 sm:p-3 md:p-4"
+            className="border-t border-border/50 bg-surface/40 backdrop-blur-md p-[clamp(0.625rem,1.5vh,1rem)]"
           >
             <ProblemTable rows={rows} />
           </div>

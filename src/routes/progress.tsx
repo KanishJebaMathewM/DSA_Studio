@@ -80,14 +80,14 @@ function ProgressPage() {
 
   return (
     <AppShell title="Progress">
-      <div className="mb-6 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Progress</h2>
         <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
           Your overall stats and topic-by-topic completion.
         </p>
       </div>
 
-      <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+      <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-xs backdrop-blur-md">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -102,7 +102,7 @@ function ProgressPage() {
           </div>
           <div className="text-sm font-medium text-primary">{pct}%</div>
         </div>
-        <ProgressBar value={pct} className="mt-3 h-2" />
+        <ProgressBar value={pct} className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)]" />
       </div>
 
       <div className="mt-4 sm:mt-6 grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-3">
@@ -111,8 +111,8 @@ function ProgressPage() {
         <DiffProgress label="Hard" tone="hard" {...hard} />
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+      <div className="mt-[clamp(0.75rem,2vh,1.5rem)] grid gap-[clamp(0.75rem,2vh,1.25rem)] lg:grid-cols-3">
+        <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold">Topic progress</h3>
             {q && (
@@ -165,8 +165,8 @@ function ProgressPage() {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+        <div className="space-y-[clamp(0.75rem,2vh,1rem)]">
+          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md">
             <h3 className="text-sm font-semibold">Strongest topics</h3>
             <ul className="mt-3 space-y-2 text-sm">
               {strongest.map((r) => (
@@ -177,7 +177,7 @@ function ProgressPage() {
               ))}
             </ul>
           </div>
-          <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md">
             <h3 className="text-sm font-semibold">Needs practice</h3>
             <ul className="mt-3 space-y-2 text-sm">
               {weakest.map((r) => (
@@ -191,7 +191,7 @@ function ProgressPage() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+      <div className="mt-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md">
         <h3 className="text-sm font-semibold">Recently completed</h3>
         {recent.length === 0 ? (
           <p className="mt-3 text-sm text-muted-foreground">Complete a problem to see it here.</p>

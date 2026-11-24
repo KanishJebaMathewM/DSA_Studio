@@ -104,7 +104,7 @@ function Dashboard() {
   return (
     <AppShell title="Dashboard">
       {q ? (
-        <div className="space-y-6">
+        <div className="space-y-[clamp(0.75rem,2vh,1.5rem)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -130,7 +130,7 @@ function Dashboard() {
               }
             />
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-[clamp(0.75rem,2vh,1.5rem)]">
               {searchResults.topics.length > 0 && (
                 <div>
                   <h3 className="mb-3 text-sm font-semibold text-foreground">
@@ -212,9 +212,9 @@ function Dashboard() {
           )}
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-[clamp(0.75rem,2vh,1.5rem)]">
           {/* Welcome Hero Banner */}
-          <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Welcome back
@@ -234,7 +234,7 @@ function Dashboard() {
           </div>
 
           {/* Overall progress */}
-          <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-xs backdrop-blur-md">
             <div className="flex flex-wrap items-end justify-between gap-2">
               <div>
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -249,7 +249,7 @@ function Dashboard() {
               </div>
               <div className="text-sm font-medium text-primary">{pct}%</div>
             </div>
-            <ProgressBar value={pct} className="mt-3 h-2" />
+            <ProgressBar value={pct} className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)]" />
           </div>
 
           {/* Stat cards */}
@@ -279,75 +279,79 @@ function Dashboard() {
             <DiffCard label="Hard" value={byDifficulty("Hard")} tone="hard" />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-3">
+          <div className="grid gap-[clamp(0.75rem,2vh,1.25rem)] lg:grid-cols-3">
             {/* Continue practicing */}
-            <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-foreground">Continue Practicing</h3>
-                <span className="text-xs text-muted-foreground">Next unsolved problem</span>
-              </div>
-              {nextProblem && nextPlacement ? (
-                <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border/70 bg-surface-muted/60 p-3.5 sm:p-4 backdrop-blur-sm transition-all duration-200 hover:border-primary/40 hover:shadow-xs">
-                  <div className="min-w-0">
-                    <div className="text-xs text-muted-foreground">
-                      {nextPlacement.topicName} • Level {nextPlacement.levelNumber}
-                    </div>
-                    <div className="mt-1 break-words sm:truncate text-base font-semibold text-foreground">
-                      {nextProblem.title}
-                    </div>
-                    <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
-                      {!["Easy", "Medium", "Hard"].includes(nextPlacement.levelTitle) && (
-                        <span>{nextPlacement.levelTitle}</span>
-                      )}
-                      <DifficultyBadge difficulty={nextProblem.difficulty} />
-                    </div>
-                  </div>
-                  <Link
-                    to="/topics/$slug"
-                    params={{ slug: nextPlacement.topicSlug }}
-                    className="self-start sm:self-auto inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                  >
-                    Continue
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
+            <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md">
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground">Continue Practicing</h3>
+                  <span className="text-xs text-muted-foreground">Next unsolved problem</span>
                 </div>
-              ) : (
-                <p className="mt-3 text-sm text-muted-foreground">
-                  🎉 All problems completed. Excellent work.
-                </p>
-              )}
+                {nextProblem && nextPlacement ? (
+                  <div className="mt-[clamp(0.5rem,1.2vh,0.875rem)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border/70 bg-surface-muted/60 p-[clamp(0.75rem,1.5vh,1rem)] backdrop-blur-sm transition-all duration-200 hover:border-primary/40 hover:shadow-xs">
+                    <div className="min-w-0">
+                      <div className="text-xs text-muted-foreground">
+                        {nextPlacement.topicName} • Level {nextPlacement.levelNumber}
+                      </div>
+                      <div className="mt-1 break-words sm:truncate text-base font-semibold text-foreground">
+                        {nextProblem.title}
+                      </div>
+                      <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
+                        {!["Easy", "Medium", "Hard"].includes(nextPlacement.levelTitle) && (
+                          <span>{nextPlacement.levelTitle}</span>
+                        )}
+                        <DifficultyBadge difficulty={nextProblem.difficulty} />
+                      </div>
+                    </div>
+                    <Link
+                      to="/topics/$slug"
+                      params={{ slug: nextPlacement.topicSlug }}
+                      className="self-start sm:self-auto inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                    >
+                      Continue
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    🎉 All problems completed. Excellent work.
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Recently practiced */}
-            <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
-              <h3 className="text-sm font-semibold text-foreground">Recently Practiced</h3>
-              {recent.length === 0 ? (
-                <p className="mt-3 text-sm text-muted-foreground">
-                  Nothing yet — check off your first problem to see it here.
-                </p>
-              ) : (
-                <ul className="mt-3 space-y-2">
-                  {recent.map(([id, e]) => {
-                    const pr = PROBLEM_MAP[id];
-                    if (!pr) return null;
-                    return (
-                      <li key={id} className="flex items-center justify-between gap-2 text-sm">
-                        <a
-                          href={pr.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="min-w-0 truncate text-foreground hover:text-primary"
-                        >
-                          {pr.title}
-                        </a>
-                        <span className="shrink-0 text-[11px] text-muted-foreground">
-                          {new Date(e.completedAt!).toLocaleDateString()}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
+            <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Recently Practiced</h3>
+                {recent.length === 0 ? (
+                  <p className="mt-[clamp(0.5rem,1.2vh,0.75rem)] text-sm text-muted-foreground">
+                    Nothing yet — check off your first problem to see it here.
+                  </p>
+                ) : (
+                  <ul className="mt-[clamp(0.5rem,1.2vh,0.75rem)] space-y-[clamp(0.375rem,1vh,0.625rem)]">
+                    {recent.map(([id, e]) => {
+                      const pr = PROBLEM_MAP[id];
+                      if (!pr) return null;
+                      return (
+                        <li key={id} className="flex items-center justify-between gap-2 text-sm">
+                          <a
+                            href={pr.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="min-w-0 truncate text-foreground hover:text-primary"
+                          >
+                            {pr.title}
+                          </a>
+                          <span className="shrink-0 text-[11px] text-muted-foreground">
+                            {new Date(e.completedAt!).toLocaleDateString()}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -358,12 +362,12 @@ function Dashboard() {
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md p-3 sm:p-4 shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-sm">
+    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-3 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-sm">
       <div className="flex items-center justify-between text-[11px] sm:text-xs font-medium uppercase tracking-wide text-muted-foreground">
         <span className="truncate pr-1">{label}</span>
         <span className="shrink-0">{icon}</span>
       </div>
-      <div className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-semibold text-foreground">
+      <div className="mt-[clamp(0.25rem,0.8vh,0.5rem)] text-xl sm:text-2xl font-semibold text-foreground">
         {value}
       </div>
     </div>
@@ -385,7 +389,7 @@ function DiffCard({
     hard: "bg-hard-bg text-hard-foreground",
   } as const;
   return (
-    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md p-2.5 sm:p-4 shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-sm">
+    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-2.5 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs transition-all duration-200 hover:border-primary/30 hover:shadow-sm">
       <div className="flex items-center justify-between gap-1">
         <span className="truncate text-[10px] sm:text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
@@ -397,7 +401,7 @@ function DiffCard({
           {label}
         </span>
       </div>
-      <div className="mt-1 sm:mt-2 text-lg sm:text-2xl font-semibold text-foreground">{value}</div>
+      <div className="mt-[clamp(0.25rem,0.8vh,0.5rem)] text-lg sm:text-2xl font-semibold text-foreground">{value}</div>
     </div>
   );
 }

@@ -30,12 +30,12 @@ export function ProblemTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border/60 bg-surface-muted/80 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              <th className="w-10 px-3 py-2.5"></th>
-              <th className="px-3 py-2.5">Problem</th>
-              <th className="w-24 px-3 py-2.5">Difficulty</th>
-              <th className="w-20 px-3 py-2.5">Platform</th>
-              <th className="w-16 px-3 py-2.5 text-center">Revision</th>
-              <th className="w-20 px-3 py-2.5 text-right">Action</th>
+              <th className="w-10 px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]"></th>
+              <th className="px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]">Problem</th>
+              <th className="w-24 px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]">Difficulty</th>
+              <th className="w-20 px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]">Platform</th>
+              <th className="w-16 px-3 py-[clamp(0.45rem,1.1vh,0.625rem)] text-center">Revision</th>
+              <th className="w-20 px-3 py-[clamp(0.45rem,1.1vh,0.625rem)] text-right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -49,7 +49,7 @@ export function ProblemTable({
                   key={`${problem.id}-${i}`}
                   className="group border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80"
                 >
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <Checkbox
                       checked={done}
                       onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}
@@ -57,7 +57,7 @@ export function ProblemTable({
                       className="transition-transform duration-150 active:scale-90 cursor-pointer"
                     />
                   </td>
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <div className="flex items-center gap-2">
                       <a
                         href={problem.url}
@@ -106,13 +106,13 @@ export function ProblemTable({
                       </p>
                     )}
                   </td>
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <DifficultyBadge difficulty={problem.difficulty} />
                   </td>
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <PlatformBadge platform={problem.platform} />
                   </td>
-                  <td className="px-3 py-2 text-center align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] text-center align-middle">
                     <button
                       onClick={() => progressRepo.toggleNeedsRevision(problem.id)}
                       aria-label={`Mark ${problem.title} as needs revision`}
@@ -127,7 +127,7 @@ export function ProblemTable({
                       />
                     </button>
                   </td>
-                  <td className="px-3 py-2 text-right align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] text-right align-middle">
                     <a
                       href={problem.url}
                       target="_blank"
@@ -146,7 +146,7 @@ export function ProblemTable({
       </div>
 
       {/* Mobile cards */}
-      <div className="space-y-2.5 md:hidden">
+      <div className="space-y-[clamp(0.5rem,1.2vh,0.75rem)] md:hidden">
         {rows.map(({ problem }, i) => {
           const entry = progress[problem.id];
           const done = !!entry?.completed;
@@ -155,7 +155,7 @@ export function ProblemTable({
           return (
             <div
               key={`${problem.id}-m-${i}`}
-              className="rounded-lg border border-border/60 bg-surface backdrop-blur-md p-3 transition-all duration-200 hover:border-primary/40 hover:shadow-xs"
+              className="rounded-lg border border-border/60 bg-surface backdrop-blur-md p-[clamp(0.625rem,1.4vh,0.875rem)] transition-all duration-200 hover:border-primary/40 hover:shadow-xs"
             >
               <div className="flex items-start gap-2.5">
                 <Checkbox
