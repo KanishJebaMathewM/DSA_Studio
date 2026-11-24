@@ -16,6 +16,7 @@ import { SearchProvider } from "@/lib/search-context";
 import { ThemeProvider } from "@/lib/theme";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function NotFoundComponent() {
   return (
@@ -91,8 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "DSA Studio — Practice Tracker" },
       {
         property: "og:description",
-        content:
-          "Level-by-level DSA practice across graphs, DP, trees, sliding window, and more.",
+        content: "Level-by-level DSA practice across graphs, DP, trees, sliding window, and more.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -158,6 +158,7 @@ function RootComponent() {
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
             <Outlet />
             <Analytics />
+            <SpeedInsights />
           </SidebarProvider>
         </SearchProvider>
       </ThemeProvider>
