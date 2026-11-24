@@ -134,20 +134,25 @@ function TopicPage() {
   return (
     <AppShell title={topic.name}>
       <div className="mb-6 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
-          {topic.name}
-        </h2>
-        <p className="mt-1 max-w-2xl text-xs sm:text-sm text-muted-foreground">
-          {topic.description}
-        </p>
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-          <ProgressBar value={pct} className="w-full sm:max-w-md" />
-          <div className="text-xs font-medium text-muted-foreground shrink-0">
-            {solved} / {total} completed •{" "}
-            <span className="text-primary font-semibold">{pct}%</span>
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
+              {topic.name}
+            </h2>
+            <p className="mt-1 max-w-2xl text-xs sm:text-sm text-muted-foreground">
+              {topic.description}
+            </p>
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <ProgressBar value={pct} className="w-full sm:max-w-md" />
+              <div className="text-xs font-medium text-muted-foreground shrink-0">
+                {solved} / {total} completed •{" "}
+                <span className="text-primary font-semibold">{pct}%</span>
+              </div>
+            </div>
           </div>
+
+          <TopicVisualizations topicSlug={topic.slug} />
         </div>
-        <TopicVisualizations topicSlug={topic.slug} />
       </div>
 
       {/* Filters */}
