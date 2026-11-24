@@ -35,9 +35,15 @@ export function AppHeader({ title }: { title: string }) {
   }, [setQuery]);
 
   return (
-    <header className="sticky top-2 md:top-3 z-30 w-full">
-      <div className="flex h-13 sm:h-14 items-center gap-2 sm:gap-3 rounded-2xl border border-border/60 bg-card px-2.5 sm:px-4 shadow-md backdrop-blur-xl">
-        <SidebarTrigger className="md:hidden shrink-0 text-muted-foreground hover:text-foreground cursor-pointer" />
+    <header className="sticky top-2 md:top-3 z-30 flex w-full items-center gap-2 sm:gap-3">
+      {/* Standalone sidebar toggle button, separated from the navbar card */}
+      <SidebarTrigger
+        className="flex md:hidden h-13 sm:h-14 w-13 sm:w-14 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card shadow-md backdrop-blur-xl text-muted-foreground hover:text-foreground hover:bg-card/90 transition-all cursor-pointer [&>svg]:size-5"
+        title="Toggle sidebar"
+      />
+
+      {/* Main navigation bar container */}
+      <div className="flex flex-1 h-13 sm:h-14 items-center gap-2 sm:gap-3 rounded-2xl border border-border/60 bg-card px-2.5 sm:px-4 shadow-md backdrop-blur-xl min-w-0">
         <div className="hidden min-w-0 items-center md:flex">
           <h1 className="truncate text-sm font-semibold text-foreground">{title}</h1>
         </div>
