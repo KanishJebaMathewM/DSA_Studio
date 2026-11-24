@@ -1,17 +1,18 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useTheme, THEME_PRESETS } from "@/lib/theme";
+
+let hasPreloadedArtwork = false;
 
 export function ThemeBackground() {
   const { mode, preset, isArtworkEnabled, isPreferenceRestored } = useTheme();
-  const hasPreloadedRef = useRef(false);
 
   const currentPreset = THEME_PRESETS.find((p) => p.id === preset) || THEME_PRESETS[0];
   const shouldEnableArtwork = isPreferenceRestored && isArtworkEnabled && currentPreset.hasArtwork;
 
   // Preload and decode theme illustrations only once preferences are restored with artwork enabled
   useEffect(() => {
-    if (typeof window === "undefined" || !shouldEnableArtwork || hasPreloadedRef.current) return;
-    hasPreloadedRef.current = true;
+    if (typeof window === "undefined" || !shouldEnableArtwork || hasPreloadedArtwork) return;
+    hasPreloadedArtwork = true;
 
     THEME_PRESETS.forEach((p) => {
       if (p.background) {
@@ -70,7 +71,7 @@ export function ThemeBackground() {
                 WebkitTransform: "translate3d(0, 0, 0)",
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
-                willChange: "opacity",
+                willChange: isPresetActive ? "opacity" : undefined,
               }}
             >
               {/* Day illustration layer */}

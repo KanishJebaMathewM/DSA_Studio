@@ -59,7 +59,10 @@ function TopicPage() {
   const [status, setStatus] = useState<string>("all");
   const [platform, setPlatform] = useState<string>("all");
 
-  const allLevels = topic.levels ?? topic.parts?.flatMap((p) => p.levels) ?? [];
+  const allLevels = useMemo(
+    () => topic.levels ?? topic.parts?.flatMap((p) => p.levels) ?? [],
+    [topic],
+  );
 
   const [openLevelId, setOpenLevelId] = useState<string | null>(() => {
     const first = allLevels[0];
@@ -70,13 +73,22 @@ function TopicPage() {
   useEffect(() => {
     const first = allLevels[0];
     setOpenLevelId(first ? `${first.number}-${first.title}` : null);
-  }, [topic.slug]);
+  }, [allLevels]);
 
-  const allIds = new Set<string>();
-  allLevels.forEach((lvl) => lvl.problems.forEach((lp) => allIds.add(lp.id)));
-  const total = allIds.size;
-  const solved = Array.from(allIds).filter((id) => progress[id]?.completed).length;
-  const pct = total ? Math.round((solved / total) * 100) : 0;
+  const { total, solved, pct } = useMemo(() => {
+    const allIds = new Set<string>();
+    allLevels.forEach((lvl) => lvl.problems.forEach((lp) => allIds.add(lp.id)));
+    const tot = allIds.size;
+    let sol = 0;
+    allIds.forEach((id) => {
+      if (progress[id]?.completed) sol++;
+    });
+    return {
+      total: tot,
+      solved: sol,
+      pct: tot ? Math.round((sol / tot) * 100) : 0,
+    };
+  }, [allLevels, progress]);
 
   const filtersActive =
     query.trim() !== "" || difficulty !== "all" || status !== "all" || platform !== "all";
@@ -107,8 +119,7 @@ function TopicPage() {
         return { ...lvl, problems };
       })
       .filter((lvl) => lvl.problems.length > 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allLevels, query, difficulty, status, platform, progress]);
+  }, [allLevels, query, difficulty, status, platform, progress, topic.name]);
 
   const filterKey = `${query}|${difficulty}|${status}|${platform}`;
   const prevFilterKeyRef = useRef(filterKey);

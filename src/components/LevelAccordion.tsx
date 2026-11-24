@@ -86,9 +86,9 @@ export function LevelAccordion({
         <div className="overflow-hidden">
           <div
             id={`level-panel-${level.number}`}
-            className="border-t border-border/50 bg-surface/40 backdrop-blur-md p-[clamp(0.625rem,1.5vh,1rem)]"
+            className="border-t border-border/50 bg-surface-muted/35 p-[clamp(0.625rem,1.5vh,1rem)]"
           >
-            <ProblemTable rows={rows} />
+            <ProblemTable rows={rows} embedded />
           </div>
         </div>
       </div>

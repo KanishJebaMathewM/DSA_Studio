@@ -14,10 +14,13 @@ export interface ProblemTableRow {
 export function ProblemTable({
   rows,
   showNotes = false,
+  embedded = false,
 }: {
   rows: ProblemTableRow[];
   /** Show a short preview of each problem's notes under its title. */
   showNotes?: boolean;
+  /** Skip nested backdrop-blur when already inside a blurred accordion card. */
+  embedded?: boolean;
 }) {
   const progress = useProgress();
 
@@ -26,7 +29,11 @@ export function ProblemTable({
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-x-auto rounded-lg border border-border/70 bg-surface shadow-xs backdrop-blur-md md:block">
+      <div
+        className={`hidden overflow-x-auto rounded-lg border border-border/70 shadow-xs md:block ${
+          embedded ? "bg-card/70" : "bg-surface backdrop-blur-md"
+        }`}
+      >
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border/60 bg-surface-muted/80 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -155,7 +162,9 @@ export function ProblemTable({
           return (
             <div
               key={`${problem.id}-m-${i}`}
-              className="rounded-lg border border-border/60 bg-surface backdrop-blur-md p-[clamp(0.625rem,1.4vh,0.875rem)] transition-all duration-200 hover:border-primary/40 hover:shadow-xs card-glass-line"
+              className={`rounded-lg border border-border/60 p-[clamp(0.625rem,1.4vh,0.875rem)] transition-all duration-200 hover:border-primary/40 hover:shadow-xs card-glass-line ${
+                embedded ? "bg-card/70" : "bg-surface backdrop-blur-md"
+              }`}
             >
               <div className="flex items-start gap-2.5">
                 <Checkbox

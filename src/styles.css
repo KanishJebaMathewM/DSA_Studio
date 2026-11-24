@@ -477,7 +477,7 @@ html[data-theme="mountain-observatory"].dark,
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -486,7 +486,7 @@ html[data-theme="mountain-observatory"].dark,
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fadeInUp 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .stagger-1 {
@@ -557,7 +557,6 @@ html[data-theme="mountain-observatory"].dark,
    Mobile Viewport & Background Scroll Stabilization
    ========================================================================== */
 html {
-  scroll-behavior: smooth;
   overscroll-behavior-y: none;
 }
 
