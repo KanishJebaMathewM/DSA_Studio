@@ -65,16 +65,17 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
 }
 
 /* Light theme — soft off-white surfaces, slate text, indigo accent */
 :root {
   --radius: 0.5rem;
 
-  --background: oklch(0.985 0.003 247);  /* #F8FAFC-ish */
-  --foreground: oklch(0.205 0.04 265);   /* slate-900 */
+  --background: oklch(0.985 0.003 247); /* #F8FAFC-ish */
+  --foreground: oklch(0.205 0.04 265); /* slate-900 */
 
   --surface: oklch(1 0 0);
   --surface-muted: oklch(0.972 0.005 247);
@@ -86,15 +87,15 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.205 0.04 265);
 
-  --primary: oklch(0.52 0.19 271);        /* indigo-600 #4F46E5 */
+  --primary: oklch(0.52 0.19 271); /* indigo-600 #4F46E5 */
   --primary-foreground: oklch(0.985 0.003 247);
-  --primary-soft: oklch(0.955 0.03 271);  /* subtle indigo tint */
+  --primary-soft: oklch(0.955 0.03 271); /* subtle indigo tint */
 
   --secondary: oklch(0.968 0.006 247);
   --secondary-foreground: oklch(0.28 0.04 265);
 
   --muted: oklch(0.968 0.006 247);
-  --muted-foreground: oklch(0.55 0.03 257);  /* slate-500 */
+  --muted-foreground: oklch(0.55 0.03 257); /* slate-500 */
 
   --accent: oklch(0.955 0.03 271);
   --accent-foreground: oklch(0.35 0.14 271);
@@ -102,7 +103,7 @@
   --destructive: oklch(0.58 0.22 25);
   --destructive-foreground: oklch(0.985 0.003 247);
 
-  --border: oklch(0.918 0.012 255);   /* #E2E8F0 */
+  --border: oklch(0.918 0.012 255); /* #E2E8F0 */
   --input: oklch(0.918 0.012 255);
   --ring: oklch(0.52 0.19 271);
 
@@ -133,10 +134,10 @@
 
 /* Dark theme — deep slate/navy surfaces, near-white text, same indigo accent */
 .dark {
-  --background: oklch(0.19 0.03 265);     /* #0F172A */
+  --background: oklch(0.19 0.03 265); /* #0F172A */
   --foreground: oklch(0.965 0.005 247);
 
-  --surface: oklch(0.235 0.03 265);       /* #1E293B */
+  --surface: oklch(0.235 0.03 265); /* #1E293B */
   --surface-muted: oklch(0.215 0.03 265);
   --hover: oklch(0.275 0.03 265);
 
@@ -192,7 +193,7 @@
 
 /* Atmospheric Theme Glassmorphism Enhancement */
 [data-theme-artwork="true"] {
-  --background: oklch(0.985 0.003 247 / 0.50);
+  --background: oklch(0.985 0.003 247 / 0.5);
   --card: oklch(1 0 0 / 0.86);
   --surface: oklch(1 0 0 / 0.88);
   --sidebar: oklch(1 0 0 / 0.86);
@@ -202,13 +203,13 @@
 }
 
 [data-theme-artwork="true"].dark {
-  --background: oklch(0.12 0.02 265 / 0.50);
+  --background: oklch(0.12 0.02 265 / 0.5);
   --card: oklch(0.19 0.03 265 / 0.86);
   --surface: oklch(0.21 0.03 265 / 0.88);
   --sidebar: oklch(0.16 0.03 265 / 0.86);
   --popover: oklch(0.17 0.03 265 / 0.95);
-  --border: oklch(0.35 0.03 265 / 0.50);
-  --sidebar-border: oklch(0.35 0.03 265 / 0.50);
+  --border: oklch(0.35 0.03 265 / 0.5);
+  --sidebar-border: oklch(0.35 0.03 265 / 0.5);
 }
 
 /* Dynamic Theme Presets & Accents */
@@ -243,28 +244,28 @@ html[data-theme="cozy-room"].dark,
 /* 2. Greenhouse Studio — Botanical Emerald & Glowing Jade */
 html[data-theme="greenhouse-studio"],
 [data-theme="greenhouse-studio"] {
-  --primary: oklch(0.50 0.15 152);
+  --primary: oklch(0.5 0.15 152);
   --primary-foreground: oklch(0.99 0 0);
   --primary-soft: oklch(0.94 0.04 152);
-  --sidebar-primary: oklch(0.50 0.15 152);
+  --sidebar-primary: oklch(0.5 0.15 152);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   --sidebar-accent: oklch(0.93 0.04 152);
-  --sidebar-accent-foreground: oklch(0.30 0.12 152);
-  --ring: oklch(0.50 0.15 152);
-  --sidebar-ring: oklch(0.50 0.15 152);
+  --sidebar-accent-foreground: oklch(0.3 0.12 152);
+  --ring: oklch(0.5 0.15 152);
+  --sidebar-ring: oklch(0.5 0.15 152);
 }
 
 html[data-theme="greenhouse-studio"].dark,
 [data-theme="greenhouse-studio"].dark {
-  --primary: oklch(0.70 0.15 155);
+  --primary: oklch(0.7 0.15 155);
   --primary-foreground: oklch(0.13 0.03 155);
   --primary-soft: oklch(0.27 0.06 155);
-  --sidebar-primary: oklch(0.70 0.15 155);
+  --sidebar-primary: oklch(0.7 0.15 155);
   --sidebar-primary-foreground: oklch(0.13 0.03 155);
   --sidebar-accent: oklch(0.25 0.05 155);
   --sidebar-accent-foreground: oklch(0.92 0.05 155);
-  --ring: oklch(0.70 0.15 155);
-  --sidebar-ring: oklch(0.70 0.15 155);
+  --ring: oklch(0.7 0.15 155);
+  --sidebar-ring: oklch(0.7 0.15 155);
 }
 
 /* 3. Mountain Observatory — Alpine Azure & Cosmic Violet / Starry Sapphire */
@@ -283,15 +284,15 @@ html[data-theme="mountain-observatory"],
 
 html[data-theme="mountain-observatory"].dark,
 [data-theme="mountain-observatory"].dark {
-  --primary: oklch(0.70 0.17 280);
+  --primary: oklch(0.7 0.17 280);
   --primary-foreground: oklch(0.14 0.03 280);
   --primary-soft: oklch(0.28 0.07 280);
-  --sidebar-primary: oklch(0.70 0.17 280);
+  --sidebar-primary: oklch(0.7 0.17 280);
   --sidebar-primary-foreground: oklch(0.14 0.03 280);
   --sidebar-accent: oklch(0.26 0.06 280);
   --sidebar-accent-foreground: oklch(0.92 0.05 280);
-  --ring: oklch(0.70 0.17 280);
-  --sidebar-ring: oklch(0.70 0.17 280);
+  --ring: oklch(0.7 0.17 280);
+  --sidebar-ring: oklch(0.7 0.17 280);
 }
 
 html[data-theme-artwork="true"],
@@ -306,6 +307,17 @@ html[data-theme-artwork="true"] body {
 [data-theme-artwork="true"] .bg-popover {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+}
+
+/* Modals and dialog overlays should always have solid high-contrast surfaces */
+[role="dialog"] {
+  background-color: #ffffff;
+  color: oklch(0.205 0.04 265);
+}
+
+.dark [role="dialog"] {
+  background-color: var(--surface);
+  color: oklch(0.965 0.005 247);
 }
 
 @layer base {
@@ -427,9 +439,10 @@ html[data-theme-artwork="true"] body {
 
 /* Subtle, soothing interactive card hover lift */
 .hover-lift {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.2s ease;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease;
 }
 
 .hover-lift:hover {

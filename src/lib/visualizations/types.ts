@@ -27,6 +27,37 @@ export interface SortingStep {
 
 export type ParseResult<T> = { ok: true; input: T } | { ok: false; error: string };
 
+export interface ComplexityInfo {
+  timeBest: string;
+  timeAverage: string;
+  timeWorst: string;
+  space: string;
+  notes?: string;
+}
+
+export interface LearningResource {
+  title: string;
+  url: string;
+  source: string;
+  description?: string;
+}
+
+export interface ExampleWalkthrough {
+  title: string;
+  description: string;
+  steps: string[];
+}
+
+export interface VisualizationTheory {
+  overview: string;
+  principles: string[];
+  workingProcess: string[];
+  pseudocode: string;
+  exampleWalkthrough: ExampleWalkthrough;
+  complexity: ComplexityInfo;
+  resources: LearningResource[];
+}
+
 interface VisualizationBase {
   id: string;
   topicSlug: string;
@@ -35,6 +66,7 @@ interface VisualizationBase {
   description: string;
   inputHint: string;
   defaultValueText: string;
+  theory: VisualizationTheory;
 }
 
 export type GraphVisualizationDefinition = VisualizationBase & {

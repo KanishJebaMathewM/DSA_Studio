@@ -163,6 +163,35 @@ test("Every registry definition produces a usable default step sequence", () => 
   }
 });
 
+test("Every visualization definition includes comprehensive theory and valid learning resources", () => {
+  for (const definition of VISUALIZATIONS) {
+    const { theory } = definition;
+    assert.ok(theory, `${definition.id} must have theory object`);
+    assert.ok(theory.overview.length > 20, `${definition.id} overview must be detailed`);
+    assert.ok(theory.principles.length >= 2, `${definition.id} must have multiple principles`);
+    assert.ok(
+      theory.workingProcess.length >= 3,
+      `${definition.id} must have working process steps`,
+    );
+    assert.ok(theory.pseudocode.length > 10, `${definition.id} must have pseudocode`);
+    assert.ok(
+      theory.exampleWalkthrough.steps.length >= 3,
+      `${definition.id} must have walkthrough steps`,
+    );
+    assert.ok(theory.complexity.timeWorst, `${definition.id} must have worst time complexity`);
+    assert.ok(theory.complexity.space, `${definition.id} must have space complexity`);
+    assert.ok(
+      theory.resources.length >= 1,
+      `${definition.id} must have external learning resources`,
+    );
+    for (const res of theory.resources) {
+      assert.ok(res.title, "resource title required");
+      assert.ok(res.source, "resource source required");
+      assert.ok(res.url.startsWith("https://"), `resource url must be https: ${res.url}`);
+    }
+  }
+});
+
 console.log(`\n📊 Results: ${passed} passed, ${failed} failed\n`);
 if (failed > 0) {
   process.exit(1);

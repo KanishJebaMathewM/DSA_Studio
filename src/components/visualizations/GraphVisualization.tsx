@@ -70,6 +70,11 @@ export function GraphVisualization({ input, step }: { input: GraphInput; step: G
                   ? "fill-primary-soft"
                   : "fill-surface";
             const stroke = isFrontier ? "stroke-primary" : "stroke-border";
+            const textColor = isCurrent
+              ? "fill-slate-900 font-bold"
+              : isVisited
+                ? "fill-primary-foreground font-semibold"
+                : "fill-foreground font-semibold";
             return (
               <g key={node}>
                 <circle
@@ -84,9 +89,7 @@ export function GraphVisualization({ input, step }: { input: GraphInput; step: G
                   y={pos.y}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  className={`text-xs font-semibold ${
-                    isCurrent || isVisited ? "fill-primary-foreground" : "fill-foreground"
-                  }`}
+                  className={`text-xs ${textColor}`}
                 >
                   {node}
                 </text>

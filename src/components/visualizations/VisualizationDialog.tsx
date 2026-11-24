@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { BookOpen, ExternalLink } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -7,20 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useStepPlayer } from "@/hooks/use-step-player";
-import { GraphVisualization } from "./GraphVisualization";
-import { SortingVisualization } from "./SortingVisualization";
-import { VisualizationControls } from "./VisualizationControls";
-import type {
-  GraphInput,
-  GraphStep,
-  SortingInput,
-  SortingStep,
-  VisualizationDefinition,
-} from "@/lib/visualizations/types";
+import { Badge } from "@/components/ui/badge";
+import { InteractiveVisualizer } from "./InteractiveVisualizer";
+import type { VisualizationDefinition } from "@/lib/visualizations/types";
 
 export function VisualizationDialog({
   definition,
@@ -31,125 +21,68 @@ export function VisualizationDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const [input, setInput] = useState<GraphInput | SortingInput>(definition.defaultInput);
-  const [raw, setRaw] = useState(definition.defaultValueText);
-  const [error, setError] = useState<string | null>(null);
-  const [speed, setSpeed] = useState(1);
-  const [customOpen, setCustomOpen] = useState(false);
-
-  const steps = useMemo(() => {
-    if (definition.kind === "graph") {
-      return definition.generateSteps(input as GraphInput) as GraphStep[];
-    }
-    return definition.generateSteps(input as SortingInput) as SortingStep[];
-  }, [definition, input]);
-
-  const player = useStepPlayer(steps.length, speed);
-  const step = steps[Math.min(player.index, steps.length - 1)];
-
-  const applyCustomInput = () => {
-    const result = definition.parseInput(raw);
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-    setError(null);
-    setInput(result.input);
-    setCustomOpen(false);
-  };
-
-  const restoreDefault = () => {
-    setInput(definition.defaultInput);
-    setRaw(definition.defaultValueText);
-    setError(null);
-  };
+  const primaryResource = definition.theory.resources[0];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[92vh] w-[calc(100%-1rem)] max-w-3xl overflow-y-auto p-4 sm:p-6">
-        <DialogHeader>
-          <DialogTitle>{definition.name}</DialogTitle>
-          <DialogDescription>{definition.description}</DialogDescription>
+      <DialogContent className="max-h-[92vh] w-[calc(100%-1rem)] max-w-3xl overflow-y-auto p-4 sm:p-6 bg-white dark:bg-surface text-slate-900 dark:text-foreground border border-border shadow-2xl">
+        <DialogHeader className="space-y-2 border-b border-border/60 pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 pr-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+                {definition.name}
+              </DialogTitle>
+              <Badge variant="secondary" className="text-xs font-semibold">
+                {definition.algorithm}
+              </Badge>
+            </div>
+            <Button
+              asChild
+              variant="default"
+              size="sm"
+              className="h-8 gap-1.5 text-xs font-medium cursor-pointer"
+              onClick={() => onOpenChange(false)}
+            >
+              <Link to="/visualizations/$id" params={{ id: definition.id }}>
+                <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Dedicated Learning Page</span>
+              </Link>
+            </Button>
+          </div>
+          <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            {definition.description}
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
-          {definition.kind === "graph" && step ? (
-            <GraphVisualization input={input as GraphInput} step={step as GraphStep} />
-          ) : step ? (
-            <SortingVisualization input={input as SortingInput} step={step as SortingStep} />
-          ) : null}
-
-          <div
-            className="rounded-lg border border-border/60 bg-surface-muted/50 px-3 py-2 text-sm text-foreground"
-            role="status"
-            aria-live="polite"
-          >
-            {step?.message}
+        {/* Quick Concept & Complexity Pill Strip */}
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/70 bg-surface-muted/60 p-2.5 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-muted-foreground">Time Complexity:</span>
+            <span className="rounded bg-primary-soft px-1.5 py-0.5 font-mono text-[11px] font-semibold text-primary">
+              {definition.theory.complexity.timeWorst}
+            </span>
+            <span className="font-semibold text-muted-foreground ml-1">Space:</span>
+            <span className="rounded bg-primary-soft px-1.5 py-0.5 font-mono text-[11px] font-semibold text-primary">
+              {definition.theory.complexity.space}
+            </span>
           </div>
 
-          <VisualizationControls
-            index={player.index}
-            total={steps.length}
-            playing={player.playing}
-            speed={speed}
-            atStart={player.atStart}
-            atEnd={player.atEnd}
-            onToggle={player.toggle}
-            onNext={player.next}
-            onPrev={player.prev}
-            onReset={player.reset}
-            onSpeedChange={setSpeed}
-          />
-
-          <Collapsible open={customOpen} onOpenChange={setCustomOpen}>
-            <CollapsibleTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="w-full justify-between text-muted-foreground"
-              >
-                Custom input
-                <ChevronDown
-                  aria-hidden="true"
-                  className={`transition-transform ${customOpen ? "rotate-180" : ""}`}
-                />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-2">
-              <div className="space-y-2">
-                <label htmlFor="visualization-input" className="text-xs font-medium">
-                  {definition.inputHint}
-                </label>
-                <Textarea
-                  id="visualization-input"
-                  value={raw}
-                  onChange={(e) => {
-                    setRaw(e.target.value);
-                    if (error) setError(null);
-                  }}
-                  rows={3}
-                  className="font-mono text-sm"
-                  aria-invalid={!!error}
-                  aria-describedby={error ? "visualization-input-error" : undefined}
-                />
-                {error && (
-                  <p id="visualization-input-error" className="text-xs text-destructive">
-                    {error}
-                  </p>
-                )}
-                <div className="flex flex-wrap gap-2">
-                  <Button type="button" size="sm" onClick={applyCustomInput}>
-                    Apply input
-                  </Button>
-                  <Button type="button" size="sm" variant="outline" onClick={restoreDefault}>
-                    Restore default
-                  </Button>
-                </div>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
+          {primaryResource && (
+            <a
+              href={primaryResource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+              title={`Read about ${definition.name} on ${primaryResource.source}`}
+            >
+              <span>{primaryResource.source} Guide</span>
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            </a>
+          )}
         </div>
+
+        {/* Interactive Visualization Engine & Step Controls */}
+        <InteractiveVisualizer definition={definition} />
       </DialogContent>
     </Dialog>
   );
