@@ -219,7 +219,12 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
         {!collapsed && (
           <div className="flex items-center justify-center gap-3 px-2 py-1 text-[11px] text-muted-foreground">
-            <a href={sourceUrl} target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
               Source
             </a>
             <a

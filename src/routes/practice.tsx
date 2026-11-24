@@ -10,8 +10,16 @@ import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
 import { PracticeSkeleton } from "@/components/LoadingSkeletons";
 
+function PracticePending() {
+  return (
+    <AppShell title="Practice">
+      <PracticeSkeleton />
+    </AppShell>
+  );
+}
+
 export const Route = createFileRoute("/practice")({
-  pendingComponent: PracticeSkeleton,
+  pendingComponent: PracticePending,
   head: () => ({
     meta: [
       { title: "Practice — DSA Studio" },

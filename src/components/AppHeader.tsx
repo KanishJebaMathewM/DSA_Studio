@@ -82,29 +82,31 @@ export function AppHeader({ title }: { title: string }) {
         {/* --- MOBILE VIEW (< md): Toggles between Title+Icon and Inline Search --- */}
         <div className="flex md:hidden flex-1 items-center gap-2 min-w-0">
           {isMobileSearchOpen ? (
-            <div className="flex flex-1 items-center gap-2 min-w-0">
-              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <Input
-                ref={inputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search problems, topics…"
-                className="h-8 min-w-0 flex-1 border-0 bg-transparent px-1 text-xs sm:text-sm shadow-none focus-visible:ring-0 focus-visible:outline-none placeholder:text-muted-foreground/70"
-                aria-label="Search problems and topics"
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQuery("");
-                    inputRef.current?.focus();
-                  }}
-                  className="p-1 text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
-                  aria-label="Clear search query"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
+            <div className="flex flex-1 items-center gap-1.5 min-w-0">
+              <div className="flex flex-1 items-center gap-1.5 min-w-0 rounded-lg border border-border/50 bg-surface/60 px-2 transition-all focus-within:border-primary/60 focus-within:bg-surface focus-within:ring-1 focus-within:ring-primary">
+                <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <Input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search problems, topics…"
+                  className="h-8 min-w-0 flex-1 border-0 bg-transparent px-1 text-xs sm:text-sm shadow-none focus-visible:ring-0 focus-visible:outline-none placeholder:text-muted-foreground/70"
+                  aria-label="Search problems and topics"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuery("");
+                      inputRef.current?.focus();
+                    }}
+                    className="p-1 text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
+                    aria-label="Clear search query"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
               <Button
                 variant="ghost"
                 size="sm"

@@ -121,7 +121,9 @@ const SidebarProvider = React.forwardRef<
               return parsed;
             }
           }
-        } catch {}
+        } catch {
+          // ignore storage errors
+        }
       }
       return 0; // 0 = default responsive proportional mode (20–25%)
     });
@@ -154,7 +156,7 @@ const SidebarProvider = React.forwardRef<
           <div
             style={
               {
-                "--sidebar-width": `${width}px`,
+                "--sidebar-width": width > 0 ? `${width}px` : SIDEBAR_WIDTH,
                 "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
                 ...style,
               } as React.CSSProperties
@@ -249,11 +251,7 @@ const Sidebar = React.forwardRef<
               : "w-[26%] md:w-[25%] lg:w-[22%] xl:w-[20%] 2xl:w-[18%] min-w-[220px] max-w-[420px]",
           className,
         )}
-        style={
-          state !== "collapsed" && width > 0
-            ? { width: `${width}px` }
-            : undefined
-        }
+        style={state !== "collapsed" && width > 0 ? { width: `${width}px` } : undefined}
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
@@ -302,25 +300,82 @@ const SidebarTrigger = React.forwardRef<
 });
 SidebarTrigger.displayName = "SidebarTrigger";
 
-const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
+const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {
     const { toggleSidebar, width, setWidth, state, isResizing, setIsResizing } = useSidebar();
+    const clickTimeoutRef = React.useRef<number | null>(null);
+    const dragCleanupRef = React.useRef<(() => void) | null>(null);
 
-    const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (state === "collapsed") {
+    React.useEffect(() => {
+      return () => {
+        if (clickTimeoutRef.current !== null) {
+          window.clearTimeout(clickTimeoutRef.current);
+          clickTimeoutRef.current = null;
+        }
+        dragCleanupRef.current?.();
+      };
+    }, []);
+
+    const resetWidth = React.useCallback(() => {
+      if (clickTimeoutRef.current !== null) {
+        window.clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+      }
+      setWidth(0);
+      try {
+        localStorage.removeItem("dsa-studio-sidebar-width");
+      } catch {
+        // ignore storage errors
+      }
+    }, [setWidth]);
+
+    const scheduleToggle = React.useCallback(() => {
+      if (clickTimeoutRef.current !== null) {
+        window.clearTimeout(clickTimeoutRef.current);
+      }
+      clickTimeoutRef.current = window.setTimeout(() => {
+        clickTimeoutRef.current = null;
         toggleSidebar();
+      }, 220);
+    }, [toggleSidebar]);
+
+    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      if (e.detail >= 2 && clickTimeoutRef.current !== null) {
+        window.clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+      }
+
+      if (state === "collapsed") {
+        const onCollapsedMouseUp = (upEvent: MouseEvent) => {
+          document.removeEventListener("mouseup", onCollapsedMouseUp);
+          dragCleanupRef.current = null;
+          if (upEvent.detail >= 2) return;
+          scheduleToggle();
+        };
+        document.addEventListener("mouseup", onCollapsedMouseUp);
+        dragCleanupRef.current = () => {
+          document.removeEventListener("mouseup", onCollapsedMouseUp);
+        };
         return;
       }
-      e.preventDefault();
+
       const startX = e.clientX;
-      const currentElement = (e.currentTarget.parentElement || e.currentTarget.closest("[data-sidebar]")) as HTMLElement | null;
-      const startWidth = width > 0 ? width : (currentElement?.getBoundingClientRect().width || 256);
+      const currentElement = (e.currentTarget.parentElement ||
+        e.currentTarget.closest("[data-sidebar]")) as HTMLElement | null;
+      const side =
+        currentElement?.closest("[data-side]")?.getAttribute("data-side") === "right"
+          ? "right"
+          : "left";
+      const startWidth = width > 0 ? width : currentElement?.getBoundingClientRect().width || 256;
       let didMove = false;
       let currentWidth = startWidth;
       setIsResizing(true);
 
       const onMouseMove = (moveEvent: MouseEvent) => {
-        const delta = moveEvent.clientX - startX;
+        const rawDelta = moveEvent.clientX - startX;
+        const delta = side === "right" ? -rawDelta : rawDelta;
         if (Math.abs(delta) > 3) {
           didMove = true;
         }
@@ -328,18 +383,26 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
         setWidth(currentWidth);
       };
 
-      const onMouseUp = () => {
+      const finishDrag = () => {
         setIsResizing(false);
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
         document.body.style.removeProperty("cursor");
         document.body.style.removeProperty("user-select");
+        dragCleanupRef.current = null;
+      };
+
+      const onMouseUp = (upEvent: MouseEvent) => {
+        finishDrag();
         if (!didMove) {
-          toggleSidebar();
+          if (upEvent.detail >= 2) return;
+          scheduleToggle();
         } else {
           try {
             localStorage.setItem("dsa-studio-sidebar-width", String(currentWidth));
-          } catch {}
+          } catch {
+            // ignore storage errors
+          }
         }
       };
 
@@ -347,26 +410,75 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
       document.body.style.userSelect = "none";
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
+      dragCleanupRef.current = finishDrag;
     };
 
-    const handleDoubleClick = () => {
-      setWidth(0);
-      try {
-        localStorage.removeItem("dsa-studio-sidebar-width");
-      } catch {}
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentElement = (e.currentTarget.parentElement ||
+        e.currentTarget.closest("[data-sidebar]")) as HTMLElement | null;
+      const side =
+        currentElement?.closest("[data-side]")?.getAttribute("data-side") === "right"
+          ? "right"
+          : "left";
+      const step = e.shiftKey ? 32 : 16;
+
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleSidebar();
+        return;
+      }
+
+      if (e.key === "Home") {
+        e.preventDefault();
+        resetWidth();
+        return;
+      }
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        if (state === "collapsed") {
+          const expandKey = side === "right" ? "ArrowLeft" : "ArrowRight";
+          if (e.key === expandKey) {
+            toggleSidebar();
+          }
+          return;
+        }
+        const delta =
+          e.key === "ArrowRight"
+            ? side === "right"
+              ? -step
+              : step
+            : side === "right"
+              ? step
+              : -step;
+        const baseWidth = width > 0 ? width : currentElement?.getBoundingClientRect().width || 256;
+        const nextWidth = Math.round(Math.min(Math.max(baseWidth + delta, 200), 450));
+        setWidth(nextWidth);
+        try {
+          localStorage.setItem("dsa-studio-sidebar-width", String(nextWidth));
+        } catch {
+          // ignore storage errors
+        }
+      }
     };
 
     return (
-      <button
+      <div
         ref={ref}
-        data-sidebar="rail"
+        role="separator"
+        aria-orientation="vertical"
         aria-label="Toggle or resize sidebar"
-        tabIndex={-1}
+        aria-valuemin={200}
+        aria-valuemax={450}
+        aria-valuenow={width > 0 ? width : 256}
+        tabIndex={0}
+        data-sidebar="rail"
         onMouseDown={handleMouseDown}
-        onDoubleClick={handleDoubleClick}
-        title="Drag to resize, click to toggle, double-click to reset"
+        onDoubleClick={resetWidth}
+        onKeyDown={handleKeyDown}
+        title="Drag or use arrow keys to resize, click or Enter to toggle, double-click or Home to reset"
         className={cn(
-          "absolute inset-y-0 -right-1.5 z-20 hidden w-4 cursor-col-resize transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[3px] hover:after:bg-primary/50 sm:flex",
+          "absolute inset-y-0 -right-1.5 z-20 hidden w-4 cursor-col-resize rounded-sm outline-none transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[3px] hover:after:bg-primary/50 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:after:bg-primary sm:flex",
           isResizing && "after:bg-primary",
           className,
         )}

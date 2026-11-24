@@ -19,8 +19,16 @@ import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
 import { DashboardSkeleton } from "@/components/LoadingSkeletons";
 
+function DashboardPending() {
+  return (
+    <AppShell title="Dashboard">
+      <DashboardSkeleton />
+    </AppShell>
+  );
+}
+
 export const Route = createFileRoute("/")({
-  pendingComponent: DashboardSkeleton,
+  pendingComponent: DashboardPending,
   head: () => ({
     meta: [
       { title: "Dashboard — DSA Studio" },
@@ -251,7 +259,10 @@ function Dashboard() {
               </div>
               <div className="text-sm font-medium text-primary">{pct}%</div>
             </div>
-            <ProgressBar value={pct} className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)]" />
+            <ProgressBar
+              value={pct}
+              className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)]"
+            />
           </div>
 
           {/* Stat cards */}
@@ -403,7 +414,9 @@ function DiffCard({
           {label}
         </span>
       </div>
-      <div className="mt-[clamp(0.25rem,0.8vh,0.5rem)] text-lg sm:text-2xl font-semibold text-foreground">{value}</div>
+      <div className="mt-[clamp(0.25rem,0.8vh,0.5rem)] text-lg sm:text-2xl font-semibold text-foreground">
+        {value}
+      </div>
     </div>
   );
 }

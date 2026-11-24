@@ -160,4 +160,3 @@ export function PracticeSkeleton() {
     </div>
   );
 }
-

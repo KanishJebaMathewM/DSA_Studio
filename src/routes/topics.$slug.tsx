@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { LevelAccordion } from "@/components/LevelAccordion";
 import { ProgressBar } from "@/components/ProgressBar";
@@ -17,8 +17,18 @@ import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
 import { TopicSkeleton } from "@/components/LoadingSkeletons";
 
+function TopicPending() {
+  const { slug } = useParams({ strict: false }) as { slug?: string };
+  const title = slug ? (getTopic(slug)?.name ?? "Topic") : "Topic";
+  return (
+    <AppShell title={title}>
+      <TopicSkeleton />
+    </AppShell>
+  );
+}
+
 export const Route = createFileRoute("/topics/$slug")({
-  pendingComponent: TopicSkeleton,
+  pendingComponent: TopicPending,
   loader: ({ params }) => {
     const topic = getTopic(params.slug);
     if (!topic) throw notFound();

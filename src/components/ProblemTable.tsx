@@ -47,9 +47,9 @@ export function ProblemTable({
               return (
                 <tr
                   key={`${problem.id}-${i}`}
-                  className="group relative border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80 hover:before:absolute hover:before:left-0 hover:before:top-1.5 hover:before:bottom-1.5 hover:before:w-[3px] hover:before:rounded-r-full hover:before:bg-primary"
+                  className="group border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80"
                 >
-                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle transition-[box-shadow] duration-150 group-hover:shadow-[inset_3px_0_0_0_var(--primary)]">
                     <Checkbox
                       checked={done}
                       onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}

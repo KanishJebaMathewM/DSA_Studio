@@ -102,7 +102,10 @@ function ProgressPage() {
           </div>
           <div className="text-sm font-medium text-primary">{pct}%</div>
         </div>
-        <ProgressBar value={pct} className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)]" />
+        <ProgressBar
+          value={pct}
+          className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)]"
+        />
       </div>
 
       <div className="mt-4 sm:mt-6 grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-3">
