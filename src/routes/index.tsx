@@ -212,7 +212,7 @@ function Dashboard() {
           )}
         </div>
       ) : (
-        <div className="flex flex-1 flex-col space-y-6">
+        <div className="space-y-6">
           {/* Welcome Hero Banner */}
           <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -279,9 +279,9 @@ function Dashboard() {
             <DiffCard label="Hard" value={byDifficulty("Hard")} tone="hard" />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-3 flex-1">
+          <div className="grid gap-4 lg:grid-cols-3">
             {/* Continue practicing */}
-            <div className="lg:col-span-2 flex flex-col rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+            <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground">Continue Practicing</h3>
                 <span className="text-xs text-muted-foreground">Next unsolved problem</span>
@@ -319,7 +319,7 @@ function Dashboard() {
             </div>
 
             {/* Recently practiced */}
-            <div className="flex flex-col rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+            <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
               <h3 className="text-sm font-semibold text-foreground">Recently Practiced</h3>
               {recent.length === 0 ? (
                 <p className="mt-3 text-sm text-muted-foreground">

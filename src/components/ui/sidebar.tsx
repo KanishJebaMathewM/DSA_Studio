@@ -245,7 +245,7 @@ const Sidebar = React.forwardRef<
             ? "w-[var(--sidebar-width-icon)]"
             : width > 0
               ? ""
-              : "w-[26%] md:w-[25%] lg:w-[22%] xl:w-[20%] 2xl:w-[18%] min-w-[220px] max-w-[380px]",
+              : "w-[26%] md:w-[25%] lg:w-[22%] xl:w-[20%] 2xl:w-[18%] min-w-[220px] max-w-[420px]",
           className,
         )}
         style={
