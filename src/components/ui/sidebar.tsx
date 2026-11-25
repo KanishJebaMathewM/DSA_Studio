@@ -24,6 +24,14 @@ const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+const SIDEBAR_WIDTH_STORAGE_KEY = "dsa-studio-sidebar-width";
+const SIDEBAR_WIDTH_MIN = 200;
+const SIDEBAR_WIDTH_MAX = 450;
+const SIDEBAR_WIDTH_DEFAULT = 256;
+
+function clampSidebarWidth(value: number): number {
+  return Math.min(Math.max(value, SIDEBAR_WIDTH_MIN), SIDEBAR_WIDTH_MAX);
+}
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed";
@@ -115,10 +123,10 @@ const SidebarProvider = React.forwardRef<
 
     React.useEffect(() => {
       try {
-        const saved = localStorage.getItem("dsa-studio-sidebar-width");
+        const saved = localStorage.getItem(SIDEBAR_WIDTH_STORAGE_KEY);
         if (saved) {
           const parsed = parseInt(saved, 10);
-          if (!isNaN(parsed) && parsed >= 200 && parsed <= 450) {
+          if (!isNaN(parsed) && parsed >= SIDEBAR_WIDTH_MIN && parsed <= SIDEBAR_WIDTH_MAX) {
             setWidth(parsed);
           }
         }
@@ -323,7 +331,7 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
       }
       setWidth(0);
       try {
-        localStorage.removeItem("dsa-studio-sidebar-width");
+        localStorage.removeItem(SIDEBAR_WIDTH_STORAGE_KEY);
       } catch {
         // ignore storage errors
       }
@@ -368,7 +376,8 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
         currentElement?.closest("[data-side]")?.getAttribute("data-side") === "right"
           ? "right"
           : "left";
-      const startWidth = width > 0 ? width : currentElement?.getBoundingClientRect().width || 256;
+      const startWidth =
+        width > 0 ? width : currentElement?.getBoundingClientRect().width || SIDEBAR_WIDTH_DEFAULT;
       let didMove = false;
       let currentWidth = startWidth;
       setIsResizing(true);
@@ -380,7 +389,7 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
           return;
         }
         didMove = true;
-        currentWidth = Math.min(Math.max(startWidth + delta, 200), 450);
+        currentWidth = clampSidebarWidth(startWidth + delta);
         setWidth(currentWidth);
       };
 
@@ -400,7 +409,7 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
           scheduleToggle();
         } else {
           try {
-            localStorage.setItem("dsa-studio-sidebar-width", String(currentWidth));
+            localStorage.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(currentWidth));
           } catch {
             // ignore storage errors
           }
@@ -452,11 +461,12 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
             : side === "right"
               ? step
               : -step;
-        const baseWidth = width > 0 ? width : currentElement?.getBoundingClientRect().width || 256;
-        const nextWidth = Math.round(Math.min(Math.max(baseWidth + delta, 200), 450));
+        const baseWidth =
+          width > 0 ? width : currentElement?.getBoundingClientRect().width || SIDEBAR_WIDTH_DEFAULT;
+        const nextWidth = Math.round(clampSidebarWidth(baseWidth + delta));
         setWidth(nextWidth);
         try {
-          localStorage.setItem("dsa-studio-sidebar-width", String(nextWidth));
+          localStorage.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(nextWidth));
         } catch {
           // ignore storage errors
         }
@@ -473,9 +483,9 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
         role="separator"
         aria-orientation="vertical"
         aria-label="Toggle or resize sidebar"
-        aria-valuemin={200}
-        aria-valuemax={450}
-        aria-valuenow={width > 0 ? width : 256}
+        aria-valuemin={SIDEBAR_WIDTH_MIN}
+        aria-valuemax={SIDEBAR_WIDTH_MAX}
+        aria-valuenow={width > 0 ? width : SIDEBAR_WIDTH_DEFAULT}
         tabIndex={0}
         data-sidebar="rail"
         onMouseDown={handleMouseDown}

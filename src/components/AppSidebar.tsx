@@ -83,7 +83,7 @@ const sourceUrl =
 export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const { state, toggleSidebar, isMobile } = useSidebar();
-  const collapsed = state === "collapsed";
+  const collapsed = state === "collapsed" && !isMobile;
   const isActive = (p: string) => pathname === p;
   const isTopicActive = (slug: string) => pathname === `/topics/${slug}`;
 
