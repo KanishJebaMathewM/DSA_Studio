@@ -148,7 +148,7 @@ export function AppHeader({ title }: { title: string }) {
           </div>
 
           <div className="relative ml-auto w-full max-w-[clamp(16rem,24vw,28rem)]">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-[var(--icon-sm)] w-[var(--icon-sm)] -translate-y-1/2 text-muted-foreground" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-[var(--icon-sm)] w-[var(--icon-sm)] -translate-y-1/2 text-muted-foreground" />
             <Input
               ref={desktopInputRef}
               value={query}
@@ -161,7 +161,7 @@ export function AppHeader({ title }: { title: string }) {
               aria-keyshortcuts={isMac ? "Meta+K /" : "Control+K /"}
             />
             {!query && (
-              <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 items-center rounded border bg-muted/80 px-1.5 py-0.5 font-sans text-fluid-2xs font-medium text-muted-foreground md:inline-flex">
+              <kbd className="pointer-events-none absolute right-2 top-1/2 z-10 hidden -translate-y-1/2 items-center rounded border bg-muted/80 px-1.5 py-0.5 font-sans text-fluid-2xs font-medium text-muted-foreground md:inline-flex">
                 {isMac ? "⌘K" : "Ctrl K"}
               </kbd>
             )}
@@ -172,7 +172,7 @@ export function AppHeader({ title }: { title: string }) {
                   setQuery("");
                   desktopInputRef.current?.focus();
                 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                className="absolute right-2 top-1/2 z-10 -translate-y-1/2 p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
                 aria-label="Clear search query"
               >
                 <X className="h-[var(--icon-xs)] w-[var(--icon-xs)]" />
