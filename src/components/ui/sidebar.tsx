@@ -301,7 +301,8 @@ SidebarTrigger.displayName = "SidebarTrigger";
 
 const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {
-    const { toggleSidebar, width, setWidth, state, isResizing, setIsResizing } = useSidebar();
+    const { toggleSidebar, width, setWidth, state, isMobile, isResizing, setIsResizing } =
+      useSidebar();
     const clickTimeoutRef = React.useRef<number | null>(null);
     const dragCleanupRef = React.useRef<(() => void) | null>(null);
 
@@ -375,9 +376,10 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
       const onMouseMove = (moveEvent: MouseEvent) => {
         const rawDelta = moveEvent.clientX - startX;
         const delta = side === "right" ? -rawDelta : rawDelta;
-        if (Math.abs(delta) > 3) {
-          didMove = true;
+        if (!didMove && Math.abs(delta) <= 3) {
+          return;
         }
+        didMove = true;
         currentWidth = Math.min(Math.max(startWidth + delta, 200), 450);
         setWidth(currentWidth);
       };
@@ -460,6 +462,10 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
         }
       }
     };
+
+    if (isMobile) {
+      return null;
+    }
 
     return (
       <div

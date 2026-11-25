@@ -40,7 +40,7 @@ export function ThemeBackground() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-x-0 -top-12 -bottom-12 z-0 overflow-hidden select-none transition-colors duration-200 ease-out"
+      className="pointer-events-none fixed inset-x-0 -top-12 h-[calc(100lvh+6rem)] z-0 overflow-hidden select-none transition-colors duration-200 ease-out"
       style={{
         backgroundColor: "var(--canvas)",
         transform: "translate3d(0, 0, 0)",
