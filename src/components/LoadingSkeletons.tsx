@@ -101,9 +101,9 @@ export function TopicSkeleton() {
 
       {/* Filter Bar Skeleton */}
       <div className="mb-[clamp(0.5rem,1.5vh,1rem)] flex flex-wrap items-center gap-2">
-        <Skeleton className="h-9 w-[calc(50%-0.25rem)] sm:w-[150px] rounded-lg" />
-        <Skeleton className="h-9 w-[calc(50%-0.25rem)] sm:w-[150px] rounded-lg" />
-        <Skeleton className="h-9 w-[calc(50%-0.25rem)] sm:w-[150px] rounded-lg" />
+        <Skeleton className="h-[var(--ctrl-md)] w-[calc(50%-0.25rem)] sm:w-[clamp(9.5rem,12vw,13rem)] rounded-lg" />
+        <Skeleton className="h-[var(--ctrl-md)] w-[calc(50%-0.25rem)] sm:w-[clamp(9.5rem,12vw,13rem)] rounded-lg" />
+        <Skeleton className="h-[var(--ctrl-md)] w-[calc(50%-0.25rem)] sm:w-[clamp(9.5rem,12vw,13rem)] rounded-lg" />
       </div>
 
       {/* Accordion Skeletons */}

@@ -156,15 +156,13 @@ function TopicPage() {
   return (
     <AppShell title={topic.name}>
       <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.35rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
+        <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground break-words">
           {topic.name}
         </h2>
-        <p className="mt-1 max-w-2xl text-xs sm:text-sm text-muted-foreground">
-          {topic.description}
-        </p>
+        <p className="mt-1 max-w-2xl text-fluid-sm text-muted-foreground">{topic.description}</p>
         <div className="mt-[clamp(0.5rem,1.4vh,1rem)] flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-          <ProgressBar value={pct} className="w-full sm:max-w-md" />
-          <div className="text-xs font-medium text-muted-foreground shrink-0">
+          <ProgressBar value={pct} className="w-full sm:max-w-[clamp(20rem,28vw,32rem)]" />
+          <div className="text-fluid-xs font-medium text-muted-foreground shrink-0">
             {solved} / {total} completed •{" "}
             <span className="text-primary font-semibold">{pct}%</span>
           </div>
@@ -213,7 +211,7 @@ function TopicPage() {
             variant="ghost"
             size="sm"
             onClick={clear}
-            className="h-9 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+            className="h-[var(--ctrl-md)] text-fluid-xs text-muted-foreground hover:text-foreground cursor-pointer"
           >
             Clear filters
           </Button>
@@ -261,7 +259,7 @@ function FilterSelect({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-9 w-[calc(50%-0.25rem)] sm:w-[150px] md:w-[160px] border-border/70 bg-surface shadow-xs backdrop-blur-md text-xs sm:text-sm">
+      <SelectTrigger className="h-[var(--ctrl-md)] w-[calc(50%-0.25rem)] sm:w-[clamp(9.5rem,12vw,13rem)] border-border/70 bg-surface shadow-xs backdrop-blur-md text-fluid-xs">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="max-h-[min(15rem,var(--radix-select-content-available-height))] max-w-[calc(100vw-2rem)]">

@@ -49,30 +49,35 @@ export function LevelAccordion({
         aria-controls={`level-panel-${level.number}`}
         className="group flex w-full items-center gap-3 sm:gap-4 px-3 sm:px-4 py-[clamp(0.625rem,1.4vh,0.875rem)] text-left hover:bg-hover/80 transition-colors duration-150 cursor-pointer"
       >
-        <div className="flex h-[clamp(1.75rem,3.8vh,2.25rem)] w-[clamp(1.75rem,3.8vh,2.25rem)] shrink-0 items-center justify-center rounded-md bg-primary-soft text-xs font-semibold text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-[0_0_12px_var(--primary-soft)]">
+        <div className="flex h-[clamp(1.75rem,calc(1.25rem+0.3vw+0.45vh),2.5rem)] w-[clamp(1.75rem,calc(1.25rem+0.3vw+0.45vh),2.5rem)] shrink-0 items-center justify-center rounded-md bg-primary-soft text-fluid-xs font-semibold text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-[0_0_12px_var(--primary-soft)]">
           {level.number}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground transition-colors group-hover:text-primary break-words">
+            <span className="text-fluid-sm font-semibold text-foreground transition-colors group-hover:text-primary break-words">
               Level {level.number} — {level.title}
             </span>
-            {done && <Check aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-success" />}
+            {done && (
+              <Check
+                aria-hidden="true"
+                className="h-[var(--icon-xs)] w-[var(--icon-xs)] shrink-0 text-success"
+              />
+            )}
           </div>
           <div className="mt-1.5 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
             <ProgressBar
               value={pct}
               label={`Level ${level.number} progress`}
-              className="w-full sm:max-w-[200px] md:max-w-[240px]"
+              className="w-full sm:max-w-[clamp(12.5rem,18vw,20rem)]"
             />
-            <span className="shrink-0 text-xs text-muted-foreground">
+            <span className="shrink-0 text-fluid-xs text-muted-foreground">
               {solved} / {total} completed
             </span>
           </div>
         </div>
         <ChevronDown
           aria-hidden="true"
-          className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-out ${
+          className={`h-[var(--icon-sm)] w-[var(--icon-sm)] shrink-0 text-muted-foreground transition-transform duration-300 ease-out ${
             open ? "rotate-180 text-foreground" : "group-hover:text-foreground"
           }`}
         />

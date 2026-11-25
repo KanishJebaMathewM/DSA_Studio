@@ -92,7 +92,7 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
         <div
           className={cn(
-            "flex h-10 w-full items-center justify-between transition-all",
+            "flex h-[clamp(2.5rem,calc(2rem+0.2vw+0.5vh),3.1rem)] w-full items-center justify-between transition-all",
             collapsed
               ? "h-8 w-8 justify-center p-0"
               : "px-2 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
@@ -106,12 +106,12 @@ export function AppSidebar() {
           ) : (
             <>
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
-                  <Code2 className="h-4 w-4" />
+                <div className="flex h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
+                  <Code2 className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
                 </div>
                 <div className="flex flex-col leading-tight truncate">
-                  <span className="text-sm font-semibold truncate">DSA Studio</span>
-                  <span className="text-[11px] text-muted-foreground">Practice tracker</span>
+                  <span className="text-fluid-sm font-semibold truncate">DSA Studio</span>
+                  <span className="text-fluid-2xs text-muted-foreground">Practice tracker</span>
                 </div>
               </div>
               {isMobile ? (
@@ -119,14 +119,14 @@ export function AppSidebar() {
                   variant="ghost"
                   size="icon"
                   onClick={toggleSidebar}
-                  className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] text-muted-foreground hover:text-foreground cursor-pointer"
                   aria-label="Close sidebar"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
                 </Button>
               ) : (
                 <SidebarTrigger
-                  className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] text-muted-foreground hover:text-foreground cursor-pointer"
                   title="Collapse sidebar"
                 />
               )}
@@ -218,7 +218,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
         {!collapsed && (
-          <div className="flex items-center justify-center gap-3 px-2 py-1 text-[11px] text-muted-foreground">
+          <div className="flex items-center justify-center gap-3 px-2 py-1 text-fluid-2xs text-muted-foreground">
             <a
               href={sourceUrl}
               target="_blank"

@@ -123,7 +123,7 @@ export function ProblemNotes({
           }`}
         >
           <StickyNote
-            className={`h-3.5 w-3.5 ${
+            className={`h-[var(--icon-sm)] w-[var(--icon-sm)] ${
               active
                 ? "fill-primary/20 text-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -132,7 +132,7 @@ export function ProblemNotes({
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 max-w-[calc(100vw-2rem)] p-3 sm:p-4">
-        <p className="mb-2 truncate text-sm font-medium">{problemTitle}</p>
+        <p className="mb-2 truncate text-fluid-sm font-medium">{problemTitle}</p>
         {open && <NotesEditor problemId={problemId} autoFocus />}
       </PopoverContent>
     </Popover>

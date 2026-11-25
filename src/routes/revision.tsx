@@ -48,10 +48,10 @@ function RevisionPage() {
     <AppShell title="Revision">
       <div className="mb-[clamp(0.75rem,2vh,1.5rem)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground">
             Needs Revision
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+          <p className="mt-1 text-fluid-sm text-muted-foreground">
             Problems you've marked to revisit. Click the revision icon on any row to add or remove
             it.
           </p>
@@ -61,7 +61,7 @@ function RevisionPage() {
             variant="ghost"
             size="sm"
             onClick={() => setQuery("")}
-            className="self-start sm:self-auto h-7 text-xs text-muted-foreground hover:text-foreground"
+            className="self-start sm:self-auto h-[var(--ctrl-sm)] text-fluid-xs text-muted-foreground hover:text-foreground"
           >
             Clear search
           </Button>

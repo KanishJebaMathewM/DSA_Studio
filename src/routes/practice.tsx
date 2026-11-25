@@ -51,13 +51,13 @@ function PracticePage() {
     <AppShell title="Practice">
       <div className="mb-[clamp(0.75rem,2vh,1.5rem)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Topics</h2>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+          <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground">Topics</h2>
+          <p className="mt-1 text-fluid-sm text-muted-foreground">
             Structured practice tracks organized by pattern and level.
           </p>
         </div>
         {q && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground self-start sm:self-auto">
+          <div className="flex items-center gap-2 text-fluid-xs text-muted-foreground self-start sm:self-auto">
             <span>
               Showing {filteredTopics.length} of {TOPICS.length} topics
             </span>
@@ -65,7 +65,7 @@ function PracticePage() {
               variant="ghost"
               size="sm"
               onClick={() => setQuery("")}
-              className="h-7 text-xs text-muted-foreground hover:text-foreground"
+              className="h-[var(--ctrl-sm)] text-fluid-xs text-muted-foreground hover:text-foreground"
             >
               Clear search
             </Button>
@@ -103,15 +103,15 @@ function PracticePage() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+                    <h3 className="text-fluid-base font-semibold text-foreground transition-colors group-hover:text-primary">
                       {t.name}
                     </h3>
-                    <p className="mt-1 text-xs text-muted-foreground">{t.short}</p>
+                    <p className="mt-1 text-fluid-xs text-muted-foreground">{t.short}</p>
                   </div>
-                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-all duration-200 ease-out group-hover:text-primary group-hover:translate-x-1" />
+                  <ArrowRight className="mt-1 h-[var(--icon-sm)] w-[var(--icon-sm)] shrink-0 text-muted-foreground transition-all duration-200 ease-out group-hover:text-primary group-hover:translate-x-1" />
                 </div>
                 <div className="mt-4">
-                  <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="mb-1.5 flex items-center justify-between text-fluid-xs text-muted-foreground">
                     <span>
                       {ts} / {tt} solved
                     </span>

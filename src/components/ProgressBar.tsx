@@ -16,7 +16,7 @@ export function ProgressBar({
       aria-valuenow={v}
       aria-valuemin={0}
       aria-valuemax={100}
-      className={`h-1.5 w-full overflow-hidden rounded-full bg-muted ${className}`}
+      className={`h-[clamp(0.375rem,calc(0.25rem+0.1vw+0.2vh),0.55rem)] w-full overflow-hidden rounded-full bg-muted ${className}`}
     >
       <div
         className={`h-full rounded-full transition-[width] duration-500 ease-out ${
