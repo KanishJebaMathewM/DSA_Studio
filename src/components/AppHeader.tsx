@@ -4,6 +4,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "./ThemeSelector";
+import { SoundscapeControl } from "./SoundscapeControl";
 import { useGlobalSearch } from "@/lib/search-context";
 
 export function AppHeader({ title }: { title: string }) {
@@ -182,6 +183,9 @@ export function AppHeader({ title }: { title: string }) {
         </div>
 
         {/* Theme Selector (Always visible on all screens) */}
+        <div className="shrink-0">
+          <SoundscapeControl />
+        </div>
         <div className="shrink-0">
           <ThemeSelector />
         </div>
