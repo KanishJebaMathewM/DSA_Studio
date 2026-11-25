@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting"; // neutral 
 import { SearchProvider } from "@/lib/search-context";
 import { ThemeProvider } from "@/lib/theme";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import { PersistentWorkspaceLayout } from "@/components/AppShell";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
@@ -156,7 +157,9 @@ function RootComponent() {
           <SidebarProvider>
             <MobileSidebarCloser />
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
+            <PersistentWorkspaceLayout>
+              <Outlet />
+            </PersistentWorkspaceLayout>
             <Analytics />
             <SpeedInsights />
           </SidebarProvider>

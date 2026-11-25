@@ -14,10 +14,13 @@ export interface ProblemTableRow {
 export function ProblemTable({
   rows,
   showNotes = false,
+  embedded = false,
 }: {
   rows: ProblemTableRow[];
   /** Show a short preview of each problem's notes under its title. */
   showNotes?: boolean;
+  /** Skip nested backdrop-blur when already inside a blurred accordion card. */
+  embedded?: boolean;
 }) {
   const progress = useProgress();
 
@@ -26,16 +29,28 @@ export function ProblemTable({
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-x-auto rounded-lg border border-border/70 bg-surface shadow-xs backdrop-blur-md md:block">
-        <table className="w-full text-sm">
+      <div
+        className={`hidden overflow-x-auto rounded-lg border border-border/70 shadow-xs md:block ${
+          embedded ? "bg-card/70" : "bg-surface backdrop-blur-md"
+        }`}
+      >
+        <table className="w-full text-fluid-sm">
           <thead>
-            <tr className="border-b border-border/60 bg-surface-muted/80 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              <th className="w-10 px-3 py-2.5"></th>
-              <th className="px-3 py-2.5">Problem</th>
-              <th className="w-24 px-3 py-2.5">Difficulty</th>
-              <th className="w-20 px-3 py-2.5">Platform</th>
-              <th className="w-16 px-3 py-2.5 text-center">Revision</th>
-              <th className="w-20 px-3 py-2.5 text-right">Action</th>
+            <tr className="border-b border-border/60 bg-surface-muted/80 text-left text-fluid-2xs font-medium uppercase tracking-wide text-muted-foreground">
+              <th className="w-[clamp(2.5rem,3vw,3.5rem)] px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]"></th>
+              <th className="px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]">Problem</th>
+              <th className="w-[clamp(6rem,8vw,8.5rem)] px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]">
+                Difficulty
+              </th>
+              <th className="w-[clamp(5rem,6.5vw,7rem)] px-3 py-[clamp(0.45rem,1.1vh,0.625rem)]">
+                Platform
+              </th>
+              <th className="w-[clamp(4.5rem,5.5vw,6rem)] px-3 py-[clamp(0.45rem,1.1vh,0.625rem)] text-center">
+                Revision
+              </th>
+              <th className="w-[clamp(5rem,6.5vw,7.25rem)] px-3 py-[clamp(0.45rem,1.1vh,0.625rem)] text-right">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -49,7 +64,7 @@ export function ProblemTable({
                   key={`${problem.id}-${i}`}
                   className="group border-b border-border/60 last:border-b-0 transition-colors duration-150 hover:bg-hover/80"
                 >
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle transition-[box-shadow] duration-150 group-hover:shadow-[inset_3px_0_0_0_var(--primary)]">
                     <Checkbox
                       checked={done}
                       onCheckedChange={() => progressRepo.toggleCompleted(problem.id)}
@@ -57,7 +72,7 @@ export function ProblemTable({
                       className="transition-transform duration-150 active:scale-90 cursor-pointer"
                     />
                   </td>
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <div className="flex items-center gap-2">
                       <a
                         href={problem.url}
@@ -72,7 +87,7 @@ export function ProblemTable({
                       {done && (
                         <Check
                           aria-hidden="true"
-                          className="h-3.5 w-3.5 text-success animate-in fade-in-50 duration-200"
+                          className="h-[var(--icon-sm)] w-[var(--icon-sm)] text-success animate-in fade-in-50 duration-200"
                         />
                       )}
                       <div className="ml-auto flex items-center gap-2">
@@ -91,7 +106,7 @@ export function ProblemTable({
                         >
                           <Bookmark
                             aria-hidden="true"
-                            className={`h-3.5 w-3.5 transition-colors duration-150 ${
+                            className={`h-[var(--icon-sm)] w-[var(--icon-sm)] transition-colors duration-150 ${
                               bookmarked
                                 ? "fill-gold text-gold"
                                 : "text-muted-foreground hover:text-foreground"
@@ -101,41 +116,44 @@ export function ProblemTable({
                       </div>
                     </div>
                     {showNotes && hasNotes(entry?.notes) && (
-                      <p className="mt-1 line-clamp-2 whitespace-pre-line text-xs text-muted-foreground">
+                      <p className="mt-1 line-clamp-2 whitespace-pre-line text-fluid-xs text-muted-foreground">
                         {entry!.notes}
                       </p>
                     )}
                   </td>
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <DifficultyBadge difficulty={problem.difficulty} />
                   </td>
-                  <td className="px-3 py-2 align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] align-middle">
                     <PlatformBadge platform={problem.platform} />
                   </td>
-                  <td className="px-3 py-2 text-center align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] text-center align-middle">
                     <button
                       onClick={() => progressRepo.toggleNeedsRevision(problem.id)}
                       aria-label={`Mark ${problem.title} as needs revision`}
                       aria-pressed={rev}
-                      className="inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-hover hover:text-foreground hover:scale-115 active:scale-90 cursor-pointer"
+                      className="inline-flex h-[clamp(1.5rem,2.4vh,2rem)] w-[clamp(1.5rem,2.4vh,2rem)] items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-hover hover:text-foreground hover:scale-115 active:scale-90 cursor-pointer"
                     >
                       <RotateCcw
                         aria-hidden="true"
-                        className={`h-3.5 w-3.5 transition-colors duration-150 ${
+                        className={`h-[var(--icon-sm)] w-[var(--icon-sm)] transition-colors duration-150 ${
                           rev ? "text-warning" : ""
                         }`}
                       />
                     </button>
                   </td>
-                  <td className="px-3 py-2 text-right align-middle">
+                  <td className="px-3 py-[clamp(0.35rem,0.9vh,0.55rem)] text-right align-middle">
                     <a
                       href={problem.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-primary hover:bg-primary-soft transition-all duration-150 hover:translate-x-0.5"
+                      className="inline-flex items-center gap-1 rounded-md px-[clamp(0.5rem,0.7vw,0.85rem)] py-[clamp(0.25rem,0.4vh,0.45rem)] text-fluid-xs font-medium text-primary hover:bg-primary-soft active:scale-95 transition-all duration-150 hover:translate-x-0.5"
                     >
                       Solve
-                      <ExternalLink aria-hidden="true" className="h-3 w-3" />
+                      <ExternalLink
+                        aria-hidden="true"
+                        className="h-[var(--icon-xs)] w-[var(--icon-xs)]"
+                      />
                     </a>
                   </td>
                 </tr>
@@ -146,7 +164,7 @@ export function ProblemTable({
       </div>
 
       {/* Mobile cards */}
-      <div className="space-y-2.5 md:hidden">
+      <div className="space-y-[clamp(0.5rem,1.2vh,0.75rem)] md:hidden">
         {rows.map(({ problem }, i) => {
           const entry = progress[problem.id];
           const done = !!entry?.completed;
@@ -155,7 +173,9 @@ export function ProblemTable({
           return (
             <div
               key={`${problem.id}-m-${i}`}
-              className="rounded-lg border border-border/60 bg-surface backdrop-blur-md p-3 transition-all duration-200 hover:border-primary/40 hover:shadow-xs"
+              className={`rounded-lg border border-border/60 p-[clamp(0.625rem,1.4vh,0.875rem)] transition-all duration-200 hover:border-primary/40 hover:shadow-xs card-glass-line ${
+                embedded ? "bg-card/70" : "bg-surface backdrop-blur-md"
+              }`}
             >
               <div className="flex items-start gap-2.5">
                 <Checkbox
@@ -170,7 +190,7 @@ export function ProblemTable({
                       href={problem.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`block break-words text-sm font-medium transition-colors hover:text-primary ${
+                      className={`block break-words text-fluid-sm font-medium transition-colors hover:text-primary ${
                         done
                           ? "text-muted-foreground line-through decoration-muted-foreground/50"
                           : "text-foreground"
@@ -182,11 +202,14 @@ export function ProblemTable({
                       href={problem.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary-soft transition-colors"
+                      className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-fluid-xs font-medium text-primary hover:bg-primary-soft transition-colors"
                       title="Solve problem"
                     >
                       <span>Solve</span>
-                      <ExternalLink aria-hidden="true" className="h-3 w-3" />
+                      <ExternalLink
+                        aria-hidden="true"
+                        className="h-[var(--icon-xs)] w-[var(--icon-xs)]"
+                      />
                     </a>
                   </div>
 

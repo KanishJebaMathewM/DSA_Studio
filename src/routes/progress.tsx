@@ -80,29 +80,30 @@ function ProgressPage() {
 
   return (
     <AppShell title="Progress">
-      <div className="mb-6 rounded-xl border border-border/60 bg-card p-4 sm:p-5 shadow-sm backdrop-blur-md">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Progress</h2>
-        <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.25rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
+        <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground">Progress</h2>
+        <p className="mt-1 text-fluid-sm text-muted-foreground">
           Your overall stats and topic-by-topic completion.
         </p>
       </div>
 
-      <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+      <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-xs backdrop-blur-md card-glass-line">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <div className="text-fluid-xs font-medium uppercase tracking-wide text-muted-foreground">
               Overall
             </div>
-            <div className="mt-1 text-xl sm:text-2xl font-semibold">
+            <div className="mt-1 text-fluid-xl font-semibold">
               {solved}{" "}
-              <span className="text-sm sm:text-base font-normal text-muted-foreground">
-                / {total}
-              </span>
+              <span className="text-fluid-base font-normal text-muted-foreground">/ {total}</span>
             </div>
           </div>
-          <div className="text-sm font-medium text-primary">{pct}%</div>
+          <div className="text-fluid-sm font-medium text-primary">{pct}%</div>
         </div>
-        <ProgressBar value={pct} className="mt-3 h-2" />
+        <ProgressBar
+          value={pct}
+          className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,calc(0.35rem+0.15vw+0.4vh),0.75rem)]"
+        />
       </div>
 
       <div className="mt-4 sm:mt-6 grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-3">
@@ -111,12 +112,12 @@ function ProgressPage() {
         <DiffProgress label="Hard" tone="hard" {...hard} />
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
+      <div className="mt-[clamp(0.75rem,2vh,1.5rem)] grid gap-[clamp(0.75rem,2vh,1.25rem)] lg:grid-cols-3">
+        <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md card-glass-line">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Topic progress</h3>
+            <h3 className="text-fluid-sm font-semibold">Topic progress</h3>
             {q && (
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 text-fluid-xs text-muted-foreground">
                 <span>
                   {filteredTopicRows.length} of {topicRows.length} topics
                 </span>
@@ -132,7 +133,7 @@ function ProgressPage() {
           </div>
           <div className="mt-3 space-y-3">
             {filteredTopicRows.length === 0 ? (
-              <div className="py-6 text-center text-xs text-muted-foreground">
+              <div className="py-6 text-center text-fluid-xs text-muted-foreground">
                 No topics match "{query}".{" "}
                 <button
                   type="button"
@@ -150,11 +151,11 @@ function ProgressPage() {
                   params={{ slug: r.topic.slug }}
                   className="block"
                 >
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-fluid-sm">
                     <span className="truncate pr-2 font-medium text-foreground">
                       {r.topic.name}
                     </span>
-                    <span className="shrink-0 text-xs text-muted-foreground">
+                    <span className="shrink-0 text-fluid-xs text-muted-foreground">
                       {r.solved} / {r.total} • {r.pct}%
                     </span>
                   </div>
@@ -165,10 +166,10 @@ function ProgressPage() {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
-            <h3 className="text-sm font-semibold">Strongest topics</h3>
-            <ul className="mt-3 space-y-2 text-sm">
+        <div className="space-y-[clamp(0.75rem,2vh,1rem)]">
+          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md card-glass-line">
+            <h3 className="text-fluid-sm font-semibold">Strongest topics</h3>
+            <ul className="mt-3 space-y-2 text-fluid-sm">
               {strongest.map((r) => (
                 <li key={r.topic.slug} className="flex items-center justify-between gap-2">
                   <span className="truncate text-foreground">{r.topic.name}</span>
@@ -177,9 +178,9 @@ function ProgressPage() {
               ))}
             </ul>
           </div>
-          <div className="rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
-            <h3 className="text-sm font-semibold">Needs practice</h3>
-            <ul className="mt-3 space-y-2 text-sm">
+          <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md card-glass-line">
+            <h3 className="text-fluid-sm font-semibold">Needs practice</h3>
+            <ul className="mt-3 space-y-2 text-fluid-sm">
               {weakest.map((r) => (
                 <li key={r.topic.slug} className="flex items-center justify-between gap-2">
                   <span className="truncate text-foreground">{r.topic.name}</span>
@@ -191,17 +192,19 @@ function ProgressPage() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-border/70 bg-surface p-4 sm:p-5 shadow-xs backdrop-blur-md">
-        <h3 className="text-sm font-semibold">Recently completed</h3>
+      <div className="mt-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] shadow-xs backdrop-blur-md card-glass-line">
+        <h3 className="text-fluid-sm font-semibold">Recently completed</h3>
         {recent.length === 0 ? (
-          <p className="mt-3 text-sm text-muted-foreground">Complete a problem to see it here.</p>
+          <p className="mt-3 text-fluid-sm text-muted-foreground">
+            Complete a problem to see it here.
+          </p>
         ) : (
           <ul className="mt-3 divide-y">
             {recent.map(([id, e]) => {
               const pr = PROBLEM_MAP[id];
               if (!pr) return null;
               return (
-                <li key={id} className="flex items-center justify-between gap-2 py-2 text-sm">
+                <li key={id} className="flex items-center justify-between gap-2 py-2 text-fluid-sm">
                   <a
                     href={pr.url}
                     target="_blank"
@@ -210,7 +213,7 @@ function ProgressPage() {
                   >
                     {pr.title}
                   </a>
-                  <span className="shrink-0 text-xs text-muted-foreground">
+                  <span className="shrink-0 text-fluid-xs text-muted-foreground">
                     {new Date(e.completedAt!).toLocaleDateString()}
                   </span>
                 </li>
@@ -242,18 +245,17 @@ function DiffProgress({
     hard: "text-hard-foreground bg-hard-bg",
   } as const;
   return (
-    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md p-3.5 sm:p-4 shadow-xs">
+    <div className="rounded-xl border border-border/70 bg-surface backdrop-blur-md p-3.5 sm:p-4 shadow-xs card-glass-line">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <span className="text-fluid-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
         </span>
-        <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${toneMap[tone]}`}>
+        <span className={`rounded px-1.5 py-0.5 text-fluid-2xs font-semibold ${toneMap[tone]}`}>
           {pct}%
         </span>
       </div>
-      <div className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-semibold">
-        {solved}{" "}
-        <span className="text-xs sm:text-sm font-normal text-muted-foreground">/ {total}</span>
+      <div className="mt-1.5 sm:mt-2 text-fluid-xl font-semibold">
+        {solved} <span className="text-fluid-xs font-normal text-muted-foreground">/ {total}</span>
       </div>
       <ProgressBar value={pct} className="mt-2" />
     </div>

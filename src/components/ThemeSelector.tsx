@@ -41,11 +41,15 @@ export function ThemeSelector() {
         variant="ghost"
         size="icon"
         onClick={toggle}
-        className="h-9 w-9 text-muted-foreground hover:text-foreground cursor-pointer"
+        className="h-[var(--ctrl-md)] w-[var(--ctrl-md)] text-muted-foreground hover:text-foreground cursor-pointer"
         aria-label={isDark ? "Switch to day mode" : "Switch to night mode"}
         title={isDark ? "Switch to day mode" : "Switch to night mode"}
       >
-        {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        {isDark ? (
+          <Sun className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
+        ) : (
+          <Moon className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
+        )}
       </Button>
 
       {/* Theme Library Popover Trigger */}
@@ -54,15 +58,15 @@ export function ThemeSelector() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-9 px-2 sm:gap-1.5 sm:px-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+            className="h-[var(--ctrl-md)] px-2 sm:gap-1.5 sm:px-3 text-fluid-xs text-muted-foreground hover:text-foreground cursor-pointer"
             aria-label="Open theme library"
             title={`Atmosphere: ${currentPreset.name} (Press T to cycle)`}
           >
-            <Palette className="h-4 w-4 text-primary shrink-0" />
+            <Palette className="h-[var(--icon-sm)] w-[var(--icon-sm)] text-primary shrink-0" />
             <span className="hidden sm:inline-flex items-center gap-1.5 font-medium text-foreground">
               {currentPreset.name}
               <span
-                className="h-2 w-2 rounded-full shrink-0 shadow-xs"
+                className="h-[clamp(0.5rem,0.55vw,0.65rem)] w-[clamp(0.5rem,0.55vw,0.65rem)] rounded-full shrink-0 shadow-xs"
                 style={{
                   backgroundColor: isDark
                     ? currentPreset.accentColor.dark
