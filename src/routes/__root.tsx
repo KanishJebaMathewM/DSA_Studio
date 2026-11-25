@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting"; // neutral console reporter
 import { SearchProvider } from "@/lib/search-context";
 import { ThemeProvider } from "@/lib/theme";
+import { SoundscapeProvider } from "@/lib/soundscape";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { PersistentWorkspaceLayout } from "@/components/AppShell";
 import { Analytics } from "@vercel/analytics/react";
@@ -153,6 +154,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
+        <SoundscapeProvider>
         <SearchProvider>
           <SidebarProvider>
             <MobileSidebarCloser />
@@ -164,6 +166,7 @@ function RootComponent() {
             <SpeedInsights />
           </SidebarProvider>
         </SearchProvider>
+        </SoundscapeProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
