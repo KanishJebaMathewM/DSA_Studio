@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function DashboardSkeleton() {
   return (
-    <div className="space-y-[clamp(0.75rem,2vh,1.5rem)] animate-fade-in-up">
+    <div className="flex flex-1 flex-col gap-[clamp(0.625rem,1.6vh,1.25rem)] animate-fade-in-up">
       {/* Welcome Banner Skeleton */}
-      <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between card-glass-line">
+      <div className="md:flex-[0.9] flex flex-col gap-3 rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.5rem)] shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between card-glass-line">
         <div className="space-y-2">
           <Skeleton className="h-6 w-36 sm:w-48" />
           <Skeleton className="h-3.5 w-52 sm:w-64" />
@@ -13,7 +13,7 @@ export function DashboardSkeleton() {
       </div>
 
       {/* DSA Progress Card Skeleton */}
-      <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.25rem)] shadow-xs backdrop-blur-md card-glass-line">
+      <div className="md:flex-[1] flex flex-col justify-center rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.75rem,1.8vh,1.5rem)] shadow-xs backdrop-blur-md card-glass-line">
         <div className="flex justify-between items-center">
           <div className="space-y-1.5">
             <Skeleton className="h-3 w-24" />
@@ -21,15 +21,15 @@ export function DashboardSkeleton() {
           </div>
           <Skeleton className="h-5 w-10" />
         </div>
-        <Skeleton className="mt-[clamp(0.5rem,1.2vh,0.75rem)] h-[clamp(0.5rem,1vh,0.625rem)] w-full rounded-full" />
+        <Skeleton className="mt-[clamp(0.5rem,1.2vh,0.875rem)] h-[clamp(0.5rem,1.1vh,0.75rem)] w-full rounded-full" />
       </div>
 
       {/* Stat Cards Grid Skeleton */}
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4">
+      <div className="md:flex-[1.15] grid grid-cols-2 gap-[clamp(0.625rem,1.4vh,1rem)] md:grid-cols-4">
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-3 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs card-glass-line"
+            className="h-full rounded-xl border border-border/70 bg-surface backdrop-blur-md px-3 sm:px-4 py-[clamp(0.75rem,1.8vh,1.35rem)] min-h-[clamp(74px,11vh,110px)] flex flex-col justify-between shadow-xs card-glass-line"
           >
             <div className="flex justify-between items-center">
               <Skeleton className="h-3 w-16" />
@@ -41,11 +41,11 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Difficulty Split Grid Skeleton */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      <div className="md:flex-[1.15] grid grid-cols-3 gap-[clamp(0.5rem,1.4vh,1rem)]">
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="rounded-xl border border-border/70 bg-surface backdrop-blur-md px-2.5 sm:px-4 py-[clamp(0.625rem,1.6vh,1.125rem)] min-h-[clamp(74px,11vh,100px)] flex flex-col justify-between shadow-xs card-glass-line"
+            className="h-full rounded-xl border border-border/70 bg-surface backdrop-blur-md px-2.5 sm:px-4 py-[clamp(0.75rem,1.8vh,1.35rem)] min-h-[clamp(74px,11vh,110px)] flex flex-col justify-between shadow-xs card-glass-line"
           >
             <div className="flex justify-between items-center">
               <Skeleton className="h-3 w-14" />
@@ -57,32 +57,28 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Bottom Cards Skeleton */}
-      <div className="grid gap-[clamp(0.75rem,2vh,1.25rem)] lg:grid-cols-3">
-        <div className="lg:col-span-2 rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md card-glass-line">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-3 w-28" />
-            </div>
-            <div className="rounded-lg border border-border/70 bg-surface-muted/60 p-[clamp(0.75rem,1.5vh,1rem)] space-y-2">
-              <Skeleton className="h-3 w-40" />
-              <Skeleton className="h-5 w-56" />
-              <Skeleton className="h-4 w-20" />
-            </div>
+      <div className="md:flex-[1.85] grid gap-[clamp(0.75rem,1.8vh,1.25rem)] lg:grid-cols-3">
+        <div className="lg:col-span-2 h-full rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.5rem)] flex flex-col gap-[clamp(0.625rem,1.5vh,1rem)] shadow-xs backdrop-blur-md card-glass-line">
+          <div className="flex justify-between items-center shrink-0">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-28" />
+          </div>
+          <div className="flex-1 flex flex-col justify-center rounded-lg border border-border/70 bg-surface-muted/60 px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.5rem)] space-y-2">
+            <Skeleton className="h-3 w-40" />
+            <Skeleton className="h-5 w-56" />
+            <Skeleton className="h-4 w-20" />
           </div>
         </div>
 
-        <div className="rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.35rem)] min-h-[clamp(140px,20vh,220px)] flex flex-col justify-between shadow-xs backdrop-blur-md card-glass-line">
-          <div className="space-y-3">
-            <Skeleton className="h-4 w-32" />
-            <div className="space-y-2.5">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="flex justify-between items-center">
-                  <Skeleton className="h-3.5 w-36" />
-                  <Skeleton className="h-3 w-16" />
-                </div>
-              ))}
-            </div>
+        <div className="h-full rounded-xl border border-border/70 bg-surface px-4 sm:px-5 py-[clamp(0.875rem,2vh,1.5rem)] flex flex-col gap-[clamp(0.625rem,1.5vh,1rem)] shadow-xs backdrop-blur-md card-glass-line">
+          <Skeleton className="h-4 w-32 shrink-0" />
+          <div className="flex-1 flex flex-col justify-center space-y-2.5">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <Skeleton className="h-3.5 w-36" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            ))}
           </div>
         </div>
       </div>

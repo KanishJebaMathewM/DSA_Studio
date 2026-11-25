@@ -84,7 +84,7 @@ function PracticePage() {
           }
         />
       ) : (
-        <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid flex-1 auto-rows-fr gap-[clamp(0.75rem,1.6vh,1.25rem)] md:grid-cols-2 xl:grid-cols-3">
           {filteredTopics.map((t) => {
             const ids = new Set<string>();
             t.levels?.forEach((lvl) => lvl.problems.forEach((lp) => ids.add(lp.id)));
@@ -99,7 +99,7 @@ function PracticePage() {
                 key={t.slug}
                 to="/topics/$slug"
                 params={{ slug: t.slug }}
-                className="group relative rounded-xl border border-border/70 bg-surface backdrop-blur-md p-4 sm:p-5 shadow-xs transition-all duration-250 ease-out hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 card-glass-line hover-lift-glow"
+                className="group relative flex flex-col justify-between rounded-xl border border-border/70 bg-surface backdrop-blur-md p-4 sm:p-5 shadow-xs transition-all duration-250 ease-out hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 card-glass-line hover-lift-glow"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
