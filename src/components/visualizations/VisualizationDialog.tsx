@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { BookOpen, ExternalLink } from "lucide-react";
 import {
@@ -9,18 +10,29 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InteractiveVisualizer } from "./InteractiveVisualizer";
 import type { VisualizationDefinition } from "@/lib/visualizations/types";
 
 export function VisualizationDialog({
-  definition,
+  items,
+  initialId,
   open,
   onOpenChange,
 }: {
-  definition: VisualizationDefinition;
+  items: VisualizationDefinition[];
+  initialId?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const [selectedId, setSelectedId] = useState<string>(
+    initialId ?? items[0]?.id ?? "",
+  );
+
+  const definition = items.find((item) => item.id === selectedId) ?? items[0];
+
+  if (!definition) return null;
+
   const primaryResource = definition.theory.resources[0];
 
   return (
@@ -45,10 +57,33 @@ export function VisualizationDialog({
             >
               <Link to="/visualizations/$id" params={{ id: definition.id }}>
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Dedicated Learning Page</span>
+                <span>Learn</span>
               </Link>
             </Button>
           </div>
+
+          {items.length > 1 && (
+            <div className="pt-1">
+              <Tabs
+                value={definition.id}
+                onValueChange={(val) => setSelectedId(val)}
+                className="w-full"
+              >
+                <TabsList className="grid w-full max-w-xs grid-cols-2 h-8">
+                  {items.map((item) => (
+                    <TabsTrigger
+                      key={item.id}
+                      value={item.id}
+                      className="text-xs font-medium cursor-pointer"
+                    >
+                      {item.algorithm}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
+          )}
+
           <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             {definition.description}
           </DialogDescription>
@@ -75,15 +110,16 @@ export function VisualizationDialog({
               className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
               title={`Read about ${definition.name} on ${primaryResource.source}`}
             >
-              <span>{primaryResource.source} Guide</span>
+              <span>Guide</span>
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
             </a>
           )}
         </div>
 
         {/* Interactive Visualization Engine & Step Controls */}
-        <InteractiveVisualizer definition={definition} />
+        <InteractiveVisualizer key={definition.id} definition={definition} />
       </DialogContent>
     </Dialog>
   );
 }
+
