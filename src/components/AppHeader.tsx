@@ -182,10 +182,12 @@ export function AppHeader({ title }: { title: string }) {
           </div>
         </div>
 
-        {/* Theme Selector (Always visible on all screens) */}
+        {/* Soundscape Control */}
         <div className="shrink-0">
           <SoundscapeControl />
         </div>
+
+        {/* Theme Selector (Always visible on all screens) */}
         <div className="shrink-0">
           <ThemeSelector />
         </div>

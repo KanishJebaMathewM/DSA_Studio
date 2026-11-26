@@ -9,15 +9,15 @@ export function SoundscapeControl() {
     <Button
       variant="ghost"
       size="icon"
-      className="h-9 w-9"
+      className="h-[var(--ctrl-md)] w-[var(--ctrl-md)] text-muted-foreground hover:text-foreground cursor-pointer"
       onClick={toggle}
-      aria-label={isOn ? "Turn off lofi music" : "Turn on lofi music"}
-      title={isOn ? "Turn off lofi music" : "Turn on lofi music"}
+      aria-label={isOn ? "Turn off background music" : "Turn on background music"}
+      title={isOn ? "Turn off background music" : "Turn on background music"}
     >
       {isOn ? (
-        <Music className="h-4 w-4 text-primary" />
+        <Music className="h-[var(--icon-sm)] w-[var(--icon-sm)] text-primary" />
       ) : (
-        <VolumeX className="h-4 w-4" />
+        <VolumeX className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
       )}
     </Button>
   );

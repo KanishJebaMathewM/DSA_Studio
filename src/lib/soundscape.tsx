@@ -13,27 +13,77 @@ const SoundscapeContext = createContext<SoundscapeContextValue | null>(null);
 
 export function SoundscapeProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const userDisabledRef = useRef<boolean>(false);
+  const cleanupGestureRef = useRef<(() => void) | null>(null);
   const [isOn, setIsOn] = useState(false);
 
-  // Create the audio element once and restore persisted preference.
   useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    // Default to enabled (playing) unless explicitly disabled by user
+    const shouldPlayByDefault = saved !== "false";
+
     const audio = new Audio(TRACK_URL);
     audio.loop = true;
-    audio.volume = 0.5;
+    audio.volume = 0.35;
     audioRef.current = audio;
 
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === "true") {
+    if (!shouldPlayByDefault) {
+      userDisabledRef.current = true;
+      setIsOn(false);
+    } else {
+      userDisabledRef.current = false;
       setIsOn(true);
-      audio.play().catch(() => {
-        // Autoplay may be blocked by the browser; silently fall back to off.
-        setIsOn(false);
-        localStorage.setItem(STORAGE_KEY, "false");
-      });
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If browser autoplay policy prevents unmuted playback without interaction,
+          // attach a one-time gesture listener so it starts on the user's first click or keystroke.
+          if (userDisabledRef.current) return;
+
+          const startOnGesture = () => {
+            if (userDisabledRef.current || !audioRef.current) return;
+            audioRef.current.play().catch((playErr) => {
+              console.warn("Failed to start soundscape on interaction:", playErr);
+            });
+            cleanup();
+          };
+
+          const cleanup = () => {
+            window.removeEventListener("pointerdown", startOnGesture);
+            window.removeEventListener("keydown", startOnGesture);
+            cleanupGestureRef.current = null;
+          };
+
+          cleanupGestureRef.current = cleanup;
+          window.addEventListener("pointerdown", startOnGesture, { once: true, passive: true });
+          window.addEventListener("keydown", startOnGesture, { once: true, passive: true });
+        });
+      }
     }
 
+    // Sync state across multiple tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY && audioRef.current) {
+        if (e.newValue === "false") {
+          userDisabledRef.current = true;
+          cleanupGestureRef.current?.();
+          audioRef.current.pause();
+          setIsOn(false);
+        } else if (e.newValue === "true") {
+          userDisabledRef.current = false;
+          setIsOn(true);
+          audioRef.current.play().catch(() => {});
+        }
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
     return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      cleanupGestureRef.current?.();
       audio.pause();
+      audio.src = "";
       audioRef.current = null;
     };
   }, []);
@@ -43,16 +93,25 @@ export function SoundscapeProvider({ children }: { children: ReactNode }) {
     if (!audio) return;
 
     if (isOn) {
+      userDisabledRef.current = true;
+      cleanupGestureRef.current?.();
       audio.pause();
       setIsOn(false);
       localStorage.setItem(STORAGE_KEY, "false");
     } else {
-      audio.play().catch(() => {
-        // If play is rejected, keep state as off.
-        return;
-      });
-      setIsOn(true);
-      localStorage.setItem(STORAGE_KEY, "true");
+      userDisabledRef.current = false;
+      audio
+        .play()
+        .then(() => {
+          setIsOn(true);
+          localStorage.setItem(STORAGE_KEY, "true");
+        })
+        .catch((err) => {
+          console.warn("Failed to play soundscape:", err);
+          setIsOn(false);
+          userDisabledRef.current = true;
+          localStorage.setItem(STORAGE_KEY, "false");
+        });
     }
   };
 

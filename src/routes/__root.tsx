@@ -155,17 +155,17 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <SoundscapeProvider>
-        <SearchProvider>
-          <SidebarProvider>
-            <MobileSidebarCloser />
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <PersistentWorkspaceLayout>
-              <Outlet />
-            </PersistentWorkspaceLayout>
-            <Analytics />
-            <SpeedInsights />
-          </SidebarProvider>
-        </SearchProvider>
+          <SearchProvider>
+            <SidebarProvider>
+              <MobileSidebarCloser />
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <PersistentWorkspaceLayout>
+                <Outlet />
+              </PersistentWorkspaceLayout>
+              <Analytics />
+              <SpeedInsights />
+            </SidebarProvider>
+          </SearchProvider>
         </SoundscapeProvider>
       </ThemeProvider>
     </QueryClientProvider>
