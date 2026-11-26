@@ -87,6 +87,7 @@ function RevisionPage() {
         ["Easy", "Easy"],
         ["Medium", "Medium"],
         ["Hard", "Hard"],
+        ["Unverified", "Unverified"],
       ],
     },
     {
