@@ -218,7 +218,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
         {!collapsed && (
-          <div className="flex items-center justify-center gap-3 px-2 py-1 text-fluid-2xs text-muted-foreground">
+          <div className="flex items-center justify-center px-2 py-1 text-fluid-2xs text-muted-foreground">
             <a
               href={sourceUrl}
               target="_blank"
@@ -226,14 +226,6 @@ export function AppSidebar() {
               className="hover:text-foreground transition-colors"
             >
               Source
-            </a>
-            <a
-              href="https://www.gnu.org/licenses/agpl-3.0.html"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-foreground transition-colors"
-            >
-              AGPL-3.0-only
             </a>
           </div>
         )}

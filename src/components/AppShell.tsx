@@ -10,6 +10,7 @@ import {
 import { useRouterState } from "@tanstack/react-router";
 import { AppSidebar } from "./AppSidebar";
 import { AppHeader } from "./AppHeader";
+import { AppFooter } from "./AppFooter";
 import { ThemeBackground } from "./ThemeBackground";
 import { getTopic } from "@/data/problems";
 
@@ -79,6 +80,7 @@ export function PersistentWorkspaceLayout({ children }: { children: ReactNode })
             >
               {children}
             </main>
+            <AppFooter />
           </div>
         </div>
       </div>
@@ -109,6 +111,7 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
           <main className="flex flex-1 flex-col w-full pt-[clamp(0.5rem,1.5vh,1rem)] animate-fade-in-up">
             {children}
           </main>
+          <AppFooter />
         </div>
       </div>
     </div>

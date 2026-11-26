@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SoundscapeControl } from "./SoundscapeControl";
+import { GitHubStarsButton } from "./GitHubStarsButton";
 import { useGlobalSearch } from "@/lib/search-context";
 
 export function AppHeader({ title }: { title: string }) {
@@ -187,9 +188,10 @@ export function AppHeader({ title }: { title: string }) {
           <SoundscapeControl />
         </div>
 
-        {/* Theme Selector (Always visible on all screens) */}
-        <div className="shrink-0">
+        {/* Theme Selector & GitHub Stars (Top-right corner of the navigation bar) */}
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <ThemeSelector />
+          <GitHubStarsButton />
         </div>
       </div>
     </header>
