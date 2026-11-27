@@ -35,13 +35,13 @@ export function ThemeSelector() {
   }, [cyclePreset]);
 
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2">
+    <div className="flex items-center gap-1 sm:gap-2">
       {/* Quick Day / Night Toggle Button */}
       <Button
         variant="ghost"
         size="icon"
         onClick={toggle}
-        className="h-[var(--ctrl-md)] w-[var(--ctrl-md)] text-muted-foreground hover:text-foreground cursor-pointer"
+        className="h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] sm:h-[var(--ctrl-md)] sm:w-[var(--ctrl-md)] text-muted-foreground hover:text-foreground cursor-pointer"
         aria-label={isDark ? "Switch to day mode" : "Switch to night mode"}
         title={isDark ? "Switch to day mode" : "Switch to night mode"}
       >
@@ -58,7 +58,7 @@ export function ThemeSelector() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-[var(--ctrl-md)] px-2 sm:gap-1.5 sm:px-3 text-fluid-xs text-muted-foreground hover:text-foreground cursor-pointer"
+            className="h-[var(--ctrl-sm)] sm:h-[var(--ctrl-md)] px-1.5 sm:gap-1.5 sm:px-3 text-fluid-xs text-muted-foreground hover:text-foreground cursor-pointer"
             aria-label="Open theme library"
             title={`Atmosphere: ${currentPreset.name} (Press T to cycle)`}
           >
