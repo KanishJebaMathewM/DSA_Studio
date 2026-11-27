@@ -113,6 +113,16 @@ interface ThemeContextType {
   setIsArtworkEnabled: (enabled: boolean) => void;
 }
 
+const DEFAULT_THEME_PRESET: ThemePresetId = "clean-slate";
+
+export function getThemePreset(presetId: ThemePresetId): ThemePreset {
+  return (
+    THEME_PRESETS.find((p) => p.id === presetId) ??
+    THEME_PRESETS.find((p) => p.id === DEFAULT_THEME_PRESET) ??
+    THEME_PRESETS[0]
+  );
+}
+
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 function apply(mode: ThemeMode, presetId: ThemePresetId, isArtworkEnabled: boolean) {
@@ -121,14 +131,14 @@ function apply(mode: ThemeMode, presetId: ThemePresetId, isArtworkEnabled: boole
   root.classList.toggle("dark", mode === "dark");
   root.setAttribute("data-theme", presetId);
 
-  const preset = THEME_PRESETS.find((p) => p.id === presetId) || THEME_PRESETS[0];
+  const preset = getThemePreset(presetId);
   const activeArtwork = preset.hasArtwork && isArtworkEnabled;
   root.setAttribute("data-theme-artwork", activeArtwork ? "true" : "false");
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>("light");
-  const [preset, setPresetState] = useState<ThemePresetId>("cozy-room");
+  const [preset, setPresetState] = useState<ThemePresetId>(DEFAULT_THEME_PRESET);
   const [isArtworkEnabled, setIsArtworkEnabledState] = useState<boolean>(true);
   const [isPreferenceRestored, setIsPreferenceRestored] = useState<boolean>(false);
 
@@ -144,7 +154,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const initialPreset: ThemePresetId =
         storedPreset && THEME_PRESETS.some((p) => p.id === storedPreset)
           ? storedPreset
-          : "cozy-room";
+          : DEFAULT_THEME_PRESET;
 
       const storedArtwork = localStorage.getItem(STORAGE_KEY_ARTWORK);
       const initialArtwork = storedArtwork !== null ? storedArtwork === "true" : true;
@@ -156,7 +166,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       apply(initialMode, initialPreset, initialArtwork);
     } catch {
       setIsPreferenceRestored(true);
-      apply("light", "cozy-room", true);
+      apply("light", DEFAULT_THEME_PRESET, true);
     }
   }, []);
 
@@ -224,7 +234,7 @@ export function useTheme() {
     return {
       theme: "light" as ThemeMode,
       mode: "light" as ThemeMode,
-      preset: "cozy-room" as ThemePresetId,
+      preset: DEFAULT_THEME_PRESET,
       isArtworkEnabled: true,
       isPreferenceRestored: false,
       setTheme: () => {},
