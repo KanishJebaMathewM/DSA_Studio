@@ -212,23 +212,23 @@
 /* Atmospheric Theme Glassmorphism Enhancement */
 [data-theme-artwork="true"] {
   --background: oklch(0.985 0.003 247 / 0.5);
-  --card: oklch(1 0 0 / 0.86);
-  --surface: oklch(1 0 0 / 0.88);
-  --sidebar: oklch(1 0 0 / 0.86);
-  --popover: oklch(1 0 0 / 0.95);
-  --border: oklch(0.8 0.02 255 / 0.72);
-  --sidebar-border: oklch(0.8 0.02 255 / 0.72);
+  --card: oklch(1 0 0 / 0.96);
+  --surface: oklch(1 0 0 / 0.96);
+  --sidebar: oklch(1 0 0 / 0.94);
+  --popover: oklch(1 0 0 / 0.98);
+  --border: oklch(0.85 0.015 255 / 0.7);
+  --sidebar-border: oklch(0.85 0.015 255 / 0.7);
 }
 
 [data-theme-artwork="true"].dark {
   --canvas: oklch(0.125 0.024 265);
   --background: oklch(0.12 0.02 265 / 0.5);
-  --card: oklch(0.19 0.03 265 / 0.86);
-  --surface: oklch(0.21 0.03 265 / 0.88);
-  --sidebar: oklch(0.16 0.03 265 / 0.86);
-  --popover: oklch(0.17 0.03 265 / 0.95);
-  --border: oklch(0.35 0.03 265 / 0.5);
-  --sidebar-border: oklch(0.35 0.03 265 / 0.5);
+  --card: oklch(0.19 0.03 265 / 0.96);
+  --surface: oklch(0.21 0.03 265 / 0.96);
+  --sidebar: oklch(0.16 0.03 265 / 0.94);
+  --popover: oklch(0.17 0.03 265 / 0.98);
+  --border: oklch(0.35 0.03 265 / 0.65);
+  --sidebar-border: oklch(0.35 0.03 265 / 0.65);
 }
 
 /* Dynamic Theme Presets & Accents */
@@ -321,6 +321,17 @@ html[data-theme="mountain-observatory"].dark,
 [data-theme-artwork="true"] .bg-popover {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+}
+
+/* Modals and dialog overlays should always have solid high-contrast surfaces */
+[role="dialog"] {
+  background-color: #ffffff;
+  color: oklch(0.205 0.04 265);
+}
+
+.dark [role="dialog"] {
+  background-color: var(--surface);
+  color: oklch(0.965 0.005 247);
 }
 
 @layer base {

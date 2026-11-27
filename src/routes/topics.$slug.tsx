@@ -4,6 +4,7 @@ import { AppShell } from "@/components/AppShell";
 import { LevelAccordion } from "@/components/LevelAccordion";
 import { ProgressBar } from "@/components/ProgressBar";
 import { EmptyState } from "@/components/EmptyState";
+import { TopicVisualizations } from "@/components/visualizations/TopicVisualizations";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -156,16 +157,22 @@ function TopicPage() {
   return (
     <AppShell title={topic.name}>
       <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.35rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
-        <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground break-words">
-          {topic.name}
-        </h2>
-        <p className="mt-1 max-w-2xl text-fluid-sm text-muted-foreground">{topic.description}</p>
-        <div className="mt-[clamp(0.5rem,1.4vh,1rem)] flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-          <ProgressBar value={pct} className="w-full sm:max-w-[clamp(20rem,28vw,32rem)]" />
-          <div className="text-fluid-xs font-medium text-muted-foreground shrink-0">
-            {solved} / {total} completed •{" "}
-            <span className="text-primary font-semibold">{pct}%</span>
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground break-words">
+              {topic.name}
+            </h2>
+            <p className="mt-1 max-w-2xl text-fluid-sm text-muted-foreground">{topic.description}</p>
+            <div className="mt-[clamp(0.5rem,1.4vh,1rem)] flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <ProgressBar value={pct} className="w-full sm:max-w-[clamp(20rem,28vw,32rem)]" />
+              <div className="text-fluid-xs font-medium text-muted-foreground shrink-0">
+                {solved} / {total} completed •{" "}
+                <span className="text-primary font-semibold">{pct}%</span>
+              </div>
+            </div>
           </div>
+
+          <TopicVisualizations topicSlug={topic.slug} />
         </div>
       </div>
 
