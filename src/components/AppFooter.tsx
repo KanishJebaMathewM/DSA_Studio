@@ -23,14 +23,14 @@ function DiscordIcon({ className }: { className?: string }) {
 
 export function AppFooter() {
   return (
-    <footer className="mt-[clamp(1.25rem,3vh,2rem)] w-full rounded-2xl border border-border/60 bg-card/60 px-4 py-3 sm:px-5 shadow-sm backdrop-blur-xl transition-colors">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="mt-[clamp(1.25rem,3vh,2rem)] w-full rounded-2xl border border-border/60 bg-card/60 px-3 py-2.5 sm:px-5 sm:py-3 shadow-sm backdrop-blur-xl transition-colors">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2.5">
         {/* Branding */}
-        <div className="flex items-center gap-2 text-fluid-xs text-muted-foreground">
+        <div className="order-1 flex min-w-0 items-center gap-2 text-fluid-xs text-muted-foreground">
           <span className="flex h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Code2 className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
           </span>
-          <span>
+          <span className="truncate">
             Developed by <span className="font-medium text-foreground">DSA Studio Team</span>
           </span>
         </div>
@@ -38,24 +38,24 @@ export function AppFooter() {
         {/* Support, Contribution & License */}
         <nav
           aria-label="Footer links"
-          className="flex flex-wrap items-center gap-x-4 gap-y-2 text-fluid-xs text-muted-foreground"
+          className="order-3 flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-2 border-t border-border/40 pt-2.5 text-fluid-xs text-muted-foreground sm:justify-start sm:gap-x-5 lg:order-2 lg:w-auto lg:justify-center lg:border-t-0 lg:pt-0"
         >
           <a
             href={ISSUES_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-foreground"
           >
-            <Bug className="h-[var(--icon-xs)] w-[var(--icon-xs)]" />
+            <Bug className="h-[var(--icon-xs)] w-[var(--icon-xs)] shrink-0" />
             <span>Report an Issue</span>
           </a>
           <a
             href={REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-foreground"
           >
-            <GitPullRequest className="h-[var(--icon-xs)] w-[var(--icon-xs)]" />
+            <GitPullRequest className="h-[var(--icon-xs)] w-[var(--icon-xs)] shrink-0" />
             <span>Contribute</span>
           </a>
           <a
@@ -63,15 +63,15 @@ export function AppFooter() {
             target="_blank"
             rel="noopener noreferrer"
             title="AGPL-3.0-only License"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-foreground"
           >
-            <Scale className="h-[var(--icon-xs)] w-[var(--icon-xs)]" />
+            <Scale className="h-[var(--icon-xs)] w-[var(--icon-xs)] shrink-0" />
             <span>License (AGPL-3.0)</span>
           </a>
         </nav>
 
         {/* Social Links */}
-        <div className="flex items-center gap-1.5">
+        <div className="order-2 flex shrink-0 items-center gap-1.5 lg:order-3">
           <a
             href={REPO_URL}
             target="_blank"
