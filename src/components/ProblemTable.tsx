@@ -1,4 +1,5 @@
-import { Bookmark, Check, ExternalLink, RotateCcw } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Bookmark, Check, ExternalLink, Eye, RotateCcw } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DifficultyBadge } from "./DifficultyBadge";
 import { PlatformBadge } from "./PlatformBadge";
@@ -9,6 +10,23 @@ import type { Problem } from "@/data/problems";
 export interface ProblemTableRow {
   problem: Problem;
   pattern?: string; // optional level/category name
+  visualizationId?: string;
+}
+
+function VisualizationLink({ problem, visualizationId }: ProblemTableRow) {
+  if (!visualizationId) return null;
+
+  return (
+    <Link
+      to="/visualizations/$id"
+      params={{ id: visualizationId }}
+      aria-label={`Visualize ${problem.title}`}
+      className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-fluid-xs font-medium text-primary hover:bg-primary-soft"
+    >
+      <Eye aria-hidden="true" className="h-[var(--icon-xs)] w-[var(--icon-xs)]" />
+      Visualize
+    </Link>
+  );
 }
 
 export function ProblemTable({
@@ -54,7 +72,7 @@ export function ProblemTable({
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ problem }, i) => {
+            {rows.map(({ problem, visualizationId }, i) => {
               const entry = progress[problem.id];
               const done = !!entry?.completed;
               const rev = !!entry?.needsRevision;
@@ -91,6 +109,7 @@ export function ProblemTable({
                         />
                       )}
                       <div className="ml-auto flex items-center gap-2">
+                        <VisualizationLink problem={problem} visualizationId={visualizationId} />
                         <ProblemNotes
                           problemId={problem.id}
                           problemTitle={problem.title}
@@ -165,7 +184,7 @@ export function ProblemTable({
 
       {/* Mobile cards */}
       <div className="space-y-[clamp(0.5rem,1.2vh,0.75rem)] md:hidden">
-        {rows.map(({ problem }, i) => {
+        {rows.map(({ problem, visualizationId }, i) => {
           const entry = progress[problem.id];
           const done = !!entry?.completed;
           const rev = !!entry?.needsRevision;
@@ -223,7 +242,8 @@ export function ProblemTable({
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-0.5 sm:gap-1">
+                    <div className="flex flex-wrap items-center gap-0.5 sm:gap-1">
+                      <VisualizationLink problem={problem} visualizationId={visualizationId} />
                       <ProblemNotes
                         problemId={problem.id}
                         problemTitle={problem.title}

@@ -18,8 +18,13 @@ const {
   generateBubbleSortSteps,
   generateSelectionSortSteps,
 } = await import("../src/lib/visualizations/sorting.ts");
-const { VISUALIZATIONS, getVisualization, getVisualizationsForTopic, isVisualizationSupported } =
-  await import("../src/lib/visualizations/registry.ts");
+const {
+  VISUALIZATIONS,
+  getVisualization,
+  getVisualizationForProblem,
+  getVisualizationsForTopic,
+  isVisualizationSupported,
+} = await import("../src/lib/visualizations/registry.ts");
 
 let passed = 0;
 let failed = 0;
@@ -151,6 +156,17 @@ test("Unsupported algorithms are not reported as visualizable", () => {
   assert.equal(isVisualizationSupported("sorting", "Bubble Sort"), true);
   assert.equal(isVisualizationSupported("trees", "Inorder Traversal"), false);
   assert.equal(isVisualizationSupported("graphs", "Dijkstra"), false);
+});
+
+test("Revision resolves registered problem IDs and leaves other problems unsupported", () => {
+  assert.equal(getVisualizationForProblem("gfg-bfs"), getVisualization("bfs"));
+  assert.equal(getVisualizationForProblem("gfg-dfs"), getVisualization("dfs"));
+  assert.equal(getVisualizationForProblem("gfg-bubble-sort"), getVisualization("bubble-sort"));
+  assert.equal(
+    getVisualizationForProblem("gfg-selection-sort"),
+    getVisualization("selection-sort"),
+  );
+  assert.equal(getVisualizationForProblem("sort-an-array"), undefined);
 });
 
 test("Every registry definition produces a usable default step sequence", () => {

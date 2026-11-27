@@ -331,6 +331,18 @@ export function getVisualization(id: string): VisualizationDefinition | undefine
   return VISUALIZATION_MAP.get(id);
 }
 
+const VISUALIZATION_BY_PROBLEM = new Map([
+  ["gfg-bfs", "bfs"],
+  ["gfg-dfs", "dfs"],
+  ["gfg-bubble-sort", "bubble-sort"],
+  ["gfg-selection-sort", "selection-sort"],
+]);
+
+export function getVisualizationForProblem(problemId: string): VisualizationDefinition | undefined {
+  const visualizationId = VISUALIZATION_BY_PROBLEM.get(problemId);
+  return visualizationId === undefined ? undefined : getVisualization(visualizationId);
+}
+
 export function getVisualizationsForTopic(topicSlug: string): VisualizationDefinition[] {
   return VISUALIZATIONS.filter((v) => v.topicSlug === topicSlug);
 }

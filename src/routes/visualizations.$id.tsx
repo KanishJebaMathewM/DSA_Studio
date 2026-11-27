@@ -24,13 +24,11 @@ import { getTopic } from "@/data/problems";
 
 export const Route = createFileRoute("/visualizations/$id")({
   loader: ({ params }) => {
-    const visualization = getVisualization(params.id);
-    if (!visualization) throw notFound();
-    const topic = getTopic(visualization.topicSlug);
-    return { visualization, topic };
+    if (!getVisualization(params.id)) throw notFound();
+    return { id: params.id };
   },
   head: ({ loaderData }) => {
-    const v = loaderData?.visualization;
+    const v = loaderData ? getVisualization(loaderData.id) : undefined;
     const title = v
       ? `${v.name} Learning Guide & Visualization — DSA Studio`
       : "Visualization — DSA Studio";
@@ -50,12 +48,12 @@ export const Route = createFileRoute("/visualizations/$id")({
 });
 
 function VisualizationLearningPage() {
-  const { visualization, topic } = Route.useLoaderData() as {
-    visualization: import("@/lib/visualizations/types").VisualizationDefinition;
-    topic?: import("@/data/problems").Topic;
-  };
-
+  const { id } = Route.useLoaderData();
   const [copiedCode, setCopiedCode] = useState(false);
+  const visualization = getVisualization(id);
+  if (!visualization) throw notFound();
+
+  const topic = getTopic(visualization.topicSlug);
   const { theory } = visualization;
 
   const handleCopyCode = async () => {
