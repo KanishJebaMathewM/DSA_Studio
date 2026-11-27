@@ -493,7 +493,7 @@ const SidebarRail = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">
         onKeyDown={handleKeyDown}
         title="Drag or use arrow keys to resize, click or Enter to toggle, double-click or Home to reset"
         className={cn(
-          "absolute inset-y-0 -right-1.5 z-20 hidden w-4 cursor-col-resize rounded-sm outline-none transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[3px] hover:after:bg-primary/50 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:after:bg-primary sm:flex",
+          "absolute inset-y-0 z-20 hidden w-3 cursor-col-resize rounded-sm outline-none transition-all ease-linear group-data-[side=left]:left-full group-data-[side=right]:right-full after:absolute after:inset-y-1 after:w-[3px] after:rounded-full group-data-[side=left]:after:left-1 group-data-[side=right]:after:right-1 hover:after:bg-primary/50 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:after:bg-primary sm:flex",
           isResizing && "after:bg-primary",
           className,
         )}
