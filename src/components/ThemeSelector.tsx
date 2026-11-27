@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Check, Moon, Palette, Sparkles, Sun, ChevronRight } from "lucide-react";
-import { useTheme, THEME_PRESETS, type ThemePresetId } from "@/lib/theme";
+import { useTheme, THEME_PRESETS, getThemePreset, type ThemePresetId } from "@/lib/theme";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -12,7 +12,7 @@ export function ThemeSelector() {
   const [isOpen, setIsOpen] = useState(false);
 
   const isDark = mode === "dark";
-  const currentPreset = THEME_PRESETS.find((p) => p.id === preset) || THEME_PRESETS[0];
+  const currentPreset = getThemePreset(preset);
 
   // Global keyboard shortcut: Press "T" outside input to cycle theme atmospheres
   useEffect(() => {

@@ -19,15 +19,16 @@ export function SoundscapeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    // Default to enabled (playing) unless explicitly disabled by user
-    const shouldPlayByDefault = saved !== "false";
+    // Default to off unless explicitly enabled by user
+    const shouldPlay = saved === "true";
 
     const audio = new Audio(TRACK_URL);
     audio.loop = true;
     audio.volume = 0.35;
+    audio.preload = shouldPlay ? "auto" : "none";
     audioRef.current = audio;
 
-    if (!shouldPlayByDefault) {
+    if (!shouldPlay) {
       userDisabledRef.current = true;
       setIsOn(false);
     } else {
@@ -64,16 +65,16 @@ export function SoundscapeProvider({ children }: { children: ReactNode }) {
 
     // Sync state across multiple tabs
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY && audioRef.current) {
-        if (e.newValue === "false") {
+      if ((e.key === STORAGE_KEY || e.key === null) && audioRef.current) {
+        if (e.newValue === "true") {
+          userDisabledRef.current = false;
+          setIsOn(true);
+          audioRef.current.play().catch(() => {});
+        } else {
           userDisabledRef.current = true;
           cleanupGestureRef.current?.();
           audioRef.current.pause();
           setIsOn(false);
-        } else if (e.newValue === "true") {
-          userDisabledRef.current = false;
-          setIsOn(true);
-          audioRef.current.play().catch(() => {});
         }
       }
     };

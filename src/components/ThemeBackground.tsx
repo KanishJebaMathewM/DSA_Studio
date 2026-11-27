@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react";
-import { useTheme, THEME_PRESETS } from "@/lib/theme";
+import { useTheme, THEME_PRESETS, getThemePreset } from "@/lib/theme";
 
 let hasPreloadedArtwork = false;
 
 export function ThemeBackground() {
   const { mode, preset, isArtworkEnabled, isPreferenceRestored } = useTheme();
 
-  const currentPreset = THEME_PRESETS.find((p) => p.id === preset) || THEME_PRESETS[0];
+  const currentPreset = getThemePreset(preset);
   const shouldEnableArtwork = isPreferenceRestored && isArtworkEnabled && currentPreset.hasArtwork;
 
   // Preload and decode theme illustrations only once preferences are restored with artwork enabled

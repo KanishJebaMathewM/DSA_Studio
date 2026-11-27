@@ -15,6 +15,7 @@ import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as RevisionRouteImport } from './routes/revision'
 import { Route as TopicsSlugRouteImport } from './routes/topics.$slug'
+import { Route as VisualizationsIdRouteImport } from './routes/visualizations.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const TopicsSlugRoute = TopicsSlugRouteImport.update({
   path: '/topics/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VisualizationsIdRoute = VisualizationsIdRouteImport.update({
+  id: '/visualizations/$id',
+  path: '/visualizations/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/revision': typeof RevisionRoute
   '/topics/$slug': typeof TopicsSlugRoute
+  '/visualizations/$id': typeof VisualizationsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/revision': typeof RevisionRoute
   '/topics/$slug': typeof TopicsSlugRoute
+  '/visualizations/$id': typeof VisualizationsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/revision': typeof RevisionRoute
   '/topics/$slug': typeof TopicsSlugRoute
+  '/visualizations/$id': typeof VisualizationsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/revision'
     | '/topics/$slug'
+    | '/visualizations/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/revision'
     | '/topics/$slug'
+    | '/visualizations/$id'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/revision'
     | '/topics/$slug'
+    | '/visualizations/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   RevisionRoute: typeof RevisionRoute
   TopicsSlugRoute: typeof TopicsSlugRoute
+  VisualizationsIdRoute: typeof VisualizationsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/visualizations/$id': {
+      id: '/visualizations/$id'
+      path: '/visualizations/$id'
+      fullPath: '/visualizations/$id'
+      preLoaderRoute: typeof VisualizationsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   RevisionRoute: RevisionRoute,
   TopicsSlugRoute: TopicsSlugRoute,
+  VisualizationsIdRoute: VisualizationsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
