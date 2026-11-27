@@ -14,7 +14,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting"; // neutral console reporter
 import { SearchProvider } from "@/lib/search-context";
 import { ThemeProvider } from "@/lib/theme";
+import { SoundscapeProvider } from "@/lib/soundscape";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import { PersistentWorkspaceLayout } from "@/components/AppShell";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
@@ -152,15 +154,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <SearchProvider>
-          <SidebarProvider>
-            <MobileSidebarCloser />
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-            <Analytics />
-            <SpeedInsights />
-          </SidebarProvider>
-        </SearchProvider>
+        <SoundscapeProvider>
+          <SearchProvider>
+            <SidebarProvider>
+              <MobileSidebarCloser />
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <PersistentWorkspaceLayout>
+                <Outlet />
+              </PersistentWorkspaceLayout>
+              <Analytics />
+              <SpeedInsights />
+            </SidebarProvider>
+          </SearchProvider>
+        </SoundscapeProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -74,6 +74,23 @@
 :root {
   --radius: 0.5rem;
 
+  /* 2D Fluid Typography & Control Sizing Tokens (scales smoothly with both vw & vh) */
+  --fs-2xs: clamp(0.625rem, calc(0.48rem + 0.14vw + 0.14vh), 0.78rem);
+  --fs-xs: clamp(0.75rem, calc(0.56rem + 0.18vw + 0.18vh), 0.925rem);
+  --fs-sm: clamp(0.84rem, calc(0.62rem + 0.22vw + 0.2vh), 1.05rem);
+  --fs-base: clamp(0.95rem, calc(0.68rem + 0.26vw + 0.24vh), 1.2rem);
+  --fs-lg: clamp(1.08rem, calc(0.74rem + 0.32vw + 0.28vh), 1.38rem);
+  --fs-xl: clamp(1.2rem, calc(0.8rem + 0.42vw + 0.35vh), 1.65rem);
+  --fs-2xl: clamp(1.35rem, calc(0.85rem + 0.55vw + 0.45vh), 2.15rem);
+
+  --icon-xs: clamp(0.75rem, calc(0.56rem + 0.15vw + 0.15vh), 0.95rem);
+  --icon-sm: clamp(0.9rem, calc(0.65rem + 0.2vw + 0.18vh), 1.15rem);
+  --icon-md: clamp(1.05rem, calc(0.75rem + 0.22vw + 0.2vh), 1.3rem);
+  --ctrl-sm: clamp(1.85rem, calc(1.35rem + 0.22vw + 0.42vh), 2.35rem);
+  --ctrl-md: clamp(2.15rem, calc(1.6rem + 0.25vw + 0.48vh), 2.75rem);
+  --header-h: clamp(3rem, calc(2.25rem + 0.3vw + 0.75vh), 4rem);
+
+  --canvas: oklch(0.978 0.004 247); /* Opaque solid light canvas */
   --background: oklch(0.985 0.003 247); /* #F8FAFC-ish */
   --foreground: oklch(0.205 0.04 265); /* slate-900 */
 
@@ -94,8 +111,8 @@
   --secondary: oklch(0.968 0.006 247);
   --secondary-foreground: oklch(0.28 0.04 265);
 
-  --muted: oklch(0.968 0.006 247);
-  --muted-foreground: oklch(0.55 0.03 257); /* slate-500 */
+  --muted: oklch(0.93 0.01 250);
+  --muted-foreground: oklch(0.5 0.03 257); /* slate-600 */
 
   --accent: oklch(0.955 0.03 271);
   --accent-foreground: oklch(0.35 0.14 271);
@@ -134,6 +151,7 @@
 
 /* Dark theme — deep slate/navy surfaces, near-white text, same indigo accent */
 .dark {
+  --canvas: oklch(0.145 0.028 265); /* Opaque solid dark slate canvas */
   --background: oklch(0.19 0.03 265); /* #0F172A */
   --foreground: oklch(0.965 0.005 247);
 
@@ -203,6 +221,7 @@
 }
 
 [data-theme-artwork="true"].dark {
+  --canvas: oklch(0.125 0.024 265);
   --background: oklch(0.12 0.02 265 / 0.5);
   --card: oklch(0.19 0.03 265 / 0.96);
   --surface: oklch(0.21 0.03 265 / 0.96);
@@ -295,11 +314,6 @@ html[data-theme="mountain-observatory"].dark,
   --sidebar-ring: oklch(0.7 0.17 280);
 }
 
-html[data-theme-artwork="true"],
-html[data-theme-artwork="true"] body {
-  background-color: transparent !important;
-}
-
 /* Glass panel blur for cards, sidebar, and popovers */
 [data-theme-artwork="true"] .bg-card,
 [data-theme-artwork="true"] [data-sidebar="sidebar"],
@@ -327,7 +341,7 @@ html[data-theme-artwork="true"] body {
 
   html,
   body {
-    background-color: var(--color-background);
+    background-color: var(--canvas);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -447,4 +461,163 @@ html[data-theme-artwork="true"] body {
 
 .hover-lift:hover {
   transform: translateY(-2px);
+}
+
+/* Premium ambient glow on hover */
+.hover-lift-glow {
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease;
+}
+
+.hover-lift-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px color-mix(in oklab, var(--primary) 10%, transparent);
+  border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+}
+
+/* ==========================================================================
+   Shimmer Loading & Entry Animations
+   ========================================================================== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--muted) 35%, transparent) 0%,
+    color-mix(in oklab, var(--primary) 14%, var(--muted)) 50%,
+    color-mix(in oklab, var(--muted) 35%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stagger-1 {
+  animation-delay: 40ms;
+}
+.stagger-2 {
+  animation-delay: 80ms;
+}
+.stagger-3 {
+  animation-delay: 120ms;
+}
+.stagger-4 {
+  animation-delay: 160ms;
+}
+
+/* ==========================================================================
+   Luminous Lines & Structural Hairline Accents
+   ========================================================================== */
+
+/* Luminous Top-Edge Line for Glass Cards */
+.card-glass-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glass-line::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--foreground) 16%, transparent) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Hairline gradient accent divider */
+.hairline-divider {
+  height: 1px;
+  width: auto;
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--border) 80%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+.hairline-divider-primary {
+  height: 1px;
+  width: auto;
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--primary) 40%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+/* 2D Fluid Typography Utility Classes */
+.text-fluid-2xs {
+  font-size: var(--fs-2xs);
+  line-height: 1.35;
+}
+.text-fluid-xs {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+.text-fluid-sm {
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+.text-fluid-base {
+  font-size: var(--fs-base);
+  line-height: 1.5;
+}
+.text-fluid-lg {
+  font-size: var(--fs-lg);
+  line-height: 1.35;
+}
+.text-fluid-xl {
+  font-size: var(--fs-xl);
+  line-height: 1.25;
+}
+.text-fluid-2xl {
+  font-size: var(--fs-2xl);
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   Mobile Viewport & Background Scroll Stabilization
+   ========================================================================== */
+html {
+  overscroll-behavior-y: none;
+}
+
+body {
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
 }
