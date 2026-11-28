@@ -14,6 +14,7 @@ import {
 import { ALL_PLACEMENTS, PROBLEM_MAP } from "@/data/problems";
 import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
+import { getVisualizationForProblem } from "@/lib/visualizations/registry";
 
 export const Route = createFileRoute("/revision")({
   head: () => ({
@@ -56,7 +57,11 @@ function RevisionPage() {
       continue;
 
     seenMatching.add(pl.problemId);
-    const row = { problem: pr, pattern: `${pl.topicName} • ${pl.levelTitle}` };
+    const row = {
+      problem: pr,
+      pattern: `${pl.topicName} • ${pl.levelTitle}`,
+      visualizationId: getVisualizationForProblem(pr.id)?.id,
+    };
     rows.push(row);
     if (view === "topic") {
       const group = groups.get(pl.topicSlug) ?? { name: pl.topicName, rows: [] };
