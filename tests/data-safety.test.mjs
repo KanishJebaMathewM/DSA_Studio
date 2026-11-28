@@ -197,9 +197,32 @@ test("production store writes to the exact key 'dsa-sheet-progress-v1' and prese
   assert.equal(parsed["prob-new-999"].needsRevision, true);
 });
 
+// Test 9: restricted browser storage must not crash progress operations
+test("progress store operations do not throw when localStorage access is denied", () => {
+  const localStorageDescriptor = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    get() {
+      throw new DOMException("Storage access is denied", "SecurityError");
+    },
+  });
+
+  try {
+    assert.doesNotThrow(() => getAllProgress());
+    progressRepo.toggleCompleted("prob-storage-blocked");
+    assert.equal(getEntry("prob-storage-blocked").completed, true);
+  } finally {
+    if (localStorageDescriptor) {
+      Object.defineProperty(globalThis, "localStorage", localStorageDescriptor);
+    } else {
+      delete globalThis.localStorage;
+    }
+  }
+});
+
 // ============================================================
 console.log(`\n📊 Results: ${passed} passed, ${failed} failed\n`);
 if (failed > 0) {
   process.exit(1);
 }
-

@@ -10,7 +10,7 @@ const styles: Record<Difficulty, string> = {
 export function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
   return (
     <span
-      className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${styles[difficulty]}`}
+      className={`inline-flex items-center rounded-md px-[clamp(0.45rem,calc(0.3rem+0.22vw+0.12vh),0.75rem)] py-[clamp(0.125rem,calc(0.08rem+0.08vh),0.25rem)] text-fluid-xs font-medium ${styles[difficulty]}`}
     >
       {difficulty === "Unverified" ? "—" : difficulty}
     </span>

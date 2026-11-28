@@ -4,15 +4,8 @@ import { AppSidebar } from "./AppSidebar";
 import { AppHeader } from "./AppHeader";
 import { OpenSourceFooter } from "./OpenSourceFooter";
 
-export function AppShell({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
   return (
-    <div className="relative flex min-h-screen w-full">
+    <div className="relative flex min-h-dvh w-full overflow-x-clip">
       <ThemeBackground />
       <AppSidebar />
 

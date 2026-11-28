@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { LevelAccordion } from "@/components/LevelAccordion";
 import { ProgressBar } from "@/components/ProgressBar";
 import { EmptyState } from "@/components/EmptyState";
+import { TopicVisualizations } from "@/components/visualizations/TopicVisualizations";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -15,8 +16,20 @@ import {
 import { getTopic, PROBLEM_MAP } from "@/data/problems";
 import { useProgress } from "@/lib/progress-store";
 import { useGlobalSearch } from "@/lib/search-context";
+import { TopicSkeleton } from "@/components/LoadingSkeletons";
+
+function TopicPending() {
+  const { slug } = useParams({ strict: false }) as { slug?: string };
+  const title = slug ? (getTopic(slug)?.name ?? "Topic") : "Topic";
+  return (
+    <AppShell title={title}>
+      <TopicSkeleton />
+    </AppShell>
+  );
+}
 
 export const Route = createFileRoute("/topics/$slug")({
+  pendingComponent: TopicPending,
   loader: ({ params }) => {
     const topic = getTopic(params.slug);
     if (!topic) throw notFound();
@@ -47,7 +60,10 @@ function TopicPage() {
   const [status, setStatus] = useState<string>("all");
   const [platform, setPlatform] = useState<string>("all");
 
-  const allLevels = topic.levels ?? topic.parts?.flatMap((p) => p.levels) ?? [];
+  const allLevels = useMemo(
+    () => topic.levels ?? topic.parts?.flatMap((p) => p.levels) ?? [],
+    [topic],
+  );
 
   const [openLevelId, setOpenLevelId] = useState<string | null>(() => {
     const first = allLevels[0];
@@ -58,19 +74,25 @@ function TopicPage() {
   useEffect(() => {
     const first = allLevels[0];
     setOpenLevelId(first ? `${first.number}-${first.title}` : null);
-  }, [topic.slug]);
+  }, [allLevels]);
 
-  const allIds = new Set<string>();
-  allLevels.forEach((lvl) => lvl.problems.forEach((lp) => allIds.add(lp.id)));
-  const total = allIds.size;
-  const solved = Array.from(allIds).filter((id) => progress[id]?.completed).length;
-  const pct = total ? Math.round((solved / total) * 100) : 0;
+  const { total, solved, pct } = useMemo(() => {
+    const allIds = new Set<string>();
+    allLevels.forEach((lvl) => lvl.problems.forEach((lp) => allIds.add(lp.id)));
+    const tot = allIds.size;
+    let sol = 0;
+    allIds.forEach((id) => {
+      if (progress[id]?.completed) sol++;
+    });
+    return {
+      total: tot,
+      solved: sol,
+      pct: tot ? Math.round((sol / tot) * 100) : 0,
+    };
+  }, [allLevels, progress]);
 
   const filtersActive =
-    query.trim() !== "" ||
-    difficulty !== "all" ||
-    status !== "all" ||
-    platform !== "all";
+    query.trim() !== "" || difficulty !== "all" || status !== "all" || platform !== "all";
 
   const filteredLevels = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -98,8 +120,7 @@ function TopicPage() {
         return { ...lvl, problems };
       })
       .filter((lvl) => lvl.problems.length > 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allLevels, query, difficulty, status, platform, progress]);
+  }, [allLevels, query, difficulty, status, platform, progress, topic.name]);
 
   const filterKey = `${query}|${difficulty}|${status}|${platform}`;
   const prevFilterKeyRef = useRef(filterKey);
@@ -135,22 +156,28 @@ function TopicPage() {
 
   return (
     <AppShell title={topic.name}>
-      <div className="mb-6 rounded-xl border border-border/60 bg-card p-5 shadow-sm backdrop-blur-md">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground">{topic.name}</h2>
-        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          {topic.description}
-        </p>
-        <div className="mt-4 flex items-center gap-3">
-          <ProgressBar value={pct} className="max-w-md" />
-          <div className="text-xs font-medium text-muted-foreground">
-            {solved} / {total} completed •{" "}
-            <span className="text-primary">{pct}%</span>
+      <div className="mb-[clamp(0.75rem,2vh,1.5rem)] rounded-xl border border-border/60 bg-card px-4 sm:px-5 py-[clamp(0.75rem,2vh,1.35rem)] shadow-sm backdrop-blur-md card-glass-line hover-lift-glow">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-fluid-2xl font-bold tracking-tight text-foreground break-words">
+              {topic.name}
+            </h2>
+            <p className="mt-1 max-w-2xl text-fluid-sm text-muted-foreground">{topic.description}</p>
+            <div className="mt-[clamp(0.5rem,1.4vh,1rem)] flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <ProgressBar value={pct} className="w-full sm:max-w-[clamp(20rem,28vw,32rem)]" />
+              <div className="text-fluid-xs font-medium text-muted-foreground shrink-0">
+                {solved} / {total} completed •{" "}
+                <span className="text-primary font-semibold">{pct}%</span>
+              </div>
+            </div>
           </div>
+
+          <TopicVisualizations topicSlug={topic.slug} />
         </div>
       </div>
 
       {/* Filters */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-[clamp(0.5rem,1.5vh,1rem)] flex flex-wrap items-center gap-2">
         <FilterSelect
           value={difficulty}
           onChange={setDifficulty}
@@ -179,7 +206,7 @@ function TopicPage() {
           onChange={setStatus}
           placeholder="Status"
           options={[
-            { v: "all", l: "All" },
+            { v: "all", l: "All status" },
             { v: "solved", l: "Solved" },
             { v: "unsolved", l: "Unsolved" },
             { v: "revision", l: "Needs Revision" },
@@ -187,7 +214,12 @@ function TopicPage() {
           ]}
         />
         {filtersActive && (
-          <Button variant="ghost" size="sm" onClick={clear} className="text-muted-foreground">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clear}
+            className="h-[var(--ctrl-md)] text-fluid-xs text-muted-foreground hover:text-foreground cursor-pointer"
+          >
             Clear filters
           </Button>
         )}
@@ -203,7 +235,7 @@ function TopicPage() {
           }
         />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-[clamp(0.5rem,1.4vh,0.875rem)]">
           {filteredLevels.map((lvl) => {
             const levelId = `${lvl.number}-${lvl.title}`;
             return (
@@ -211,9 +243,7 @@ function TopicPage() {
                 key={`${topic.slug}-${levelId}`}
                 level={lvl}
                 isOpen={openLevelId === levelId}
-                onToggle={() =>
-                  setOpenLevelId((prev) => (prev === levelId ? null : levelId))
-                }
+                onToggle={() => setOpenLevelId((prev) => (prev === levelId ? null : levelId))}
               />
             );
           })}
@@ -236,10 +266,10 @@ function FilterSelect({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-9 w-[160px] border-border/70 bg-surface shadow-xs backdrop-blur-md text-sm">
+      <SelectTrigger className="h-[var(--ctrl-md)] w-[calc(50%-0.25rem)] sm:w-[clamp(9.5rem,12vw,13rem)] border-border/70 bg-surface shadow-xs backdrop-blur-md text-fluid-xs">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="max-h-[min(15rem,var(--radix-select-content-available-height))] max-w-[calc(100vw-2rem)]">
         {options.map((o) => (
           <SelectItem key={o.v} value={o.v}>
             {o.l}

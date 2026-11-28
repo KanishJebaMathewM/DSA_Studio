@@ -14,8 +14,11 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting"; // neutral console reporter
 import { SearchProvider } from "@/lib/search-context";
 import { ThemeProvider } from "@/lib/theme";
+import { SoundscapeProvider } from "@/lib/soundscape";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import { PersistentWorkspaceLayout } from "@/components/AppShell";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function NotFoundComponent() {
   return (
@@ -91,8 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "DSA Studio — Practice Tracker" },
       {
         property: "og:description",
-        content:
-          "Level-by-level DSA practice across graphs, DP, trees, sliding window, and more.",
+        content: "Level-by-level DSA practice across graphs, DP, trees, sliding window, and more.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -109,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
-        children: `try{var m=localStorage.getItem('dsa-sheet-theme');if(!m){m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(m==='dark'){document.documentElement.classList.add('dark');}var p=localStorage.getItem('dsa-studio-theme-preset')||'cozy-room';document.documentElement.setAttribute('data-theme',p);var a=localStorage.getItem('dsa-studio-theme-artwork');var isArt=(a===null||a==='true')&&(p!=='clean-slate');document.documentElement.setAttribute('data-theme-artwork',isArt?'true':'false');}catch(e){}`,
+        children: `try{var m=localStorage.getItem('dsa-sheet-theme');if(!m){m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(m==='dark'){document.documentElement.classList.add('dark');}var p=localStorage.getItem('dsa-studio-theme-preset')||'clean-slate';document.documentElement.setAttribute('data-theme',p);var a=localStorage.getItem('dsa-studio-theme-artwork');var isArt=(a===null||a==='true')&&(p!=='clean-slate');document.documentElement.setAttribute('data-theme-artwork',isArt?'true':'false');}catch(e){}`,
       },
     ],
   }),
@@ -152,14 +154,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <SearchProvider>
-          <SidebarProvider>
-            <MobileSidebarCloser />
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-            <Analytics />
-          </SidebarProvider>
-        </SearchProvider>
+        <SoundscapeProvider>
+          <SearchProvider>
+            <SidebarProvider>
+              <MobileSidebarCloser />
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <PersistentWorkspaceLayout>
+                <Outlet />
+              </PersistentWorkspaceLayout>
+              <Analytics />
+              <SpeedInsights />
+            </SidebarProvider>
+          </SearchProvider>
+        </SoundscapeProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

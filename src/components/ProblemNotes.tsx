@@ -10,7 +10,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { getEntry, hasNotes, progressRepo, useProgressEntry } from "@/lib/progress-store";
+import { createDraft, editDraft, isDirty, syncDraft } from "@/lib/notes-draft";
+import { hasNotes, progressRepo, useProgressEntry } from "@/lib/progress-store";
 
 const SAVE_DELAY_MS = 500;
 const MAX_LENGTH = 2000;
@@ -20,21 +21,27 @@ const MAX_LENGTH = 2000;
 // once more on unmount (panel closed) so the last keystrokes aren't lost.
 function NotesEditor({ problemId, autoFocus }: { problemId: string; autoFocus?: boolean }) {
   const saved = useProgressEntry(problemId).notes ?? "";
-  const [draft, setDraft] = useState(saved);
-  const draftRef = useRef(draft);
-  draftRef.current = draft;
+  const [stored, setStored] = useState(() => createDraft(saved));
+  // Adopt notes saved elsewhere (e.g. another tab) unless there are unsaved edits.
+  const state = syncDraft(stored, saved);
+  if (state !== stored) setStored(state);
+
+  const { draft } = state;
+  const dirty = isDirty(state);
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   useEffect(() => {
-    if (draft === saved) return;
+    if (!dirty) return;
     const t = setTimeout(() => progressRepo.setNotes(problemId, draft), SAVE_DELAY_MS);
     return () => clearTimeout(t);
-  }, [draft, saved, problemId]);
+  }, [draft, dirty, problemId]);
 
   useEffect(() => {
     return () => {
-      // Flush pending edits when the panel closes.
-      if ((getEntry(problemId).notes ?? "") !== draftRef.current) {
-        progressRepo.setNotes(problemId, draftRef.current);
+      // Flush unsaved edits when the panel closes.
+      if (isDirty(stateRef.current)) {
+        progressRepo.setNotes(problemId, stateRef.current.draft);
       }
     };
   }, [problemId]);
@@ -43,7 +50,7 @@ function NotesEditor({ problemId, autoFocus }: { problemId: string; autoFocus?: 
     <div className="space-y-1.5">
       <Textarea
         value={draft}
-        onChange={(e) => setDraft(e.target.value)}
+        onChange={(e) => setStored(editDraft(state, e.target.value))}
         maxLength={MAX_LENGTH}
         autoFocus={autoFocus}
         rows={6}
@@ -52,7 +59,7 @@ function NotesEditor({ problemId, autoFocus }: { problemId: string; autoFocus?: 
         className="resize-y text-sm"
       />
       <div className="flex justify-between text-[11px] text-muted-foreground">
-        <span>{draft === saved ? "Saved" : "Saving…"}</span>
+        <span>{dirty ? "Saving…" : "Saved"}</span>
         <span>
           {draft.length} / {MAX_LENGTH}
         </span>
@@ -80,18 +87,27 @@ export function ProblemNotes({
     return (
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <button aria-label={label}>
+          <button
+            aria-label={label}
+            className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-hover hover:text-foreground active:scale-95 transition-all cursor-pointer"
+            title={active ? "View / edit notes" : "Add notes"}
+          >
             <StickyNote
               className={`h-4 w-4 ${active ? "fill-primary/20 text-primary" : "text-muted-foreground"}`}
             />
           </button>
         </SheetTrigger>
-        <SheetContent side="bottom" className="rounded-t-lg">
-          <SheetHeader>
-            <SheetTitle className="truncate">{problemTitle}</SheetTitle>
-            <SheetDescription>Your notes are saved automatically.</SheetDescription>
+        <SheetContent
+          side="bottom"
+          className="rounded-t-xl max-h-[85vh] p-4 sm:p-6 overflow-y-auto"
+        >
+          <SheetHeader className="text-left">
+            <SheetTitle className="break-words text-base sm:text-lg">{problemTitle}</SheetTitle>
+            <SheetDescription className="text-xs text-muted-foreground">
+              Your notes are saved automatically.
+            </SheetDescription>
           </SheetHeader>
-          <div className="mt-4">{open && <NotesEditor problemId={problemId} />}</div>
+          <div className="mt-3">{open && <NotesEditor problemId={problemId} />}</div>
         </SheetContent>
       </Sheet>
     );
@@ -107,7 +123,7 @@ export function ProblemNotes({
           }`}
         >
           <StickyNote
-            className={`h-3.5 w-3.5 ${
+            className={`h-[var(--icon-sm)] w-[var(--icon-sm)] ${
               active
                 ? "fill-primary/20 text-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -115,8 +131,8 @@ export function ProblemNotes({
           />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80">
-        <p className="mb-2 truncate text-sm font-medium">{problemTitle}</p>
+      <PopoverContent align="end" className="w-80 max-w-[calc(100vw-2rem)] p-3 sm:p-4">
+        <p className="mb-2 truncate text-fluid-sm font-medium">{problemTitle}</p>
         {open && <NotesEditor problemId={problemId} autoFocus />}
       </PopoverContent>
     </Popover>

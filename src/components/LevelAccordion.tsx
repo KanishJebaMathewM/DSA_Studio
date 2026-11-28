@@ -41,52 +41,62 @@ export function LevelAccordion({
   const done = solved === total && total > 0;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border/70 bg-surface shadow-xs backdrop-blur-md transition-colors duration-200">
+    <div className="overflow-hidden rounded-lg border border-border/70 bg-surface shadow-xs backdrop-blur-md transition-all duration-200 card-glass-line hover:border-primary/40 hover:shadow-sm">
       <button
         type="button"
         onClick={handleToggle}
         aria-expanded={open}
         aria-controls={`level-panel-${level.number}`}
-        className="group flex w-full items-center gap-4 px-4 py-3 text-left hover:bg-hover/80 transition-colors duration-150 cursor-pointer"
+        className="group flex w-full items-center gap-3 sm:gap-4 px-3 sm:px-4 py-[clamp(0.625rem,1.4vh,0.875rem)] text-left hover:bg-hover/80 transition-colors duration-150 cursor-pointer"
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary-soft text-xs font-semibold text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
+        <div className="flex h-[clamp(1.75rem,calc(1.25rem+0.3vw+0.45vh),2.5rem)] w-[clamp(1.75rem,calc(1.25rem+0.3vw+0.45vh),2.5rem)] shrink-0 items-center justify-center rounded-md bg-primary-soft text-fluid-xs font-semibold text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-[0_0_12px_var(--primary-soft)]">
           {level.number}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+            <span className="text-fluid-sm font-semibold text-foreground transition-colors group-hover:text-primary break-words">
               Level {level.number} — {level.title}
             </span>
             {done && (
-              <Check aria-hidden="true" className="h-3.5 w-3.5 text-success" />
+              <Check
+                aria-hidden="true"
+                className="h-[var(--icon-xs)] w-[var(--icon-xs)] shrink-0 text-success"
+              />
             )}
           </div>
-          <div className="mt-1.5 flex items-center gap-3">
+          <div className="mt-1.5 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
             <ProgressBar
               value={pct}
               label={`Level ${level.number} progress`}
-              className="max-w-[240px]"
+              className="w-full sm:max-w-[clamp(12.5rem,18vw,20rem)]"
             />
-            <span className="shrink-0 text-xs text-muted-foreground">
+            <span className="shrink-0 text-fluid-xs text-muted-foreground">
               {solved} / {total} completed
             </span>
           </div>
         </div>
         <ChevronDown
           aria-hidden="true"
-          className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-out ${
+          className={`h-[var(--icon-sm)] w-[var(--icon-sm)] shrink-0 text-muted-foreground transition-transform duration-300 ease-out ${
             open ? "rotate-180 text-foreground" : "group-hover:text-foreground"
           }`}
         />
       </button>
-      {open && (
-        <div
-          id={`level-panel-${level.number}`}
-          className="border-t border-border/50 bg-surface/40 backdrop-blur-md p-3 md:p-4 animate-in fade-in-50 duration-200"
-        >
-          <ProblemTable rows={rows} />
+      <div
+        className={`grid duration-300 ease-in-out ${
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+        style={{ transitionProperty: "grid-template-rows, opacity" }}
+      >
+        <div className="overflow-hidden">
+          <div
+            id={`level-panel-${level.number}`}
+            className="border-t border-border/50 bg-surface-muted/35 p-[clamp(0.625rem,1.5vh,1rem)]"
+          >
+            <ProblemTable rows={rows} embedded />
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

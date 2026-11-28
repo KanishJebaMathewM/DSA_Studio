@@ -10,7 +10,7 @@ export function PlatformBadge({ platform }: { platform: Platform }) {
   const isLC = platform === "LeetCode";
   return (
     <span
-      className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[11px] font-medium ${
+      className={`inline-flex items-center rounded-md border px-[clamp(0.375rem,calc(0.25rem+0.18vw+0.1vh),0.625rem)] py-[clamp(0.1rem,calc(0.06rem+0.08vh),0.22rem)] text-fluid-2xs font-medium ${
         isLC
           ? "border-medium/30 text-medium-foreground"
           : platform === "GFG"

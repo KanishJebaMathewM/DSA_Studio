@@ -14,7 +14,6 @@ import {
   GitFork,
   Link2,
   Layers,
-  ChevronsLeft,
   Code2,
   SearchCode,
   Layers3,
@@ -30,10 +29,10 @@ import {
   Type,
   Hash,
   AppWindow,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { TOPICS } from "@/data/problems";
-import { useSidebar } from "@/components/ui/sidebar";
 import {
   Sidebar,
   SidebarContent,
@@ -45,25 +44,46 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter,
+  SidebarTrigger,
+  SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, LucideIcon> = {
-  Share2, Network, Sigma, MoveHorizontal, ArrowLeftRight,
-  ArrowDownAZ, GitFork, Link2, Layers, SearchCode, Layers3,
-  ListOrdered, GitBranch, TrendingUp, TreePine, Binary,
-  CaseSensitive, Grid3x3, Calculator, LayoutList, Type, Hash, AppWindow,
+  Share2,
+  Network,
+  Sigma,
+  MoveHorizontal,
+  ArrowLeftRight,
+  ArrowDownAZ,
+  GitFork,
+  Link2,
+  Layers,
+  SearchCode,
+  Layers3,
+  ListOrdered,
+  GitBranch,
+  TrendingUp,
+  TreePine,
+  Binary,
+  CaseSensitive,
+  Grid3x3,
+  Calculator,
+  LayoutList,
+  Type,
+  Hash,
+  AppWindow,
 };
 
 const sourceUrl =
-  import.meta.env.VITE_SOURCE_URL ||
-  "https://github.com/KanishJebaMathewM/DSA_Studio";
+  import.meta.env.VITE_SOURCE_URL || "https://github.com/KanishJebaMathewM/DSA_Studio";
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const { state, toggleSidebar, isMobile } = useSidebar();
-  const collapsed = state === "collapsed";
+  const collapsed = state === "collapsed" && !isMobile;
   const isActive = (p: string) => pathname === p;
   const isTopicActive = (slug: string) => pathname === `/topics/${slug}`;
 
@@ -72,22 +92,45 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
         <div
           className={cn(
-            "flex h-10 items-center gap-2.5 transition-all",
+            "flex h-[clamp(2.5rem,calc(2rem+0.2vw+0.5vh),3.1rem)] w-full items-center justify-between transition-all",
             collapsed
               ? "h-8 w-8 justify-center p-0"
               : "px-2 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
           )}
         >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
-            <Code2 className="h-4 w-4" />
-          </div>
-          {!collapsed && (
-            <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
-              <span className="text-sm font-semibold">DSA Studio</span>
-              <span className="text-[11px] text-muted-foreground">
-                Practice tracker
-              </span>
-            </div>
+          {collapsed ? (
+            <SidebarTrigger
+              className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
+              title="Expand sidebar"
+            />
+          ) : (
+            <>
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
+                  <Code2 className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
+                </div>
+                <div className="flex flex-col leading-tight truncate">
+                  <span className="text-fluid-sm font-semibold truncate">DSA Studio</span>
+                  <span className="text-fluid-2xs text-muted-foreground">Practice tracker</span>
+                </div>
+              </div>
+              {isMobile ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleSidebar}
+                  className="h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] text-muted-foreground hover:text-foreground cursor-pointer"
+                  aria-label="Close sidebar"
+                >
+                  <X className="h-[var(--icon-sm)] w-[var(--icon-sm)]" />
+                </Button>
+              ) : (
+                <SidebarTrigger
+                  className="h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] text-muted-foreground hover:text-foreground cursor-pointer"
+                  title="Collapse sidebar"
+                />
+              )}
+            </>
           )}
         </div>
       </SidebarHeader>
@@ -116,6 +159,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        <div className="mx-3 my-0.5 hairline-divider group-data-[collapsible=icon]:hidden" />
+
         <SidebarGroup>
           <SidebarGroupLabel>Topics</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -124,15 +169,8 @@ export function AppSidebar() {
                 const Icon = iconMap[t.icon] ?? Layers;
                 return (
                   <SidebarMenuItem key={t.slug}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isTopicActive(t.slug)}
-                      tooltip={t.name}
-                    >
-                      <Link
-                        to="/topics/$slug"
-                        params={{ slug: t.slug }}
-                      >
+                    <SidebarMenuButton asChild isActive={isTopicActive(t.slug)} tooltip={t.name}>
+                      <Link to="/topics/$slug" params={{ slug: t.slug }}>
                         <Icon />
                         <span className="truncate">{t.name}</span>
                       </Link>
@@ -143,6 +181,8 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <div className="mx-3 my-0.5 hairline-divider group-data-[collapsible=icon]:hidden" />
 
         <SidebarGroup>
           <SidebarGroupContent>
@@ -178,12 +218,12 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border/40 p-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-2">
         {!collapsed && (
-          <div className="mb-1 flex items-center justify-center gap-3 px-2 text-[11px] text-muted-foreground">
+          <div className="flex items-center justify-center gap-3 px-2 py-1 text-fluid-2xs text-muted-foreground">
             <a
               href={sourceUrl}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-foreground"
+              className="hover:text-foreground transition-colors"
             >
               Source
             </a>
@@ -191,29 +231,14 @@ export function AppSidebar() {
               href="https://www.gnu.org/licenses/agpl-3.0.html"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-foreground"
+              className="hover:text-foreground transition-colors"
             >
               AGPL-3.0-only
             </a>
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={toggleSidebar}
-          className="w-full justify-start gap-2 text-muted-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
-          title={isMobile ? "Close sidebar" : collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          <ChevronsLeft
-            className={`h-4 w-4 transition-transform ${collapsed ? "rotate-180" : ""}`}
-          />
-          {!collapsed && (
-            <span className="group-data-[collapsible=icon]:hidden">
-              {isMobile ? "Close" : "Collapse"}
-            </span>
-          )}
-        </Button>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
