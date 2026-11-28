@@ -9,7 +9,7 @@ export function SoundscapeControl() {
     <Button
       variant="ghost"
       size="icon"
-      className="h-[var(--ctrl-md)] w-[var(--ctrl-md)] text-muted-foreground hover:text-foreground cursor-pointer"
+      className="h-[var(--ctrl-sm)] w-[var(--ctrl-sm)] sm:h-[var(--ctrl-md)] sm:w-[var(--ctrl-md)] text-muted-foreground hover:text-foreground cursor-pointer"
       onClick={toggle}
       aria-label={isOn ? "Turn off background music" : "Turn on background music"}
       title={isOn ? "Turn off background music" : "Turn on background music"}

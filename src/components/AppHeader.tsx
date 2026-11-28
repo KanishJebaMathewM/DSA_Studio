@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SoundscapeControl } from "./SoundscapeControl";
+import { GitHubStarsButton } from "./GitHubStarsButton";
 import { useGlobalSearch } from "@/lib/search-context";
 
 export function AppHeader({ title }: { title: string }) {
@@ -71,7 +72,7 @@ export function AppHeader({ title }: { title: string }) {
   };
 
   return (
-    <header className="sticky top-2 md:top-3 z-30 flex w-full items-center gap-2 sm:gap-3">
+    <header className="sticky top-2 md:top-3 z-30 flex w-full items-center gap-1.5 sm:gap-2.5 md:gap-3">
       {/* Standalone sidebar toggle button, separated from the navbar card on mobile */}
       <SidebarTrigger
         className="flex md:hidden h-[var(--header-h)] w-[var(--header-h)] shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card shadow-md backdrop-blur-xl text-muted-foreground hover:text-foreground hover:bg-card/90 transition-all cursor-pointer [&>svg]:size-[var(--icon-md)]"
@@ -79,7 +80,7 @@ export function AppHeader({ title }: { title: string }) {
       />
 
       {/* Main navigation bar container */}
-      <div className="flex flex-1 h-[var(--header-h)] items-center gap-2 sm:gap-3 rounded-2xl border border-border/60 bg-card px-3 sm:px-4 shadow-md backdrop-blur-xl min-w-0">
+      <div className="flex flex-1 h-[var(--header-h)] items-center gap-1.5 sm:gap-2.5 md:gap-3 rounded-2xl border border-border/60 bg-card px-2.5 sm:px-4 shadow-md backdrop-blur-xl min-w-0">
         {/* --- MOBILE VIEW (< md): Toggles between Title+Icon and Inline Search --- */}
         <div className="flex md:hidden flex-1 items-center gap-2 min-w-0">
           {isMobileSearchOpen ? (
@@ -148,7 +149,7 @@ export function AppHeader({ title }: { title: string }) {
             </h1>
           </div>
 
-          <div className="relative ml-auto w-full max-w-[clamp(16rem,24vw,28rem)]">
+          <div className="relative ml-auto w-full max-w-[clamp(11rem,22vw,28rem)]">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-[var(--icon-sm)] w-[var(--icon-sm)] -translate-y-1/2 text-muted-foreground" />
             <Input
               ref={desktopInputRef}
@@ -182,14 +183,17 @@ export function AppHeader({ title }: { title: string }) {
           </div>
         </div>
 
-        {/* Soundscape Control */}
-        <div className="shrink-0">
+        {/* Right-side utility controls: hidden on mobile when inline search is expanded */}
+        <div
+          className={
+            isMobileSearchOpen
+              ? "hidden md:flex shrink-0 items-center gap-1 sm:gap-1.5 md:gap-2"
+              : "flex shrink-0 items-center gap-1 sm:gap-1.5 md:gap-2"
+          }
+        >
           <SoundscapeControl />
-        </div>
-
-        {/* Theme Selector (Always visible on all screens) */}
-        <div className="shrink-0">
           <ThemeSelector />
+          <GitHubStarsButton />
         </div>
       </div>
     </header>
